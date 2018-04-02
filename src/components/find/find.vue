@@ -1,7 +1,9 @@
 <template>
+	<transition name="slideNav">
 	<div class="find">
 		<mt-header fixed title="发现" ></mt-header>
 	</div>
+	</transition>
 </template>
 
 <script>

@@ -1,4 +1,5 @@
 <template>
+	<transition name="slideNav">
 	<div class="interact">
 		<mt-header fixed title="互动" ></mt-header>
 		<div class="wrap">
@@ -30,6 +31,7 @@
 			</div>
 		</div>
 	</div>
+	</transition>
 </template>
 
 <script>

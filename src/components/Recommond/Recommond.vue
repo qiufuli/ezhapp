@@ -1,11 +1,12 @@
 <template>
+	<transition name="slideNav">
 	<div class="Recommond">
 		<mt-header fixed title="校园"></mt-header>
 		<div class="wrap">
 			<img class="Rec_img" src="static/test/test01.jpg" alt="" />
 			<!--个人信息-->
 
-			<div class="person clearfix">
+			<div class="person clearfix" @click="person()">
 				<img class="person_img" src="static/test/test01.jpg" alt="" />
 				<p>上午好，王小毛</p>
 			</div>
@@ -47,8 +48,9 @@
 				</div>
 			</div>
 		</div>
-
+	<router-view></router-view>
 	</div>
+	</transition>
 </template>
 
 <script>
@@ -56,6 +58,20 @@
 		data() {
 			return {
 
+			}
+		}, 
+		created(){
+			axios.get('http://192.168.3.19:8082/hello/say', {
+//				headers:{
+//				"Content-Type": "application/x-www-form-urlencoded"
+//				}
+			}).then(function(relove){
+				console.log(relove)
+			})
+		},
+		methods:{
+			person(){
+				this.$router.push('/Recommond/person')
 			}
 		}
 	}

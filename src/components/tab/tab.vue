@@ -1,6 +1,6 @@
 <template>
 	<div class="tab">
-	    <mt-tabbar v-model="selected" fixed class="border-1px-top">
+	    <mt-tabbar v-model="selected"  class="border-1px-top">
 	      <mt-tab-item id="校园" >
 	        <img :src="img1" slot="icon">校园
 	      </mt-tab-item>

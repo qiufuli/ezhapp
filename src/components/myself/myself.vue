@@ -1,14 +1,13 @@
 <template>
+	<transition name="slideNav">
 	<div class="myself">
 		<mt-header fixed title="我的" ></mt-header>
 		<div class="wrap">
-			<div class="person_bg">
+			<div class="person_bg" @click="person()">
 				<img src="static/test/test01.jpg" alt="" />
-				<p>
-					王小毛
-				</p>
+				<p>王小毛</p>
 			</div>
-			<div class="list clearfix mb_1">
+			<router-link tag="div" to="/myself/changePW" class="list clearfix mb_1" >
 				<div class="list_img">
 					<img src="static/test/xg.png" alt="" />
 				</div>
@@ -18,8 +17,8 @@
 						<img src="static/test/right.png" alt="" />
 					</i>
 				</div>
-			</div>
-			<div class="list clearfix ">
+			</router-link>
+			<router-link tag="div" to="/myself/manage" class="list clearfix ">
 				<div class="list_img">
 					<img src="static/test/sz.png" alt="" />
 				</div>
@@ -29,8 +28,8 @@
 						<img src="static/test/right.png" alt="" />
 					</i>
 				</div>
-			</div>
-			<div class="list clearfix">
+			</router-link>
+			<router-link tag="div" to="/" class="list clearfix">
 				<div class="list_img">
 					<img src="static/test/fk.png" alt="" />
 				</div>
@@ -40,8 +39,8 @@
 						<img src="static/test/right.png" alt="" />
 					</i>
 				</div>
-			</div>
-			<div class="list clearfix">
+			</router-link>
+			<router-link tag="div" to="/" class="list clearfix">
 				<div class="list_img">
 					<img src="static/test/sx.png" alt="" />
 				</div>
@@ -51,12 +50,26 @@
 						<img src="static/test/right.png" alt="" />
 					</i>
 				</div>
-			</div>
+			</router-link>
+			<mt-button type="primary" class="login" >退出登录</mt-button>
 		</div>
+		<router-view></router-view>
 	</div>
+	</transition>
 </template>
 
 <script>
+	export default{
+		methods:{
+			changePW(){
+				this.$router.push('/myself/changePW');
+			},
+			//路由-个人信息
+			person(){
+				this.$router.push('/myself/person');
+			}
+		}
+	}
 </script>
 
 <style scoped>
@@ -119,5 +132,9 @@
 	}
 	.list .list_title i img{
 		vertical-align: top;
+	}
+	.login{
+		width: 70%;
+		margin: 2rem 0 0 15%;
 	}
 </style>

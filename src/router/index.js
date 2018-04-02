@@ -15,7 +15,20 @@ export default new Router({
     },
     {
       path: '/Recommond',
-      component: resolve => require(['@/components/Recommond/Recommond'], resolve)
+      component: resolve => require(['@/components/Recommond/Recommond'], resolve),
+      children:[
+      	{
+      		//个人信息
+      		path:'person',
+      		component:resolve => require(['@/components/person/person'],resolve),
+      		children:[
+      			{
+      				path:'editor',
+      			component:resolve => require(['@/components/editor/editor'],resolve)
+      			}
+      		]
+      	}
+      ]
     },
     {
     	path:'/interact',
@@ -27,7 +40,22 @@ export default new Router({
     },
     {
     	path:'/myself',
-    	component:resolve => require(['@/components/myself/myself'], resolve)
+    	component:resolve => require(['@/components/myself/myself'], resolve),
+    	children:[
+    		{
+    			//个人信息
+    			path:'person',
+      		component:resolve => require(['@/components/person/person'],resolve)
+    		},
+    		{
+    			path:'changePW',
+    			component:resolve => require(['@/components/changePW/changePW'], resolve),
+    		},
+    		{
+    			path:'manage',
+    			component:resolve => require(['@/components/manage/manage'], resolve),
+    		}
+    	]
     }
   ]
 })
