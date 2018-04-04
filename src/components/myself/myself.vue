@@ -29,7 +29,7 @@
 					</i>
 				</div>
 			</router-link>
-			<router-link tag="div" to="/" class="list clearfix">
+			<router-link tag="div" to="/myself/feedback" class="list clearfix">
 				<div class="list_img">
 					<img src="static/test/fk.png" alt="" />
 				</div>
@@ -40,7 +40,7 @@
 					</i>
 				</div>
 			</router-link>
-			<router-link tag="div" to="/" class="list clearfix">
+			<router-link tag="div" to="/myself/update" class="list clearfix">
 				<div class="list_img">
 					<img src="static/test/sx.png" alt="" />
 				</div>
@@ -114,11 +114,26 @@
 	.list .list_title{
 		display: inline-block;
 		border-bottom: 1px solid #efeded;
-		width: 26rem;
+		width: 25rem;
 		color: #7c807c;
 		font-size: 1.2rem;
 		line-height: 3.8rem;
 		position: relative;
+	}
+	@media only screen and (min-width: 320px) {
+		.list .list_title{
+			width: 21rem;
+		}
+	}
+	@media only screen and (min-width:360px) {
+		.list .list_title{
+			width: 24rem;
+		}
+	}
+	@media only screen and (min-width:375px) {
+		.list .list_title{
+			width: 26rem;
+		}
 	}
 	.list .list_title i,.list .list_title i img{
 		display: inline-block;
@@ -135,6 +150,6 @@
 	}
 	.login{
 		width: 70%;
-		margin: 2rem 0 0 15%;
+		margin: 2rem 0 3rem 15%;
 	}
 </style>

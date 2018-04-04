@@ -6,7 +6,7 @@
 				<router-link to="/myself" slot="left">
 					<mt-button icon="back">关闭</mt-button>
 				</router-link>
-				<img slot="icon" src="static/test/right.png" width="24" height="24">
+
 			</mt-header>
 			<!--修改密码列表-->
 			<div class="wrap">

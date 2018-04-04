@@ -4,22 +4,22 @@
 		<mt-header fixed title="互动" ></mt-header>
 		<div class="wrap">
 			<div class="inter_list">
-				<div class="inter_item clearfix">
+				<router-link tag="div" to="/interact/maillist" class="inter_item clearfix">
 					<div class="inter_img colGre">
 						<img src="static/test/xx.png" alt="" />
 					</div>
 					<div class="inter_title">
 						发消息
 					</div>
-				</div>
-				<div class="inter_item clearfix">
+				</router-link>
+				<router-link tag="div" to="/interact/notice" class="inter_item clearfix">
 					<div class="inter_img colblu">
 						<img src="static/test/tz.png" alt="" />
 					</div>
 					<div class="inter_title">
 						发通知
 					</div>
-				</div>
+				</router-link>
 				<div class="inter_item clearfix">
 					<div class="inter_img colyel">
 						<img src="static/test/bx.png" alt="" />
@@ -30,6 +30,7 @@
 				</div>
 			</div>
 		</div>
+		<router-view></router-view>
 	</div>
 	</transition>
 </template>
@@ -68,8 +69,18 @@
 		line-height: 4.9rem;
 		border-bottom: 1px solid #efeded;
 		display: inline-block;
-		width: 25rem;
+		width: 24rem;
 		color: #7c807c;
 		font-size: 1.2rem;
+	}
+	@media only screen and (min-width: 320px) {
+		.inter_item .inter_title{
+			width: 20rem;
+		}
+	}
+	@media only screen and (min-width: 375px) {
+		.inter_item .inter_title{
+			width: 24rem;
+		}
 	}
 </style>

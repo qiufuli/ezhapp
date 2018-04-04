@@ -104,11 +104,21 @@
 	.detail_person_list p {
 		display: inline-block;
 		float: left;
-		width: 25rem;
+		width: 23rem;
 		border-bottom: 1px solid #ededed;
 		text-align: right;
 		color: #949494;
 		font-size: 1.1rem;
+	}
+	@media only screen and (min-width:320px ) {
+		.detail_person_list p {
+		width: 20rem;
+		}
+	}
+	@media only screen and (min-width:375px) {
+		.detail_person_list p {
+		width: 24rem;
+		}
 	}
 	.warn_p{
 		text-align: center;

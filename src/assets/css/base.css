@@ -59,7 +59,18 @@ body{
 .slideY-leave-to {
 	transform: translate3d(0, 100%, 0)
 }
+/*slideshow*/
 
+.slideshow-enter-active,
+.slideshow-leave-active {
+	transition: all 0.3s;
+	height: 0;
+}
+
+.slideshow-enter,
+.slideshow-leave-to {
+	max-height: 100rem;
+}
 
 /*nav滑动*/
 
@@ -144,11 +155,20 @@ body{
 .common_list_right {
 	display: inline-block;
 	float: left;
-	width: 25rem;
+	width: 23rem;
 	height: 3rem;
 	font-size: 1.1rem;
 }
-
+@media only screen and (min-width: 320px) {
+		.common_list_right{
+			width: 20rem;
+		}
+	}
+	@media only screen and (min-width:375px) {
+		.common_list_right{
+			width: 24rem;
+		}
+	}
 input::-webkit-input-placeholder {
 	color: #949494;
 }

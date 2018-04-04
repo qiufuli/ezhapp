@@ -14,7 +14,8 @@ const state = {
   goodsList: [],
   tabHidden: true,
   productInfo: {},
-  selectTab: '校园'
+  selectTab: '校园',
+  update:0
 }
 
 export default new Vuex.Store({
