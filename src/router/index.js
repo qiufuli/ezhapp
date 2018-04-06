@@ -48,7 +48,7 @@ export default new Router({
     	component:resolve => require(['@/components/interact/interact'], resolve),
     	children:[
     		{
-    			//通讯录
+    			//通讯录（发消息）
     			path:'maillist',
     			component:resolve => require(['@/components/maillist/maillist'], resolve),
     			children:[
@@ -68,6 +68,23 @@ export default new Router({
     				{
     					path:'noticeList',
     					component:resolve => require(['@/components/noticeList/noticeList'], resolve)
+    				},
+    				//选择联系人
+    				{
+    					path:'selectPeople',
+    					component:resolve => require(['@/components/selectPeople/selectPeople'], resolve)
+    				}
+    			]
+    		},
+    		{
+    			//发表现 performance
+    			path:'performance',
+    			component:resolve => require(['@/components/performance/performance'], resolve),
+    			children:[
+    				{
+    					//表现列表
+    					path:'performanceList',
+    					component:resolve => require(['@/components/performanceList/performanceList'], resolve)
     				},
     				//选择联系人
     				{

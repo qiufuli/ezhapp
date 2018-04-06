@@ -202,3 +202,20 @@ input {
 	bottom: 0;
 	background: #eae8e8;
 }
+
+.mint-actionsheet{
+		width:85%;
+		background:none;
+}
+.mint-actionsheet-listitem{
+	background:none;
+	height: 4rem;
+	line-height: 4rem;
+}
+.mint-actionsheet-listitem:last-child{
+	border-bottom:none;
+}
+	.mint-actionsheet-list,.mint-actionsheet-button{
+		border-radius: 0.5rem !important;
+		background: #fff;
+	}

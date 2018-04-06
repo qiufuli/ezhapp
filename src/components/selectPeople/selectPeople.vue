@@ -2,7 +2,7 @@
 	<transition name="slideX">
 		<div class="selectPeople child">
 			<mt-header fixed title="选择联系人">
-				<router-link to="/interact/notice" slot="left">
+				<router-link :to="getParentLink" slot="left">
 					<mt-button icon="back">关闭</mt-button>
 				</router-link>
 			</mt-header>
@@ -106,6 +106,10 @@
 			}
 		},
 		computed: {
+			getParentLink(){
+				return this.$route.path.substring(this.$route.path.indexOf('/'),this.$route.path.lastIndexOf('/'));
+				
+			},
 			getSelected() {
 				let str = ''
 				this.selecteds.forEach(function(data) {
