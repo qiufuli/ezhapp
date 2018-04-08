@@ -20,14 +20,14 @@
 						发通知
 					</div>
 				</router-link>
-				<div class="inter_item clearfix">
+				<router-link tag="div" to="/interact/performance" class="inter_item clearfix">
 					<div class="inter_img colyel">
 						<img src="static/test/bx.png" alt="" />
 					</div>
 					<div class="inter_title noborder_bottom">
 						发表现
 					</div>
-				</div>
+				</router-link>
 			</div>
 		</div>
 		<router-view></router-view>
