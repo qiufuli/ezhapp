@@ -295,7 +295,10 @@
 	.er input {
 		margin-left: 2rem !important;
 	}
-	
+	.er label{
+		display: inline-block;
+		width:80%;
+	}
 	.erSelect {
 		line-height: 3rem;
 	}
