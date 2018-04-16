@@ -36,7 +36,11 @@
 				</div>
 				<mt-button type="primary" class="save" @click.native="savePs()">保存</mt-button>
 			</div>
-			<v-confirm :str="strs" @cshow="cshow" v-show="show"></v-confirm>
+			<v-confirm  v-show="show">
+				<div class="confirm_top">提示</div>
+				<div class="confirm_center">{{strs}}</div>
+				<div class="confirm_bottom" @click="changeshow()">确定</div>
+			</v-confirm>
 		</div>
 	</transition>
 </template>
@@ -69,8 +73,8 @@
 					this.show = true;
 				}
 			},
-			cshow(data){
-				this.show=data;
+			changeshow(){
+				this.show = false;
 			}
 		}
 	}

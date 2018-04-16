@@ -11,7 +11,7 @@
 			<div class="wrap">
 				<div class="detail_person_img">
 					<img class="targetImg" src="static/test/test01.jpg" alt="" />
-					<i class="ca">
+					<i class="ca" @click="camera()">
 						<img src="static/test/ca.png" alt="" />
 					</i>
 				</div>
@@ -38,7 +38,7 @@
 				</div>
 				<p class="warn_p">若信息有误,请联系学校管理员变更</p>
 			</div>
-
+			<router-view></router-view>
 		</div>
 
 	</transition>
@@ -50,6 +50,11 @@
 			getParentLink(){
 				// 动态获取父路由
 				return this.$route.path.substring(this.$route.path.indexOf('/'),this.$route.path.lastIndexOf('/'));
+			}
+		},
+		methods:{
+			camera(){
+				this.$router.push('/myself/person/camera')
 			}
 		}
 	}

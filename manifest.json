@@ -1,16 +1,16 @@
 ﻿{
     "@platforms": ["android", "iPhone", "iPad"],
-    "id": "H5D942065",/*应用的标识，创建应用时自动生成，勿手动修改*/
-    "name": "ezhapp",/*应用名称，程序桌面图标名称*/
+    "id": "H5F237CB6",/*应用的标识，创建应用时自动生成，勿手动修改*/
+    "name": "ezhapp3",/*应用名称，程序桌面图标名称*/
     "version": {
-        "name": "2.1.2",/*应用版本名称*/
+        "name": "2.1.4",/*应用版本名称*/
         "code": "20102"
     },
     "description": "HTML5 Plus能力演示",/*应用描述信息*/
     "icons": {
         "144": "icon.png"
     },
-    "launch_path": "index.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+    "launch_path": "http://192.168.9.243:8080",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
     "developer": {
         "name": "",/*开发者名称*/
         "email": "",/*开发者邮箱地址*/
@@ -113,7 +113,7 @@
             "waiting": true/*是否在程序启动界面显示等待雪花，true表示显示，false表示不显示。*/
         },
         "statusbar": {
-            "immersed": true,
+            "immersed": false,
             "background": "#D74B28"
         },
         "popGesture": "close",/*设置应用默认侧滑返回关闭Webview窗口，"none"为无侧滑返回功能，"hide"为侧滑隐藏Webview窗口。参考http://ask.dcloud.net.cn/article/102*/

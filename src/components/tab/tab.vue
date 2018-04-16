@@ -8,8 +8,8 @@
 	        <img :src="img2" slot="icon">互动
 	        <!-- <router-link to="brandSale">名品特卖</router-link> -->
 	      </mt-tab-item>
-	      <mt-tab-item id="发现" >
-	        <img :src="img3" slot="icon">发现
+	      <mt-tab-item id="每日推荐" >
+	        <img :src="img3" slot="icon">每日推荐
 	      </mt-tab-item>
 	      <mt-tab-item id="我的">
 	        <img :src="img4" slot="icon">我的
@@ -34,28 +34,34 @@ export default {
       return this.$store.state.selectTab
     }
   },
+  created(){
+  },
   watch: {
     // 监听 是否从其他的页面跳转过来的数据
     "otherSelect" () {
       this.selected = this.otherSelect;
+      console.log('111113',this.selected)
     },
     // this.$.router.push({name: ''})
     // 固定的书写 ""双引号里面是要监听的数据 handler是处理数据改变的函数 deep是否深度监听
     "selected": {
       handler (val,oldval) { //多看文档 handler
+      	console.log(val)
         if (this.selected == "校园") {
           this.$router.push('/Recommond')
           this.img1="static/icon/indexchoose.png"
+
         } else {
           this.img1="static/icon/index.png"
         }
         if (this.selected == "互动") {
           this.$router.push('/interact')
           this.img2="static/icon/brandchoose.png"
+
         } else {
           this.img2="static/icon/brand.png"
         }
-        if (this.selected == "发现") {
+        if (this.selected == "每日推荐") {
           this.$router.push('/find')
           this.img3="static/icon/livechoose.png"
         } else {

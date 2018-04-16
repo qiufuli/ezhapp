@@ -8,32 +8,31 @@
 
 			<div class="person clearfix" @click="person()">
 				<img class="person_img" src="static/test/test01.jpg" alt="" />
-				<p>上午好，王小毛</p>
+				<p>您好，{{username}}</p>
 			</div>
 			<div class="baby_list clearfix">
-				<div class="baby_item">
+				<router-link to="/baby" class="baby_item" tag='div'>
 					<img src="static/icon/indexchoose.png" alt="" />
 					<p>宝宝在线</p>
-
-				</div>
-				<div class="baby_item">
+				</router-link>
+				<router-link to="/BabyCircle" class="baby_item" tag='div'>
 					<img src="static/icon/indexchoose.png" alt="" />
 					<p>宝贝圈</p>
-				</div>
+				</router-link>
 			</div>
 			<div class="recommond_list clearfix">
-				<div class="recommond_item">
+				<router-link to="/cookbook" class="recommond_item" tag='div'>
 					<img src="static/icon/brand.png" alt="" />
 					<p>食谱</p>
-				</div>
-				<div class="recommond_item">
+				</router-link>
+				<router-link :to="kaoqin" class="recommond_item" tag='div' @click="kaoqin()">
 					<img src="static/icon/brand.png" alt="" />
 					<p>考勤</p>
-				</div>
-				<div class="recommond_item">
+				</router-link>
+				<router-link tag="div" :to="feel" class="recommond_item">
 					<img src="static/icon/brand.png" alt="" />
 					<p>体感</p>
-				</div>
+				</router-link>
 				<div class="recommond_item">
 					<img src="static/icon/brand.png" alt="" />
 					<p>警告</p>
@@ -42,10 +41,10 @@
 					<img src="static/icon/brand.png" alt="" />
 					<p>园长信箱</p>
 				</div>
-				<div class="recommond_item">
+				<router-link to="/Recommond/maillist" class="recommond_item"  tag='div'>
 					<img src="static/icon/brand.png" alt="" />
 					<p>通讯录</p>
-				</div>
+				</router-link>
 			</div>
 		</div>
 	<router-view></router-view>
@@ -57,22 +56,38 @@
 	export default {
 		data() {
 			return {
-
+					username:''
 			}
 		}, 
 		created(){
-			axios.get('http://192.168.3.19:8082/hello/say', {
-//				headers:{
-//				"Content-Type": "application/x-www-form-urlencoded"
-//				}
-			}).then(function(relove){
-				console.log(relove)
+			this.$store.dispatch('GetInfo',this.$store.state).then(()=>{
 			})
+			this.$nextTick(function(){
+			this.username=this.$store.state.name;	
+			})
+			console.log('用户',this.$store.state.sysUser)
+		},
+		computed:{
+			kaoqin(){
+				if(this.$store.state.userType == 5){
+					return '/Recommond/kqCon?name='+this.username
+				}else{
+					return '/kaoqin'
+				}
+			},
+			feel(){
+				if(this.$store.state.userType == 5){
+					return '/Recommond/feelCon?name='+this.username
+				}else{
+					return '/feel'
+				}
+			}
 		},
 		methods:{
 			person(){
 				this.$router.push('/Recommond/person')
-			}
+			},
+			
 		}
 	}
 </script>

@@ -7,6 +7,17 @@
 				<img src="static/test/test01.jpg" alt="" />
 				<p>王小毛</p>
 			</div>
+			<router-link v-if="bookShow" tag="div" to="/myself/book" class="list clearfix mb_1" >
+				<div class="list_img">
+					<img src="static/test/xg.png" alt="" />
+				</div>
+				<div class="list_title">
+					我的书架
+					<i class="list_i">
+						<img src="static/test/right.png" alt="" />
+					</i>
+				</div>
+			</router-link>
 			<router-link tag="div" to="/myself/changePW" class="list clearfix mb_1" >
 				<div class="list_img">
 					<img src="static/test/xg.png" alt="" />
@@ -51,23 +62,63 @@
 					</i>
 				</div>
 			</router-link>
-			<mt-button type="primary" class="login" >退出登录</mt-button>
+			<mt-button type="primary" class="login" @click="cancellation()">退出登录</mt-button>
 		</div>
+		<v-confirm v-show="flag">
+			<div class="confirm_top">注销用户</div>
+			<div class="confirm_center">您确定要注销当前账户吗</div>
+			<div class="confirm_bottom_left" @click="changeshow()">确定</div>
+			<div class="confirm_bottom_right" @click="cancelshow()">取消</div>
+		</v-confirm>
 		<router-view></router-view>
 	</div>
 	</transition>
 </template>
 
 <script>
+	import vConfirm from '@/components/confirm/changeConfirm';
 	export default{
+		components:{
+			vConfirm
+		},
+		data(){
+			return{
+				//显示注销弹窗
+				flag:false,
+				bookShow:false //权限显示书架  -- 家长
+			}
+		},
+		created(){
+			this.init()
+		},
 		methods:{
+			init(){
+				if(this.$store.state.userType == 5){
+					this.bookShow = true;
+				}
+			},
 			changePW(){
 				this.$router.push('/myself/changePW');
 			},
 			//路由-个人信息
 			person(){
 				this.$router.push('/myself/person');
+			},
+			//退出登录
+			cancellation(){
+				this.flag = true;
+			},
+			cancelshow(){
+				this.flag = false;
+			},
+			changeshow(){
+				this.$store.dispatch('LogOut',this.$store.state).then(()=>{
+					this.$router.push({
+						path: '/'
+					})
+				})
 			}
+			
 		}
 	}
 </script>
@@ -152,4 +203,5 @@
 		width: 70%;
 		margin: 2rem 0 3rem 15%;
 	}
+	
 </style>

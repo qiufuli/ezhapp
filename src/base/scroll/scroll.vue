@@ -32,13 +32,21 @@
 			beforeScroll:{
 				type:Boolean,
 				default:false
+			},
+			bottom:{
+				type:Boolean,
+				default:false
 			}
 			
 		},
 		// 绑定的时候 触发scroll 但可能数据还没加载完 所以在watch中也刷新下
 		mounted(){
 			this.$nextTick(()=>{
-				this._initScroll()
+				this._initScroll();
+				//是否默认滚动到底部
+				if(this.bottom){
+					this.scrollTo(0,this.scroll.maxScrollY-50)
+				}
 			})
 		},
 		methods:{
@@ -71,6 +79,7 @@
 						this.$emit('beforeScroll')
 					})
 				}
+				
 			}, 
 			enable(){
 				this.scroll && this.scroll.enable();

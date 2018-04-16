@@ -5,15 +5,30 @@
 const path = require('path')
 
 module.exports = {
-  dev: {
+  dev: {	
 
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+			'/auth': {
+				target: 'http://192.168.3.19:9999',
+				changeOrigin: true,
+				pathRewrite: {
+					'^/auth': '/auth'
+				}
+			},
+			'/ims': {
+				target: 'http://192.168.3.19:9999',
+				changeOrigin: true,
+				pathRewrite: {
+					'^/ims': '/ims'
+				}
+			}
+		},
 
     // Various Dev Server settings
-    host: '192.168.1.4', // can be overwritten by process.env.HOST
+    host: '192.168.9.243', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
@@ -43,7 +58,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps
