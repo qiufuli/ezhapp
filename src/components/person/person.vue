@@ -6,35 +6,35 @@
 				<router-link :to="getParentLink" slot="left">
 					<mt-button icon="back"></mt-button>
 				</router-link>
-				
 			</mt-header>
 			<div class="wrap">
 				<div class="detail_person_img">
-					<img class="targetImg" src="static/test/test01.jpg" alt="" />
+					<img class="targetImg" id="preview" :src="targetImg" alt="" />
 					<i class="ca" @click="camera()">
 						<img src="static/test/ca.png" alt="" />
 					</i>
+					<input id="File2" runat="server" @change="changes($event)" type="file" accept="image/*" multiple="multiple" capture="camera" style="display:none" />
 				</div>
 				<div class="detail_person_list clearfix">
 					<span>姓&nbsp;&nbsp;&nbsp;&nbsp;名</span>
-					<p>王小毛</p>
+					<p>{{name}}</p>
 				</div>
 				<div class="detail_person_list clearfix">
 					<span>手机号</span>
-					<p>13601000001</p>
+					<p>{{mobile}}</p>
 				</div>
 				<div style="height: 1rem;"></div>
 				<div class="detail_person_list clearfix">
 					<span>身&nbsp;&nbsp;&nbsp;&nbsp;份</span>
-					<p>管理员</p>
+					<p>{{identity}}</p>
 				</div>
 				<div class="detail_person_list clearfix">
 					<span>学&nbsp;&nbsp;&nbsp;&nbsp;校</span>
-					<p>演示幼儿园</p>
+					<p>{{school}}</p>
 				</div>
 				<div class="detail_person_list clearfix ">
 					<span>班&nbsp;&nbsp;&nbsp;&nbsp;级</span>
-					<p class="noborder_bottom">王小毛</p>
+					<p class="noborder_bottom">{{className}}</p>
 				</div>
 				<p class="warn_p">若信息有误,请联系学校管理员变更</p>
 			</div>
@@ -46,15 +46,78 @@
 
 <script>
 	export default {
-		computed:{
-			getParentLink(){
-				// 动态获取父路由
-				return this.$route.path.substring(this.$route.path.indexOf('/'),this.$route.path.lastIndexOf('/'));
+		data() {
+			return {
+				sysUser: {},
+				name: '',
+				mobile: '',
+				identity: '',
+				school: '',
+				className: '',
+				targetImg: ''
 			}
 		},
-		methods:{
-			camera(){
-				this.$router.push('/myself/person/camera')
+		computed: {
+			getParentLink() {
+				// 动态获取父路由
+				return this.$route.path.substring(this.$route.path.indexOf('/'), this.$route.path.lastIndexOf('/'));
+			}
+		},
+		created() {
+			this.init();
+		},
+		methods: {
+			camera() {
+				document.getElementById('File2').click()
+
+			},
+			init() {
+				let self = this;
+				this.$nextTick(function() {
+					console.log('sysuser这里', this.$store.state.sysUser)
+					console.log('comeon！', self.$store.state.userType)
+					self.sysUser = self.$store.state.sysUser;
+					self.mobile = self.sysUser.mobile;
+					self.school = self.sysUser.office.name;
+					self.targetImg = self.sysUser.avatar;
+
+					if(self.$store.state.userType == 3) {
+						self.name = self.sysUser.name + '园长';
+						self.identity = '园长';
+
+					} else if(self.$store.state.userType == 4) {
+						self.name = self.sysUser.name + '教师';
+						self.identity = '教师';
+						self.className = self.sysUser.cclass.name;
+					} else if(self.$store.state.userType == 5) {
+						self.name = self.sysUser.name + '家长';
+						self.identity = '家长';
+						self.className = self.sysUser.cclass.name;
+
+					}
+				})
+
+			},
+			changes(e) {
+				var fileObj = e.currentTarget;
+				console.log(e)
+				console.log(e.currentTarget)
+				var windowURL = window.URL || window.webkitURL;
+				var dataURL;
+				var $img = document.getElementById("preview");
+				if(fileObj && fileObj.files && fileObj.files[0]) {
+					dataURL = windowURL.createObjectURL(fileObj.files[0]);
+					//					$img.setAttribute('src', dataURL);
+					this.targetImg = dataURL
+				} else {
+					dataURL = e.currentTarget.value;
+					var imgObj = document.getElementById("preview");
+					// 两个坑:
+					// 1、在设置filter属性时，元素必须已经存在在DOM树中，动态创建的Node，也需要在设置属性前加入到DOM中，先设置属性在加入，无效；
+					// 2、src属性需要像下面的方式添加，上面的两种方式添加，无效；
+					imgObj.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+					imgObj.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = dataURL;
+				}
 			}
 		}
 	}
@@ -115,19 +178,23 @@
 		color: #949494;
 		font-size: 1.1rem;
 	}
-	@media only screen and (min-width:320px ) {
+	
+	@media only screen and (min-width:320px) {
 		.detail_person_list p {
-		width: 20rem;
+			width: 20rem;
 		}
 	}
+	
 	@media only screen and (min-width:375px) {
 		.detail_person_list p {
-		width: 24rem;
+			width: 24rem;
 		}
 	}
-	.warn_p{
+	
+	.warn_p {
 		text-align: center;
 		line-height: 3rem;
-		color:#a59b9b;
+		color: #a59b9b;
+		font-size: 1.2rem;
 	}
 </style>

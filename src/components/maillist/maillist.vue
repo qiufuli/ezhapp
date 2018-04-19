@@ -113,10 +113,10 @@
 			},
 			gosingle(test) {
 				if(this.$route.path.substring(this.$route.path.indexOf('/'), this.$route.path.lastIndexOf('/')) == '/Recommond') {
-					this.$router.push('/Recommond/maillist/contactDetails?name='+test.name+'&test=' + test.loginName)
+					this.$router.push('/Recommond/maillist/contactDetails?name='+test.name+'&test=' + test.loginName+'&id='+test.id)
 					
 				} else {
-					this.$router.push('/interact/maillist/mailsingle?name='+test.name+'&test=' + test.loginName)
+					this.$router.push('/interact/maillist/mailsingle?name='+test.name+'&test=' + test.loginName+'&id='+test.id)
 				}
 			},
 			

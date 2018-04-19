@@ -29,6 +29,11 @@
 				type:Boolean,
 				default:false
 			},
+			// 下拉更新
+			pulldown:{
+				type:Boolean,
+				default:false
+			},
 			beforeScroll:{
 				type:Boolean,
 				default:false
@@ -73,7 +78,13 @@
 						}
 					})
 				}
-
+				if(this.pulldown){
+					this.scroll.on('scrollEnd',()=>{
+						if(this.scroll.y >= 0){
+							this.$emit('scrollToEnd')
+						}
+					})
+				}
 				if(this.beforeScroll){
 					this.scroll.on('beforeScrollStart',()=>{
 						this.$emit('beforeScroll')

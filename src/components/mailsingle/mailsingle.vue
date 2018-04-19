@@ -2,8 +2,8 @@
 	<transition name="slideY">
 		<div class="mainsingle child">
 			<mt-header fixed :title="gname">
-				<router-link to="/interact/maillist" slot="left" >
-					<mt-button icon="back">关闭</mt-button>
+				<router-link to="/interact/maillist" slot="left" @click="hide">
+					<mt-button icon="back" >关闭</mt-button>
 				</router-link>
 			</mt-header>
 			<div class="mainBox">
@@ -29,7 +29,6 @@
 
 <script>
 	import Scroll from '@/base/scroll/scroll';
-	import * as scoket from '@/common/util/webscokt.js'
 	export default {
 		data() {
 			return {
@@ -54,13 +53,14 @@
 			}
 		},
 		created() {
-			//this.initWebSocket();
-			this.websock=scoket.init()
-			console.log(this.websock)
-			this.websock.onmessage = this.websocketonmessage;
-			this.websock.onclose = this.websocketclose;
 			this.$nextTick(function(){
 				this.csh_scroll = this.$refs.scrolls.$el.clientHeight;
+			})
+		},
+		mounted(){
+			this.$nextTick(function(){
+				this.websock=this.$store.state.webSocket
+				this.websock.onmessage = this.websocketonmessage;
 			})
 		},
 		methods: {
@@ -80,26 +80,12 @@
 						},
 						type: "message"
 					}));
+				}else{
+					return false;
 				}
-
-			},
-			initWebSocket() { //初始化weosocket
-				//ws地址
-				var self = this;
-				const wsuri = "ws://192.168.9.57:8083/socket/socketServer?userid=" + self.$store.state.name;
-				if('WebSocket' in window) {
-					this.websock = new WebSocket(wsuri);
-				} else if('MozWebSocket' in window) {
-					this.websock = new MozWebSocket(wsuri)
-				} else {
-					this.websock = new SockJS("http://192.168.9.57:8083/socket/imserver");
-				}
-				this.websock.onmessage = this.websocketonmessage;
-				this.websock.onclose = this.websocketclose;
-				console.log('websocket对象', this.websock)
 			},
 			websocketonmessage(e) { //数据接收
-				console.log('接受',e)
+				console.log('消息列表接受',e)
 				let redata = JSON.parse(e.data);
 				let target_obj ={
 						align:'right',
@@ -123,22 +109,21 @@
 						
 					}
 				}
-				
-					
-				//              const redata = JSON.parse(e.data);
-				//              console.log(redata.value);
 			},
 			websocketsend(agentData) { //数据发送
 				this.websock.send(agentData);
 			},
 			websocketclose(e) { //关闭
-				console.log("connection closed (" + e.code + ")");
+				console.log("connection closed (" +e.code + ")");
 			},
 			//获取当前发送时间
 			getDateFull() {
 				var date = new Date();
 				var currentdate = date.getFullYear() + "-" + appendZero(date.getMonth() + 1) + "-" + appendZero(date.getDate()) + " " + appendZero(date.getHours()) + ":" + appendZero(date.getMinutes()) + ":" + appendZero(date.getSeconds());
 				return currentdate;
+			},
+			hide(){
+				
 			}
 		}
 	}

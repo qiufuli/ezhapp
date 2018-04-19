@@ -69,7 +69,7 @@
 	}
 	
 	.kaoqin .iconfont {
-		font-size: 20px;
+		font-size: 1.2rem;
 		color: red;
 	}
 	
@@ -86,6 +86,6 @@
 	}
 	
 	.kaoqin .lesson-item span {
-		font-size: 16px;
+		font-size: 1.2rem;
 	}
 </style>

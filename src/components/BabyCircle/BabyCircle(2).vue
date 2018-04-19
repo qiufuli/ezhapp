@@ -2,15 +2,14 @@
 	<transition name="slideX">
 		<div class="babyCircle child">
 			<mt-header fixed title="宝贝圈">
-				<router-link to="/Recommond" slot="left">
+				<router-link to="/" slot="left">
 					<mt-button icon="back"></mt-button>
 				</router-link>
-				<mt-button slot="right" @click="show">
-
-					<i class="iconfont icon-fabu"></i>
+				<mt-button slot="right">
+					<i class="iconfont icon-fabu" @click="show"></i>
 				</mt-button>
 			</mt-header>
-			<scroll class="mailHeight" :pullup="pullup" @scrollToEnd="scrollToEnd">
+			<scroll class="mailHeight">
 				<div>
 					<img class="Rec_img" src="static/test/test01.jpg" alt="" />
 					<div class="message">
@@ -21,14 +20,14 @@
 										<i class="iconfont icon-icon32"></i>
 									</div>
 									<div class="message-info">
-										<h2 class="spacing-name">{{item.userName}}</h2>
-										<span class="spacing-time">{{item.createDate}}</span>
+										<h2 class="spacing-name">{{item.name}}</h2>
+										<span class="spacing-time">{{item.time}}</span>
 									</div>
 								</div>
 								<div class="message-p">
-									<p>{{item.text}}</p>
+									<p>{{item.content}}</p>
 								</div>
-								<!--<div class="message-b">
+								<div class="message-b">
 									<div class="message-p">
 										<a class="delete" @click="deleteAll(index)">
 											<span class="icon-delete iconfont icon-shanchu"></span>
@@ -42,8 +41,8 @@
 											</a>
 										</div>
 									</div>
-								</div>-->
-								<!--<div class="Message">
+								</div>
+								<div class="Message">
 									<div class="messageItem">
 										<span class="spanName">王大毛：</span>
 										<span class="spanCon">我的名字叫王大毛</span>
@@ -56,11 +55,9 @@
 										<span class="spanName">王大毛：</span>
 										<span class="spanCon">我的名字叫王大毛</span>
 									</div>
-								</div>-->
+								</div>
 							</div>
 						</div>
-						<p v-show="end" class="dataP">数据已加载完毕</p>
-						<p v-show="start" class="dataP">数据加载中....</p>
 					</div>
 				</div>
 			</scroll>
@@ -68,7 +65,7 @@
 				<input @blur="hide" class='inputBox' placeholder='请输入评论' ref="inputBox">
 				<button class="input-button" v-on:click.stop="inputClick()">发送</button>
 			</div>
-			<pub @submit="commit" ref="pub" @flag="flag"></pub>
+			<pub @submit="commit" ref="pub"></pub>
 		</div>
 	</transition>
 </template>
@@ -85,16 +82,26 @@
 			return {
 				trueFlag: false,
 				showFlag: false,
-				pullup: true,
-				OFFSET: 1,
-				end: false,
-				start: false,
-				commentText: [],
-				commentText2: [],
-				newCommonText: {
-					name: '王大毛(管理员)',
-					time: '一天前',
-					content: ''
+				commentText:[
+					{
+						name:'王大毛(管理员)',
+						time:'一天前',
+						content:'我的你的我我的你的我我的你的我我的你的我我的你的我我的你的我的你的我的你的我的你的我的你的我的你的我的你的我的你的我的你的',
+					},
+					{
+						name:'王小毛',
+						time:'一天前',
+						content:'我的你的我我的你的我我的你的我我的你的我我的你的我我的你的我的你的我的你的我的你的我的你的我的你的我的你的我的你的我的你的',
+					},{
+						name:'爱蜜丽',
+						time:'一天前',
+						content:'我是你爹',
+					}
+				],
+				newCommonText:{
+					name:'王大毛(管理员)',
+					time:'一天前',
+					content:''
 				}
 			}
 		},
@@ -112,7 +119,6 @@
 			setTimeout(function() {
 				document.body.scrollTop = document.body.scrollHeight;
 			}, 300);
-			this.init();
 		},
 		mounted() {
 			this.$nextTick(function() {
@@ -120,52 +126,7 @@
 			})
 		},
 		methods: {
-			scrollToEnd() {
-				this.OFFSET++
-					this.init();
-			},
-			init() {
-				let self = this;
-				this.$nextTick(function() {
-					axios.get(address + 'index/api/getBabyCriList', {
-						params: {
-							userId: self.$store.state.userId,
-							offset: self.OFFSET,
-							limit: 10
-						}
-					}).then(function(res) {
-						if(res.data.code == 0) {
-							if(self.commentText == '') {
-								self.commentText = res.data.data;
-								self.start = true
-							} else {
-								if(res.data.data != '') {
-									self.start = true
-									res.data.data.forEach(function(data) {
-										self.commentText.push(data);
-									})
-									
-								} else {
-									self.start = false;
-									self.end = true;
-								}
-							}
-						}
-					}).catch(function(err) {
-						console.log(err)
-					})
-				})
-			},
-			flag() {
-				console.log('过去了')
-				this.OFFSET = 1;
-				this.commentText = '';
-				this.$nextTick(function() {
-					this.init();
-				})
-
-			},
-			show: function() {
+			show:function(){
 				this.$refs.pub.show()
 			},
 			comtClick: function() {
@@ -189,27 +150,27 @@
 				}, 200)
 
 			},
-			commit: function(text) {
+			commit:function(text){
 				console.log(text)
-				this.newCommonText.content = text;
+				this.newCommonText.content=text;
 				this.commentText.unshift(this.newCommonText);
 				console.log(this.commentText)
 			},
-			deleteAll: function(idx) {
-				this.commentText.splice(idx, 1)
+			deleteAll:function(idx){
+				this.commentText.splice(idx,1)
 			}
 		}
 	}
 </script>
 
-<style scoped>
+<style scoped="scoped">
 	.babyCircle {
 		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 		-webkit-user-select: none;
 	}
 	
 	.iconfont {
-		font-size: 2.2rem;
+		font-size: 20px;
 	}
 	
 	.Rec_img {
@@ -221,7 +182,7 @@
 	
 	.img-box {
 		display: inline-block;
-		margin: 0 0 0 0.5rem;
+		margin: 0.5rem;
 		/*width: 4rem;
 		height: 4rem;
 		border-radius: 50%;*/
@@ -229,14 +190,7 @@
 	}
 	
 	.img-box i {
-		font-size: 3rem;
-	}
-	
-	.message-item {
-		background: #fff;
-		border-radius: 0.5rem;
-		margin-bottom: 0.5rem;
-		padding: 1rem 0;
+		font-size: 40px;
 	}
 	
 	.message-pic img {
@@ -248,18 +202,16 @@
 		display: inline-block;
 		width: 80%;
 		vertical-align: top;
-		margin-top: 0.8rem;
+		margin-top: 1.5rem;
 	}
 	
 	.message-info .spacing-name {
 		display: inline-block;
-		font-size: 1.2rem;
 	}
 	
 	.message-info .spacing-time {
 		display: inline-block;
-		float: right;
-		font-size: 1rem;
+	    float: right;
 	}
 	
 	.message-b .message-p {
@@ -267,12 +219,11 @@
 	}
 	
 	.message-p {
-		padding: 0 1rem 0.5rem 1rem;
+		padding: 0 1rem 0 1rem;
 	}
 	
 	.message-p p {
-		font-size: 1.1rem;
-		word-break: break-word;
+		font-size: 14px;
 	}
 	
 	.delete {
@@ -316,9 +267,8 @@
 		background: #00A0DC;
 	}
 	
-	.babyCircle .messageItem {
+	.messageItem {
 		padding: 0 1rem 0 1rem;
-		background: #fff
 	}
 	
 	.messageItem .spanName {
@@ -335,11 +285,5 @@
 		height: 100%;
 		position: relative;
 		overflow: hidden;
-	}
-	
-	.dataP {
-		text-align: center;
-		font-size: 1.1rem;
-		line-height: 2rem;
 	}
 </style>

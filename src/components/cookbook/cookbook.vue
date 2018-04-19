@@ -118,6 +118,7 @@
 			this.list2 = time.getThisTime();
 			this.demo2 = time.getDateWeek();
 			this.selectedTime = time.getDateWeek2();
+			
 			this.init();
 		},
 		mounted: function() {
@@ -133,6 +134,7 @@
 				}
 			},
 			init() {
+				
 				let self = this;
 				this.$nextTick(() => {
 					axios.get(address + 'index/api/getRecipes', {
@@ -141,13 +143,17 @@
 							createDate: new Date(self.getWeekTimeLong).getTime()
 						}
 					}).then((res) => {
-						self.getList = eval(res.data.data.text);
-						self.mo1 = self.getList[0];
-						self.mo2 = self.getList[1];
-						self.mo3 = self.getList[2];
-						self.mo4 = self.getList[3];
-						self.mo5 = self.getList[4];
-						self.mo6 = self.getList[5];
+						console.log(res)
+						if(res.data.code == 0){
+							self.getList = eval(res.data.data.text);
+							self.mo1 = self.getList[0];
+							self.mo2 = self.getList[1];
+							self.mo3 = self.getList[2];
+							self.mo4 = self.getList[3];
+							self.mo5 = self.getList[4];
+							self.mo6 = self.getList[5];
+						}
+						
 
 					}).catch((err) => {
 						console.log(err)
@@ -241,4 +247,5 @@
 		font-size: 1.2rem;
 		margin-bottom: 0.5rem;
 	}
+	
 </style>

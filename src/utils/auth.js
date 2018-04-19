@@ -5,6 +5,20 @@ const userName='userName'
 const RefreshToken='Admin-RefreshToken'
 const SelectTab='Admin-selectTab'
 const userId='Admin-userId'
+const userType='userType'
+const OfficeId="officeId"
+export function getUserType() {
+  return Cookies.get(userType)
+}
+
+export function setUserType(usertype) {
+  return Cookies.set(userType, usertype)
+}
+
+export function removeUserType() {
+  return Cookies.remove(userType)
+}
+
 export function getToken() {
   return Cookies.get(TokenKey)
 }
@@ -61,4 +75,15 @@ export function setUserId(UserId) {
 
 export function removeUserId() {
   return Cookies.remove(userId)
+}
+export function getOfficeId() {
+  return Cookies.get(OfficeId)
+}
+
+export function setOfficeId(officeId) {
+  return Cookies.set(OfficeId, officeId)
+}
+
+export function removeOfficeId() {
+  return Cookies.remove(OfficeId)
 }

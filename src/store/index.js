@@ -15,7 +15,13 @@ import { getToken,
 		getUserId,
 		setUserId,
 		removeUserId,
-		removeName 
+		removeName,
+		getUserType,
+		setUserType,
+		removeUserType,
+		getOfficeId,
+		setOfficeId,
+		removeOfficeId
 } from '@/utils/auth'
 
 Vue.use(Vuex)
@@ -32,9 +38,13 @@ const state = {
 	productInfo: {},
 	selectTab: getSelectTab(),
 	update: 0, //版本时候有更新 0 no 1 yes
-	userType: "", //3--管理员 4--老师 5--家长
+	userType:getUserType(), //3--管理员 4--老师 5--家长
 	userId:getUserId(), //3
-	sysUser:{}
+//	userType:3, //3--管理员 4--老师 5--家长
+//	userId:3, //3
+	sysUser:{},
+	officeId:getOfficeId(),
+	webSocket:null
 }
 const getters = {
 	token: state => state.token
@@ -67,6 +77,12 @@ const mutations = {
     SET_SYSUSER: (state, sysUser) => {
       state.sysUser = sysUser
     },
+    SET_SCOKET:(state,ws)=>{
+    	state.webSocket=ws
+    },
+    SET_OFFICEID:(state,officeId)=>{
+    	state.officeId=officeId
+    }
 }
 const actions = {
 	//登录
@@ -79,8 +95,6 @@ const actions = {
 				setRefreshToken(data.refresh_token)
 				commit('SET_TOKEN', data.access_token)
 				commit('SET_REFRESH_TOKEN', data.refresh_token)
-				
-				
 				resolve()
 			}).catch(error => {
 				reject(error)
@@ -95,13 +109,16 @@ const actions = {
           console.log(response)
           const data = response.data.data
           setName(data.sysUser.username);
+          setUserType(data.sysUser.userType);
           setUserId(data.sysUser.userId); 
+          setOfficeId(data.sysUser.officeId);
           commit('SET_NAME', data.sysUser.username)
           commit('SET_AVATAR', data.sysUser.avatar)
           commit('SET_INTRODUCTION', data.sysUser.introduction)
           commit('SET_USERID', data.sysUser.userId)
           commit('SET_USERTYPE', data.sysUser.userType)
           commit('SET_SYSUSER', data.sysUser)
+          commit('SET_OFFICEID', data.sysUser.officeId)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -119,19 +136,17 @@ const actions = {
         removeRefreshToken()
         removeUserId()
         removeName()
+        removeUserType()
         resolve()
       }).catch(error => {
         reject(error)
       })
     })
     },
-    //存储选中状态
-    select({ commit, state }) {
-    	console.log('111',state)
-//  	setSelectTab(state)
-    	getSelectTab()
-    	commit('SET_SELECTTAB', state)  
-    }
+//存储websoket状态
+	setScoket({commit},ws){
+		commit('SET_SCOKET',ws)
+	}
 }
 export default new Vuex.Store({
 	state,

@@ -405,7 +405,43 @@ input {
 	height: 20rem;
 }
 
-.el-message{
+.el-message {
 	min-width: 0!important;
 	color: darkred!important;
+}
+
+.mintui {
+	font-size: 1.2rem;
+}
+
+.vux-tab-container {
+	height: 5rem !important;
+}
+
+.scrollable {
+	padding-top: 1rem;
+}
+
+.vux-tab-warp {
+	padding-top: 5rem !important;
+}
+
+.vux-center span,
+.vux-center p {
+	font-size: 1.2rem;
+}
+
+.mint-button-text {
+	font-size: 1.2rem;
+}
+
+.allText p {
+	height: 2rem;
+	line-height: 2rem;
+}
+
+.shadow {
+	box-shadow: 0px 0.2rem 0.5rem rgba(34, 25, 25, 0.2);
+	border-radius: 0.5rem;
+	box-sizing: border-box;
 }

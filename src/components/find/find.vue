@@ -17,8 +17,7 @@
 					<p>资源描述</p>
 					<scroll class="minHeight">
 						<div >
-							<div style="padding-bottom: 6rem;">
-								{{allData.content}} 
+							<div class="allText" style="padding-bottom: 6rem;" v-html="allData.content">
 							</div>
 						</div>
 					</scroll>
@@ -120,4 +119,5 @@ import Scroll from '@/base/scroll/scroll';
 		overflow: hidden;
 		padding: 1rem 0.5rem;
 	}
+
 </style>

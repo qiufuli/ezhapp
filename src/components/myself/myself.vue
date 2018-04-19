@@ -5,7 +5,7 @@
 		<div class="wrap">
 			<div class="person_bg" @click="person()">
 				<img src="static/test/test01.jpg" alt="" />
-				<p>王小毛</p>
+				<p>{{name}}</p>
 			</div>
 			<router-link v-if="bookShow" tag="div" to="/myself/book" class="list clearfix mb_1" >
 				<div class="list_img">
@@ -29,7 +29,7 @@
 					</i>
 				</div>
 			</router-link>
-			<router-link tag="div" to="/myself/manage" class="list clearfix ">
+			<router-link v-if="manageShow" tag="div" to="/myself/manage" class="list clearfix ">
 				<div class="list_img">
 					<img src="static/test/sz.png" alt="" />
 				</div>
@@ -76,25 +76,38 @@
 </template>
 
 <script>
+	import {Toast} from 'mint-ui';
 	import vConfirm from '@/components/confirm/changeConfirm';
+	import * as scoket from '@/common/util/webscokt.js'
 	export default{
 		components:{
 			vConfirm
 		},
 		data(){
 			return{
+				websock:null,
 				//显示注销弹窗
 				flag:false,
-				bookShow:false //权限显示书架  -- 家长
+				bookShow:false, //权限显示书架  -- 家长,
+				manageShow:false, //权限显示设备管理 -- 园长
+				name:this.$store.state.sysUser.name
 			}
 		},
 		created(){
-			this.init()
+			this.init();
+		},
+		mounted(){
+			this.$nextTick(function(){
+				this.websock=this.$store.state.webSocket
+			})
 		},
 		methods:{
 			init(){
 				if(this.$store.state.userType == 5){
 					this.bookShow = true;
+				}
+				if(this.$store.state.userType == 3){
+					this.manageShow = true;
 				}
 			},
 			changePW(){
@@ -113,12 +126,25 @@
 			},
 			changeshow(){
 				this.$store.dispatch('LogOut',this.$store.state).then(()=>{
+					this.websock.close()
 					this.$router.push({
 						path: '/'
 					})
 				})
 			}
 			
+		},
+		watch:{
+			$route(to){
+				if(to.path == '/myself/update'){
+					Toast({
+					  message: '您目前是最新版本',
+					  duration: 2000
+					})
+					this.$router.push("/myself")
+				}
+				
+			}
 		}
 	}
 </script>
@@ -176,9 +202,14 @@
 			width: 21rem;
 		}
 	}
-	@media only screen and (min-width:360px) {
+	@media only screen and (min-width:340px) {
 		.list .list_title{
 			width: 24rem;
+		}
+	}
+	@media only screen and (min-width:360px) {
+		.list .list_title{
+			width: 25rem;
 		}
 	}
 	@media only screen and (min-width:375px) {
@@ -202,6 +233,9 @@
 	.login{
 		width: 70%;
 		margin: 2rem 0 3rem 15%;
+		font-size:1.2rem;
+		height: 3rem;
+		line-height: 3rem;
 	}
 	
 </style>

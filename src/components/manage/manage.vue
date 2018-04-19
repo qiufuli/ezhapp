@@ -10,126 +10,35 @@
 			<div class="mailDiv">
 				<scroll class="mailHeight">
 					<div>
-						<div class="monitor_list clearfix">
+						<div class="monitor_list clearfix" v-for="item in getData">
 							<div class="monitor-left">
 								<img src="static/test/sxt.png" alt="" />
-								<p>正常</p>
+								<div class="allSelect">
+									<input type="radio" value="1" :name="item.id" :checked="item.status == 1" @change="changes($event,item)" /><label >正常</label>
+									<input type="radio" value="0" :name="item.id"  :checked="item.status == 0" @change="changes($event,item)"  /><label >关闭</label>
+								</div>
 							</div>
 							<div class="monitor-right">
-								<p>设备编码: <span>21511545445456465464654</span></p>
+								<p>设备编码: <span>{{item.deviceId}}</span></p>
 								<div class="name">
-									<span>中一班</span>
-									<i></i>
+									<span>班级：{{item.officeName}}</span>
+								
 								</div>
-								<div class="Input">
-									<input type="text" class="monitor_input" />
-									<i></i>
+								<div class="name">
+									<div @click="trigger($event)" class="inp_pev">
+										<span>{{item.name}}</span>
+										<i></i>
+									</div>
+									<div class="inp" >
+										<input type="text" v-model="item.name"/>
+										<button class="t1" @click="sendMes(item,$event)">确定</button>
+										<button class="t2" @click="trigger2($event)">取消</button>
+									</div>
+									
 								</div>
 							</div>
 						</div>
-						<div class="monitor_list clearfix">
-							<div class="monitor-left">
-								<img src="static/test/sxt.png" alt="" />
-								<p>正常</p>
-							</div>
-							<div class="monitor-right">
-								<p>设备编码: <span>21511545445456465464654</span></p>
-								<div class="name">
-									<span>中一班</span>
-									<i></i>
-								</div>
-								<div class="Input">
-									<input type="text" class="monitor_input" />
-									<i></i>
-								</div>
-							</div>
-						</div>
-						<div class="monitor_list clearfix">
-							<div class="monitor-left">
-								<img src="static/test/sxt.png" alt="" />
-								<p>正常</p>
-							</div>
-							<div class="monitor-right">
-								<p>设备编码: <span>21511545445456465464654</span></p>
-								<div class="name">
-									<span>中一班</span>
-									<i></i>
-								</div>
-								<div class="Input">
-									<input type="text" class="monitor_input" />
-									<i></i>
-								</div>
-							</div>
-						</div>
-						<div class="monitor_list clearfix">
-							<div class="monitor-left">
-								<img src="static/test/sxt.png" alt="" />
-								<p>正常</p>
-							</div>
-							<div class="monitor-right">
-								<p>设备编码: <span>21511545445456465464654</span></p>
-								<div class="name">
-									<span>中一班</span>
-									<i></i>
-								</div>
-								<div class="Input">
-									<input type="text" class="monitor_input" />
-									<i></i>
-								</div>
-							</div>
-						</div>
-						<div class="monitor_list clearfix">
-							<div class="monitor-left">
-								<img src="static/test/sxt.png" alt="" />
-								<p>正常</p>
-							</div>
-							<div class="monitor-right">
-								<p>设备编码: <span>21511545445456465464654</span></p>
-								<div class="name">
-									<span>中一班</span>
-									<i></i>
-								</div>
-								<div class="Input">
-									<input type="text" class="monitor_input" />
-									<i></i>
-								</div>
-							</div>
-						</div>
-						<div class="monitor_list clearfix">
-							<div class="monitor-left">
-								<img src="static/test/sxt.png" alt="" />
-								<p>正常</p>
-							</div>
-							<div class="monitor-right">
-								<p>设备编码: <span>21511545445456465464654</span></p>
-								<div class="name">
-									<span>中一班</span>
-									<i></i>
-								</div>
-								<div class="Input">
-									<input type="text" class="monitor_input" />
-									<i></i>
-								</div>
-							</div>
-						</div>
-						<div class="monitor_list clearfix">
-							<div class="monitor-left">
-								<img src="static/test/sxt.png" alt="" />
-								<p>正常</p>
-							</div>
-							<div class="monitor-right">
-								<p>设备编码: <span>21511545445456465464654</span></p>
-								<div class="name">
-									<span>中一班</span>
-									<i></i>
-								</div>
-								<div class="Input">
-									<input type="text" class="monitor_input" />
-									<i></i>
-								</div>
-							</div>
-						</div>
-						
+
 					</div>
 				</scroll>
 			</div>
@@ -140,32 +49,81 @@
 </template>
 
 <script>
+	import { Toast } from 'mint-ui';
 	import Scroll from '@/base/scroll/scroll';
 	export default {
 		data() {
 			return {
-				userId:this.$store.state.userId
+				userId: this.$store.state.userId,
+				getData: [],
+				value:false,
+				
 			}
 		},
-		created(){
+		created() {
 			this.init()
-			console.log(this.userId)
 		},
 		components: {
 			Scroll
 		},
-		methods:{
-			init(){
+		methods: {
+			init() {
 				let self = this;
-				this.$nextTick(function(){
-					axios.get(address+'index/api/monitorList',{
-						userId:self.userId
-					}).then(function(res){
-						console.log('get到',res)
-					}).catch(function(err){
-						console.log(err)
+				this.$nextTick(function() {
+					axios.get(address + 'index/api/monitorList', {
+						params: {
+							userId: self.userId
+						}
+					}).then(function(res) {
+						if(res.data.code == 0) {
+							self.getData = res.data.data
+						}else{
+							Toast({
+							message: res.data.msg,
+							duration: 2000
+						})
+						}
+					}).catch(function(err) {
+						Toast({
+							message: err,
+							duration: 2000
+						})
 						
 					})
+				})
+			},
+			changes(obj,item){
+				let stus = obj.target.attributes.value.value;
+				let  params = new URLSearchParams();
+				params.append('userId',this.$store.state.userId);
+				params.append('monitorId',item.id);
+				params.append('monitorStatus',stus);
+				axios.post(address+'index/api/updateMonitor',params).then((res)=>{
+					if(res.data.code == 0){
+						this.init()
+					}
+				})
+			},
+			trigger(obj){
+				let  tardiv = obj.target.parentNode.parentNode.children[1];
+				tardiv.style.display="block";
+				obj.target.parentNode.style.display="none";
+			},
+			trigger2(obj){
+				let tardiv = obj.target.parentNode.parentNode.children[0];
+				tardiv.style.display="block";
+				obj.target.parentNode.style.display="none";
+			},
+			sendMes(item,$event){
+				let  params = new URLSearchParams();
+				params.append('userId',this.$store.state.userId);
+				params.append('monitorId',item.id);
+				params.append('monitorName',item.name);
+				axios.post(address+'index/api/updateMonitor',params).then((res)=>{
+					if(res.data.code == 0){
+						this.init()
+						this.trigger2($event)
+					}
 				})
 			}
 		}
@@ -199,12 +157,15 @@
 	.monitor_list .monitor-left {
 		float: left;
 		margin: 0 0.5rem;
+		margin-right: 1rem;
+		text-align: center;
 	}
 	
 	.monitor-left img {
 		display: inline-block;
 		width: 4rem;
 		height: 4rem;
+		margin-bottom: 0.5rem;
 	}
 	
 	.monitor-left p {
@@ -217,7 +178,7 @@
 	}
 	
 	.monitor-right p {
-		margin-bottom: 0.5rem;
+		margin-bottom: 1rem;
 		color: #676565;
 		font-size: 1.1rem;
 	}
@@ -271,5 +232,65 @@
 		.monitor-right .monitor_input {
 			width: 22rem;
 		}
+	}
+	.allSelect input[type="radio"] {
+		-webkit-appearance: none;
+		/*清除复选框默认样式*/
+		background: #fff;
+		/*复选框的背景图，就是上图*/
+		height: 2rem;
+		/*高度*/
+		vertical-align: middle;
+		width: 2rem;
+		border-radius: 50%;
+		border: 1px solid #ccc;
+		margin-left: 0.2rem;
+	}
+	
+	.allSelect input[type="radio"]:checked {
+		background: #fff url('../../../static/test/right03.png') no-repeat;
+		background-size: 100% 100%;
+		border: 1px solid #fff;
+	}
+	
+	.allSelect label {
+		margin-left: 0.5rem;
+		vertical-align: middle;
+	}
+	.inp_pev{
+		height: 2rem;
+	}
+	.inp{
+		display: inline-block;
+		display: none;
+	}
+	.inp input{
+		display: inline-block;
+		outline: none;
+		width: 8rem;
+		height: 2rem;
+		border: 1px solid #ccc;
+		border-radius: 0.3rem;
+		box-sizing: border-box;
+	}
+	.inp button{
+		background: #fff;
+		border: none;
+		outline: none;
+		border-radius: 0.2rem;
+		height:2rem;
+		width: 3rem;
+		line-height:2rem;
+		font-size: 1.1rem;
+		color: #323232;		
+		background: #fb7065;
+		margin-right: 0.3rem;
+		box-sizing: border-box;
+	}
+	.inp .t1{
+		color: #fff;
+	}
+	.inp .t2{
+		background: #ccc;
 	}
 </style>

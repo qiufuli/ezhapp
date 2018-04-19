@@ -5,7 +5,7 @@
 				<router-link to="/Recommond/maillist" slot="left">
 					<mt-button icon="back"></mt-button>
 				</router-link>
-				
+
 			</mt-header>
 			<div class="wrap">
 				<div class="person_bg">
@@ -25,7 +25,7 @@
 					<p class="noborder_bottom">{{usertypename}}</p>
 				</div>
 				<div class="profile">
-					<div class="weixin">
+					<div class="weixin" @click="mes()">
 						<i class="iconfont icon-weixintubiao"></i>
 						<span>聊天</span>
 					</div>
@@ -37,6 +37,7 @@
 			</div>
 			<mt-actionsheet :actions="menus1" v-model="show1" cancelText="取消">
 			</mt-actionsheet>
+			<router-view></router-view>
 		</div>
 	</transition>
 </template>
@@ -56,31 +57,74 @@
 					}
 				],
 				show1: false,
-				username:'',
-				mobile:'',
-				userclass:'',
-				usertypename:''
+				username: '',
+				mobile: '',
+				userclass: '',
+				usertypename: '',
+				loginName:'',
+				id:''
 			}
 		},
 		created() {
-			console.log('获取到了',this.$store.state.sysUser)
-			this.username = this.$store.state.sysUser.username;
-			this.mobile = this.$store.state.sysUser.mobile;
-			this.userclass = this.$store.state.sysUser.username;
-			this.usertypename = this.$store.state.sysUser.username;
+			this.init();
+			console.log('获取到了', this.$store.state.sysUser)
+			//			this.username = this.$store.state.sysUser.username;
+			//			this.mobile = this.$store.state.sysUser.mobile;
+			//			this.userclass = this.$store.state.sysUser.username;
+			//			this.usertypename = this.$store.state.sysUser.username;
 		},
 		methods: {
+			init() {
+				let self = this;
+				axios.get(address + 'index/api/getUserInfo', {
+					params: {
+						userId: self.$route.query.id
+					}
+				}).then(function(res) {
+					console.log('111', res)
+					if(res.data.code == 0) {
+						self.loginName = res.data.data.loginName;
+						self.username = res.data.data.name;
+						self.mobile = res.data.data.mobile;
+						if(res.data.data.cclass == null){
+							self.userclass="暂无"
+						}else{
+						self.userclass = res.data.data.cclass.name;
+						}
+						self.id = res.data.data.id;
+						if(res.data.data.userType == 3) {
+							self.usertypename = '园长'
+						} else if(res.data.data.userType == 4) {
+							self.usertypename = '教师'
+						} else if(res.data.data.userType == 5) {
+							self.usertypename = '家长'
+						}
+						self.menus1 = [{
+								name: self.mobile,
+								method: self.getStr
+							},
+							{
+								name: '拨打电话',
+								method: self.getStr
+							}
+						]
+					}
+				})
+			},
 			hide() {
 				this.$router.back(-1)
 			},
 			change(value) {
 				this.value = value
 			},
-			showAction(){
+			showAction() {
 				this.show1 = true;
 			},
-			getStr(target){			
-				window.location.href = 'tel://17611258883'
+			getStr(target) {
+				window.location.href = 'tel://'+this.mobile
+			},
+			mes(){
+				this.$router.push('/Recommond/maillist/contactDetails/mailsingle?name='+this.username+'&test=' + this.loginName+'&id='+this.id)
 			}
 		}
 	}

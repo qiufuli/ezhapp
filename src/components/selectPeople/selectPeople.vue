@@ -57,6 +57,7 @@
 			return {
 				selecteds: [],
 				selecteds1: [],
+				getArr:{},
 				show: true,
 				datas: [{
 						//用于判断是否展示子列表
@@ -136,6 +137,8 @@
 					data.listItem.forEach(function(item) {
 						JSON.stringify(self.selecteds).indexOf(JSON.stringify(item)) === -1 && self.selecteds.push(item);
 						console.log(self.selecteds)
+						self.getData[item.name]=item.name;
+						console.log('111',self.getData)
 					})
 				} else {
 					data.listItem.forEach(function(item) {

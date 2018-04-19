@@ -12,7 +12,7 @@
 						发消息
 					</div>
 				</router-link>
-				<router-link tag="div" to="/interact/notice" class="inter_item clearfix">
+				<router-link  v-if="userType==3" tag="div" to="/interact/notice" class="inter_item clearfix">
 					<div class="inter_img colblu">
 						<img src="static/test/tz.png" alt="" />
 					</div>
@@ -20,7 +20,7 @@
 						发通知
 					</div>
 				</router-link>
-				<router-link tag="div" to="/interact/performance" class="inter_item clearfix">
+				<router-link  v-if="userType==4"   tag="div" to="/interact/performance" class="inter_item clearfix">
 					<div class="inter_img colyel">
 						<img src="static/test/bx.png" alt="" />
 					</div>
@@ -36,6 +36,13 @@
 </template>
 
 <script>
+	export default{
+		data(){
+			return{
+				userType:this.$store.state.userType
+			}
+		}
+	}
 </script>
 
 <style scoped>

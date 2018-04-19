@@ -6,39 +6,29 @@
 			</p>
 			<div class="login_input clearfix">
 				<i class="un"></i>
-				<input type="text" v-model="loginForm.username" />
+				<input type="text" v-model="loginForm.username" placeholder="请输入账号" />
 			</div>
 			<div class="login_input bor clearfix">
 				<i class="ps"></i>
-				<input type="password" v-model="loginForm.password" />
+				<input type="password" v-model="loginForm.password" placeholder="请输入密码" />
 			</div>
 			<mt-button type="primary" class="save" @click="go()">登录</mt-button>
 			<router-link tag="p" to="/login/forgetPW" class="forgetPW">忘记密码？</router-link>
-			<v-confirm v-show="flag">
-				<div class="confirm_top">选择身份</div>
-				<div class="">
-					<mt-radio align="right" v-model="value" :options="options">
-					</mt-radio>
-				</div>
-				<div class="confirm_bottom" @click="changeshow()">确定</div>
-			</v-confirm>
 			<router-view></router-view>
 		</div>
 	</transition>
 </template>
 
 <script>
-	import vConfirm from '@/components/confirm/changeConfirm';
 	import * as request from '@/utils/request.js'
+	import { getToken } from '@/utils/auth'
+	import * as scoket from '@/common/util/webscokt.js'
+	import {Toast} from 'mint-ui';
+	
 	export default {
-		components: {
-			vConfirm
-		},
 		data() {
 			return {
-				flag: false, //radio显示
-				value: '值F', //radio的值
-				//radio的选项
+				webscoket:null,
 				loginForm: {
 					username: '',
 					password: null,
@@ -46,46 +36,83 @@
 					code: 'qw12',
 					grant_type: 'password',
 					scope: 'server'
-				},
-				options: [{
-						label: '被禁用',
-						value: '值F'
-					},
-					{
-						label: '选项A',
-						value: '值A'
-					},
-					{
-						label: '选项B',
-						value: '值B'
-					}
-				]
+				}
 			}
 		},
+		created() {
+			this.init()
+		},
 		methods: {
+			init() {
+				if(getToken() != undefined) {
+					this.$router.push('/Recommond')
+				}
+			},
 			changeshow() {
 				console.log(this.value)
 			},
 			//登录接口
 			go() {
 				if(this.loginForm.username == '' || this.loginForm.password == '') {
-					request.message("用户名和密码不能为空")
-				
+					Toast({
+					  message: '用户名和密码不能为空',
+					  duration: 2000
+					})
+
 				} else {
 					this.$store.dispatch('Login', this.loginForm).then(() => {
 						this.$router.push({
 							path: '/Recommond'
 						})
+					this.$store.dispatch('GetInfo', this.$store.state).then(() => { //加入聊天室
+						this.getWebsoket()
+					})
 					}).catch((error) => {
 						console.log(error)
 					})
 				}
+			},
+			getWebsoket(){
+				this.websock=scoket.init()
+				//scoket.setWs(this.websock)
+				this.$store.dispatch('setScoket',this.websock)
+				this.websock.onmessage = this.websocketonmessage;
+				this.websock.onclose = this.websocketclose;
+			},
+			websocketonmessage(e) { //数据接收
+				console.log('loGIn接收',e)
+			},
+			websocketsend(agentData) { //数据发送
+				this.websock.send(agentData);
+			},
+			websocketclose(e) { //关闭
+				console.log("connection closed (" + e.code + ")");
 			}
 		}
 	}
 </script>
 
 <style scoped>
+	input::-webkit-input-placeholder {
+		color: #C6C6C6;
+		font-size: 1.3rem;
+	}
+	
+	input::-moz-placeholder {
+		/* Mozilla Firefox 19+ */
+		color: #949494;
+	}
+	
+	input:-moz-placeholder {
+		/* Mozilla Firefox 4 to 18 */
+		color: #949494;
+	}
+	
+	input:-ms-input-placeholder {
+		/* Internet Explorer 10-11 */
+		color: #949494;
+	}
+	
 	.logo_img {
 		text-align: center;
 		margin-top: 6rem;
@@ -138,7 +165,7 @@
 		line-height: 3rem;
 		border: none;
 		color: #38bae2;
-		font-size: 1.6rem;
+		font-size: 1.4rem;
 	}
 	
 	@media only screen and (min-width:320px) {
@@ -152,11 +179,17 @@
 		height: 3rem;
 		margin: 2rem 0 0 15%;
 		font-size: 1.2rem;
+		 /*background: -webkit-linear-gradient(left,#f4ae00, #f1dd29f2); 
+		  background: -o-linear-gradient(right,#f4ae00, #f1dd29f2); 
+		  background: -moz-linear-gradient(right,#f4ae00, #f1dd29f2); 
+		  background: linear-gradient(to right,#f4ae00, #f1dd29f2); */
 	}
 	
 	.forgetPW {
 		line-height: 3rem;
 		text-align: center;
 		font-size: 1.4rem;
+		margin-top: 1rem;
+		color: #7C807C;
 	}
 </style>

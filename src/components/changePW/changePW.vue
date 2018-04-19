@@ -36,7 +36,7 @@
 				</div>
 				<mt-button type="primary" class="save" @click.native="savePs()">保存</mt-button>
 			</div>
-			<v-confirm  v-show="show">
+			<v-confirm v-show="show">
 				<div class="confirm_top">提示</div>
 				<div class="confirm_center">{{strs}}</div>
 				<div class="confirm_bottom" @click="changeshow()">确定</div>
@@ -46,34 +46,64 @@
 </template>
 
 <script>
-	import { MessageBox } from 'mint-ui';
+	import { MessageBox, Toast } from 'mint-ui';
+
 	import vConfirm from '@/components/confirm/changeConfirm';
 	export default {
-		components:{
-		vConfirm
+		components: {
+			vConfirm
 		},
 		data() {
 			return {
 				show: false,
-				strs:''
+				strs: ''
 			}
+		},
+		created(){
 		},
 		methods: {
 			savePs() {
+				let self = this;
 				if(this.$refs.oldPS.value == '') {
-					this.strs ='请输入原始密码'
+					this.strs = '请输入原始密码'
 					this.show = true;
-				}
-				if(this.$refs.oldPS.value !='' && this.$refs.newPS.value == '') {
-					this.strs ='请输入8-16位数字、字母的组合'
+				} else if(this.$refs.oldPS.value != '' && this.$refs.newPS.value == '') {
+					this.strs = '请输入8-16位数字、字母的组合'
 					this.show = true;
-				}
-				if(this.$refs.oldPS.value !='' &&  this.$refs.newPS.value !='' && this.$refs.confirmPS.value == '') {
-					this.strs ='请输入确认密码'
+				} else if(this.$refs.oldPS.value != '' && this.$refs.oldPS.value.length < 6 || this.$refs.oldPS.value.length > 16) {
+					this.strs = '请输入6-16位数字、字母的组合'
 					this.show = true;
+				} else if(this.$refs.oldPS.value != '' && this.$refs.newPS.value != '' && this.$refs.confirmPS.value != this.$refs.newPS.value) {
+					this.strs = '请输入正确的确认密码'
+					this.show = true;
+				} else {
+					let params = new URLSearchParams();
+					params.append('userId', this.$store.state.userId);
+					params.append('password', this.$refs.oldPS.value);
+					params.append('newPassword', this.$refs.newPS.value);
+					params.append('accessToken', this.$store.state.token);
+					params.append('refreshToken',this.$store.state.refresh_token);
+					axios.post(address + 'index/api/updatePwd', params).then(function(res) {
+						console.log(res)
+						if(res.data.code != 0) {
+							Toast({
+								message: res.data.msg,
+								duration: 2000
+							})
+						} else {
+							self.$store.dispatch('LogOut', self.$store.state).then(() => {
+								self.$router.push({
+									path: '/'
+								})
+							})
+						}
+					}).catch(function(err) {
+						console.log(err)
+					})
 				}
+
 			},
-			changeshow(){
+			changeshow() {
 				this.show = false;
 			}
 		}
@@ -103,5 +133,4 @@
 		width: 100%;
 		height: 100%;
 	}
-	
 </style>

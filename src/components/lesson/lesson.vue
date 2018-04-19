@@ -198,7 +198,7 @@ import { Toast ,Indicator } from 'mint-ui';
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		font-size: 16px;
+		font-size: 1.2rem;
 	}
 
 	.lesson .wrap-box {
@@ -213,6 +213,8 @@ import { Toast ,Indicator } from 'mint-ui';
 		color: #FFFFFF;
 		flex: 1;
 		margin: 1.5rem 0.5rem 0 0.5rem;
+		font-size: 1.2rem;
+		
 	}
 	
 	.lesson .wrap a:last-child {

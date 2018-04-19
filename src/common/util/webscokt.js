@@ -1,4 +1,6 @@
 import store from '../../store'
+import Cookies from 'js-cookie'
+const webscoket='ws'
 export function init() {
 	let ws=null
 	const wsuri = "ws://192.168.9.57:8083/socket/socketServer?userid=" + store.state.name;
@@ -11,5 +13,8 @@ export function init() {
 	}
 	ws.onmessage = ws.websocketonmessage;
 	ws.onclose = ws.websocketclose;
-	return ws;
+	return ws
+}
+export function setWs(ws) {
+  return Cookies.set(webscoket, ws)
 }

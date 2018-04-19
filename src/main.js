@@ -15,7 +15,7 @@ import vueLazyLoad from 'vue-lazyload'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN'
-
+import 'url-search-params-polyfill'; // axios 兼容 userURLSearchParams的
 
 
 import VueDplayer from 'vue-dplayer'

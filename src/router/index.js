@@ -19,6 +19,10 @@ export default new Router({
 			children: [{
 				path: 'forgetPW',
 				component: resolve => require(['@/components/forgetPW/forgetPW'], resolve),
+				children: [{
+					path: 'resetPW',
+					component: resolve => require(['@/components/forgetPW/resetPW'], resolve),
+				}]
 			}]
 		},
 		{
@@ -59,12 +63,15 @@ export default new Router({
 						navShow: false
 					},
 					component: resolve => require(['@/components/maillist/maillist'], resolve),
-					children:[
-						{
-							path: 'contactDetails', //通讯录致电
-							component: resolve => require(['@/components/contactDetails/contactDetails'], resolve)
-						}
-					]
+					children: [{
+						path: 'contactDetails', //通讯录致电
+						component: resolve => require(['@/components/contactDetails/contactDetails'], resolve),
+						children: [{
+							//单个通讯人
+							path: 'mailsingle',
+							component: resolve => require(['@/components/mailsingle/mailsingle'], resolve)
+						}]
+					}]
 				}
 
 			]
@@ -230,28 +237,43 @@ export default new Router({
 		},
 		{
 			//体感
-			path: '/feel', 
+			path: '/feel',
 			meta: {
 				navShow: false
 			},
 			component: resolve => require(['@/components/feel/feel'], resolve),
 			children: [{
-					//个人信息
-					path: 'lesson',
+				//个人信息
+				path: 'lesson',
+				meta: {
+					navShow: false
+				},
+				component: resolve => require(['@/components/feel/lesson'], resolve),
+				children: [{
+					//个人体感
+					path: 'feelCon',
 					meta: {
 						navShow: false
 					},
-					component: resolve => require(['@/components/feel/lesson'], resolve),
-					children: [{
-						//个人体感
-						path: 'feelCon',
-						meta: {
-							navShow: false
-						},
-						component: resolve => require(['@/components/feel/feelCon'], resolve)
-					}]
-				}
-			]
+					component: resolve => require(['@/components/feel/feelCon'], resolve)
+				}]
+			}]
+		},
+		{
+			//表现列表
+			path: '/performanceList',
+			meta: {
+				navShow: false
+			},
+			component: resolve => require(['@/components/performanceList/performanceList'], resolve)
+		},
+		//园长信箱
+		{
+			path: '/noticeList',
+			meta: {
+				navShow: false
+			},
+			component: resolve => require(['@/components/noticeList/noticeList'], resolve)
 		}
 	]
 })
