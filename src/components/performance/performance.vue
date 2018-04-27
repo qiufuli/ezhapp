@@ -39,7 +39,7 @@
 <script>
 	//	import { Actionsheet } from 'mint-ui';
 	import * as scoket from '@/common/util/webscokt.js'
-	import {Toast} from 'mint-ui';
+	import { Toast } from 'mint-ui';
 	export default {
 		components: {},
 		data() {
@@ -134,9 +134,9 @@
 				this.slname = this.$route.params.selectName
 			},
 			send() {
-				let self = this;			
-//				let chatType = self.slname.split(',').length > 1 ? 'GROUP' : 'SIGNLE';
-//				console.log(chatType)
+				let self = this;
+				//				let chatType = self.slname.split(',').length > 1 ? 'GROUP' : 'SIGNLE';
+				//				console.log(chatType)
 				if(self.talk != '') {
 					self.websock.send(JSON.stringify({
 						message: {
@@ -144,22 +144,31 @@
 							group: 1,
 							chatType: 'GROUP',
 							msgType: 'TEXT',
-							content: 'bx'+self.talk,
+							content: 'bx' + self.talk,
 							from: self.from,
 							to: '', //接收人,如果没有则置空,如果有多个接收人则用,分隔						
-							time: this.getDateFull
+							time: this.getDateFull	
 						},
 						type: "message"
 					}));
-					Toast({
-					  message: '发送成功！',
-					  duration: 2000
+					let params = new URLSearchParams();
+					params.append('userId', self.$store.state.userId)
+					params.append('title', '一纸鹤')
+					params.append('text', self.talk)
+					axios.post(address + 'push/api/pushNoticeShow', params).then((res) => {
+						console.log(res)
 					})
-					self.talk='';
-				}else{
+					
 					Toast({
-					  message: '发送内容不能为空！',
-					  duration: 2000
+						message: '发送成功！',
+						duration: 2000
+					})
+					
+					self.talk = '';
+				} else {
+					Toast({
+						message: '发送内容不能为空！',
+						duration: 2000
 					})
 				}
 			},

@@ -107,8 +107,11 @@
 		margin: 0 auto;
 		border-radius: 0.5rem;
 		text-indent: 1rem;
+		font-size: 1.2rem;
 	}
-	
+	.forgetPW{
+		background:#ebebeb;
+	}
 	.forgetPW_yzm {
 		width: 95%;
 		margin: 0 auto;
@@ -122,6 +125,8 @@
 		border: none;
 		border-radius: 0.5rem;
 		text-indent: 1rem;
+		font-size: 1.2rem;
+		
 	}
 	
 	.forgetPW_yzm .save {
@@ -134,6 +139,8 @@
 	.next {
 		width: 90%;
 		font-size: 1.4rem;
+		height: 3rem;
+		line-height: 3rem;
 		margin-top: 5rem;
 	}
 </style>

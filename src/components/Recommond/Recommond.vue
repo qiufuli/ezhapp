@@ -1,94 +1,82 @@
 <template>
-	<transition name="slideNav">
-		<div class="Recommond">
-			<mt-header fixed title="校园"></mt-header>
-			<div class="wrap">
-				<img class="Rec_img" src="static/test/test01.jpg" alt="" />
-				<!--个人信息-->
+	<div class="Recommond">
+		<mt-header fixed title="校园"></mt-header>
+		<div class="mailDiv">
+			<scroll class="mailHeight">
+				<div>
+					<img class="Rec_img" src="static/test/test01.jpg" alt="" />
+					<!--个人信息-->
 
-				<div class="person clearfix" @click="person()">
-					<img class="person_img" src="static/test/test01.jpg" alt="" />
-					<p>您好，{{username}}</p>
+					<div class="person shadow clearfix" @click="person()">
+						<img class="person_img" src="static/test/person.png" alt="" />
+						<p>您好，{{username}}</p>
+					</div>
+					<div class="baby_list clearfix">
+						<router-link to="/baby" class="baby_item " tag='div'>
+							<i class="icon iconfont icon-weibiaoti202-copy"></i>
+							<p>看宝宝</p>
+						</router-link>
+						<router-link to="/BabyCircle" class="baby_item" tag='div'>
+							<i class="icon iconfont icon-pengyouquan"></i>
+							<p>宝贝圈</p>
+						</router-link>
+					</div>
+					<div class="recommond_list clearfix">
+						<router-link to="/cookbook" class="recommond_item " tag='div'>
+							<i class="icon iconfont icon-baby_crockery"></i>
+							<p>食谱</p>
+						</router-link>
+						<router-link :to="kaoqin" class="recommond_item" tag='div' @click="kaoqin()">
+							<i class="icon iconfont icon-icon-test"></i>
+							<p>考勤</p>
+						</router-link>
+						<router-link tag="div" :to="feel" class="recommond_item">
+							<i class="icon iconfont icon-thermometer"></i>
+							<p>体感</p>
+						</router-link>
+						<router-link to="/performanceList" class="recommond_item" tag='div'>
+							<i class="icon iconfont icon-jiangli"></i>
+							<p>表现列表</p>
+							<b v-if="num2"></b>
+						</router-link>
+						<router-link to="/noticeList" class="recommond_item" tag='div'>
+							<i class="icon iconfont icon-tongzhi"></i>
+							<p>园长信箱</p>
+							<b v-if="num1"></b>
+						</router-link>
+						<router-link to="/Recommond/maillist" class="recommond_item" tag='div'>
+							<i class="icon iconfont icon-tongxunlu"></i>
+							<p>通讯录</p>
+						</router-link>
+					</div>
 				</div>
-				<div class="baby_list clearfix">
-					<router-link to="/baby" class="baby_item" tag='div'>
-						<img src="static/icon/indexchoose.png" alt="" />
-						<p>看宝宝</p>
-					</router-link>
-					<router-link to="/BabyCircle" class="baby_item" tag='div'>
-						<img src="static/icon/indexchoose.png" alt="" />
-						<p>宝贝圈</p>
-					</router-link>
-				</div>
-				<div class="recommond_list clearfix">
-					<router-link to="/cookbook" class="recommond_item " tag='div'>
-						<img src="static/icon/brand.png" alt="" />
-						<p>食谱</p>
-					</router-link>
-					<router-link :to="kaoqin" class="recommond_item" tag='div' @click="kaoqin()">
-						<img src="static/icon/brand.png" alt="" />
-						<p>考勤</p>
-					</router-link>
-					<router-link tag="div" :to="feel" class="recommond_item">
-						<img src="static/icon/brand.png" alt="" />
-						<p>体感</p>
-					</router-link>
-					<router-link to="/performanceList" class="recommond_item" tag='div'>
-						<img src="static/icon/brand.png" alt="" />
-						<p>表现列表</p>
-					</router-link>
-					<router-link to="/noticeList" class="recommond_item" tag='div'>
-						<img src="static/icon/brand.png" alt="" />
-						<p>园长信箱</p>
-					</router-link>
-					<router-link to="/Recommond/maillist" class="recommond_item" tag='div'>
-						<img src="static/icon/brand.png" alt="" />
-						<p>通讯录</p>
-					</router-link>
-				</div>
-			</div>
-			<router-view></router-view>
+			</scroll>
+
 		</div>
-	</transition>
+		<router-view></router-view>
+	</div>
 </template>
 
 <script>
+	import Scroll from '@/base/scroll/scroll';
+
 	export default {
+		components: {
+			Scroll
+		},
 		data() {
 			return {
-				username: ''
+				username: '',
+				noticeNum: 0,
+				showNum: 0,
+				num1:false,
+				num2:false
 			}
 		},
 		created() {
-			let self = this;
-
-			this.$nextTick(function() {
-				self.$store.dispatch('GetInfo', this.$store.state).then(() => {
-					axios.get(address + 'index/api/getUserInfo', {
-					params: {
-						userId: this.$store.state.userId
-					}
-				}).then(function(res) {
-					console.log('111111',res)
-					self.$store.state.sysUser = res.data.data;
-					console.log('用户1', self.$store.state.sysUser)
-					self.$store.state.userId = res.data.data.id;
-					self.$store.state.token = res.data.data.userToken;
-					self.$store.state.userType = res.data.data.userType;
-					self.$store.state.name = res.data.data.loginName;
-					if(self.$store.state.userType == 3) {
-						self.username = res.data.data.name + '园长';
-					}else if(self.$store.state.userType == 4){
-						self.username = res.data.data.name + '教师';
-					}else if(self.$store.state.userType == 5){
-						self.username = res.data.data.name + '家长';
-					}
-
-				})
-				})
-				
-			})
-
+			this.init()
+//			this.noticeNumFn()
+//			this.showNumFn()
 		},
 		computed: {
 			kaoqin() {
@@ -110,12 +98,83 @@
 			person() {
 				this.$router.push('/Recommond/person')
 			},
+			init() {
+				let self = this;
+				this.$nextTick(function() {
+					self.$store.dispatch('GetInfo', this.$store.state).then(() => {
+						axios.get(address + 'index/api/getUserInfo', {
+							params: {
+								userId: this.$store.state.userId
+							}
+						}).then(function(res) {
+							self.$store.state.sysUser = res.data.data;
+							console.log('用户1', self.$store.state.sysUser)
+							self.$store.state.userId = res.data.data.id;
+							self.$store.state.token = res.data.data.userToken;
+							self.$store.state.userType = res.data.data.userType;
+							self.$store.state.name = res.data.data.loginName;
+							if(self.$store.state.userType == 3) {
+								self.username = res.data.data.name + '园长';
+							} else if(self.$store.state.userType == 4) {
+								self.username = res.data.data.name + '教师';
+							} else if(self.$store.state.userType == 5) {
+								self.username = res.data.data.name + '家长';
+							}
+							self.noticeNum = res.data.data.userConfig.noticeNum;
+							self.showNum = res.data.data.userConfig.showNum;
+							self.noticeNumFn();
+							self.showNumFn();
+
+						})
+					})
+
+				})
+
+			},
+			noticeNumFn(){
+				axios.get(address + 'push/api/getNoticeList', {
+					params: {
+						userId: this.$store.state.userId,
+						type: 'notice',
+						isNum:1
+					}
+				}).then((res) => {
+					if(this.noticeNum < res.data.data.totalSize){
+						this.num1 = true;
+					}
+					
+				})
+				
+				
+			},
+			showNumFn(){
+					axios.get(address + 'push/api/getNoticeList', {
+					params: {
+						userId: this.$store.state.userId,
+						type: 'show',
+						isNum:1
+					}
+				}).then((res) => {
+					if(this.showNum < res.data.data.totalSize){
+						this.num2 = true;
+					}
+					
+				})
+				
+			}
 
 		}
 	}
 </script>
 
 <style scoped>
+	.mailDiv {
+		position: fixed;
+		top: 3rem;
+		bottom: 3rem;
+		width: 100%;
+	}
+	
 	.Rec_img {
 		display: inline-block;
 		width: 100%;
@@ -136,7 +195,7 @@
 		width: 3.6rem;
 		height: 3.6rem;
 		border-radius: 50%;
-		border: 0.3rem solid #ccc;
+		border: 0.3rem solid #ebe8e8;
 		margin: 0.4rem 1rem 0 0.5rem;
 	}
 	
@@ -158,9 +217,8 @@
 		background: #fff;
 		text-align: center;
 		box-shadow: 0px 0.2rem 0.5rem rgba(34, 25, 25, 0.2);
-		border-radius: 0.5rem;
+		border-radius: 0.2rem;
 		box-sizing: border-box;
-		
 	}
 	
 	.baby_list .baby_item:first-child {
@@ -179,6 +237,7 @@
 	}
 	
 	.recommond_list {
+		padding: 0 2%;
 		padding-bottom: 3rem;
 	}
 	
@@ -191,7 +250,18 @@
 		border-bottom: 1px solid #dcd5d5;
 		box-sizing: border-box;
 		box-shadow: 0px 0.1rem 0.3rem rgba(34, 25, 25, 0.2);
-		
+		border-radius: 0.5rem;
+		position: relative;
+	}
+	.recommond_item b{
+		display: inline-block;
+		position: absolute;
+		top: 0.5rem;
+		right: 0.5rem;
+		width: 1rem;
+		height: 1rem;
+		border-radius: 50%;
+		background: red;
 	}
 	
 	.recommond_item:nth-child(odd) {

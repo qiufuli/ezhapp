@@ -24,10 +24,10 @@ export default {
   data () {
     return {
       selected: "校园",
-      img1: 'static/icon/indexchoose.png',
-      img2: 'static/icon/brand.png',
-      img3: 'static/icon/livechoose.png',
-      img4: 'static/icon/me.png'
+      img1: 'static/test/icon1_1.png',
+      img2: 'static/test/icon2_1.png',
+      img3: 'static/test/icon3_1.png',
+      img4: 'static/test/icon4_1.png'
     }
   },
   created(){
@@ -39,59 +39,60 @@ export default {
 			
 			this.$nextTick(function(){
 			if(this.$route.path == '/'){
-				this.img1 = "static/icon/indexchoose.png"
+				this.img1 = "static/test/icon1_2.png"
 			}else{
-				this.img2 = "static/icon/index.png"
+				this.img1 = "static/test/icon1_1.png"
 			}
 			if(this.$route.path == '/Recommond'){
-				this.img1 = "static/icon/indexchoose.png"
+				this.img1 = "static/test/icon1_2.png"
 			}else{
-				this.img2 = "static/icon/index.png"
-			}
-			if(this.$route.path == '/find'){
-				this.img3 = "static/icon/livechoose.png"
-			}else{
-				this.img3 = "static/icon/live.png"
+				this.img1 = "static/test/icon1_1.png"
 			}
 			if(this.$route.path == '/interact'){
-				this.img2 = "static/icon/brandchoose.png"
+				this.img2 = "static/test/icon2_2.png"
 			}else{
-				this.img2 = "static/icon/brand.png"
+				this.img2 = "static/test/icon2_1.png"
 			}
-			if(this.$route.path == '/myself'){
-				this.img4 = "static/icon/mechoose.png"
+			if(this.$route.path == '/find'){
+				this.img3 = "static/test/icon3_2.png"
 			}else{
-				this.img4 = "static/icon/me.png"
+				this.img3 = "static/test/icon3_1.png"
+			}
+			
+			if(this.$route.path == '/myself'){
+				this.img4 = "static/test/icon4_2.png"
+			}else{
+				this.img4 = "static/test/icon4_1.png"
 			}
 			})
 		}
 	},
-	watch:{
+	watch:{ 
 		$route(to){
 			if(to.path == '/'){
-				this.img1 = "static/icon/indexchoose.png"
+				this.img1 = "static/test/icon1_2.png"
 			}else{
-				this.img1 = "static/icon/index.png"
+				this.img1 = "static/test/icon1_1.png"
 			}
 			if(to.path == '/Recommond'){
-				this.img1 = "static/icon/indexchoose.png"
+				this.img1 = "static/test/icon1_2.png"
 			}else{
-				this.img1 = "static/icon/index.png"
+				this.img1 = "static/test/icon1_1.png"
 			}
 			if(to.path == '/find'){
-				this.img3 = "static/icon/livechoose.png"
+				this.img3 = "static/test/icon3_2.png"
 			}else{
-				this.img3 = "static/icon/live.png"
+				this.img3 = "static/test/icon3_1.png"
 			}
 			if(to.path == '/interact'){
-				this.img2 = "static/icon/brandchoose.png"
+				this.img2 = "static/test/icon2_2.png"
 			}else{
-				this.img2 = "static/icon/brand.png"
+				this.img2 = "static/test/icon2_1.png"
 			}
 			if(to.path == '/myself'){
-				this.img4 = "static/icon/mechoose.png"
+				this.img4 = "static/test/icon4_2.png"
 			}else{
-				this.img4 = "static/icon/me.png"
+				this.img4 = "static/test/icon4_1.png"
 			}
 		}
 	}
@@ -110,6 +111,7 @@ export default {
 		text-align: center;
 		color: #fff;
 		background: #fff;
+		border-top: 1px solid #ebebeb;
 	}
 	.tabList{
 		display: inline-block;

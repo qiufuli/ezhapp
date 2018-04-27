@@ -1,5 +1,4 @@
 <template>
-	<transition name="slideNav">
 		<div>
 			<div class="find">
 				<mt-header fixed title="每日推荐"></mt-header>
@@ -25,7 +24,6 @@
 			</div>
 		</div>
 
-	</transition>
 </template>
 
 <script>
@@ -82,7 +80,6 @@ import Scroll from '@/base/scroll/scroll';
 	.mint-header {
 		width: 100%;
 		line-height: 3rem;
-		background: #fb7065;
 		text-align: center;
 		color: #fff;
 		font-weight: normal;
@@ -97,7 +94,8 @@ import Scroll from '@/base/scroll/scroll';
 		line-height: 2rem;
 	}
 	.video_con{
-		background: #fff;
+		background: #fff url('../../../static/test/ezh_bg01.png') no-repeat center bottom;
+		background-size:100% 14rem;
 		padding: 1rem;
 		margin-top: 1rem;
 		position: absolute;

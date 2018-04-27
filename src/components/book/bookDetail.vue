@@ -22,9 +22,10 @@
 						</div>
 						<div class="videoList" >
 							<p>视频列表</p>
-							<router-link tag="div" :to="'/myself/book/bookDetail/bookVideo?id='+item.id" class="video_item" v-for="(item,index) in getCourses">
+							<router-link tag="div" :to="'/myself/book/bookDetail/bookVideo?id='+item.id" class="video_item" :key="index" v-for="(item,index) in getCourses">
 								<img v-lazy="'http://res.ezhihe.cn/zlwx/resources/convert_s'+item.iconUrl" alt="" />
 								<p>{{item.fileName}}</p>
+								<i></i>
 							</router-link>
 						</div>
 					</div>
@@ -161,6 +162,7 @@
 	.video_item{
 		display: inline-block;
 		width: 46%;
+		position: relative;
 	}
 	.video_item:nth-child(even){
 		margin: 0 4% 0 2%;
@@ -175,6 +177,18 @@
 		width: 100%;
 		text-align: center;
 		line-height: 3rem;
+	}
+	.video_item i{
+		display: inline-block;
+		width: 4rem;
+		height: 4rem;
+		position: absolute;
+		top: 3rem;
+		left: 50%;
+		transform: translateX(-50%);
+		background: url('../../../static/test/ezh_bg02.png') no-repeat;
+		background-size:4rem;
+		z-index: 2;
 	}
 	.videoList > p{
 		font-weight: bold;

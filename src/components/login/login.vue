@@ -2,7 +2,7 @@
 	<transition name="slideX">
 		<div class="login child">
 			<p class="logo_img">
-				<img src="static/test/test01.jpg" alt="" />
+				<img src="static/test/lg.png" alt="" />
 			</p>
 			<div class="login_input clearfix">
 				<i class="un"></i>
@@ -66,6 +66,7 @@
 						})
 					this.$store.dispatch('GetInfo', this.$store.state).then(() => { //加入聊天室
 						this.getWebsoket()
+						this.getPushInfo();
 					})
 					}).catch((error) => {
 						console.log(error)
@@ -87,12 +88,25 @@
 			},
 			websocketclose(e) { //关闭
 				console.log("connection closed (" + e.code + ")");
+			},
+			getPushInfo(){
+				let info = plus.push.getClientInfo();
+				let params = new URLSearchParams();
+				params.append('userId',this.$store.state.userId)
+				params.append('clientId',info.clientid)
+				axios.post(address+'push/api/bindPushConfig',params).then((res)=>{
+					console.log(res)
+				})
 			}
 		}
 	}
 </script>
 
 <style scoped>
+	.child{
+		background: url('../../../static/test/ezh_bg06.png') no-repeat center bottom;
+		background-size:100% 14rem;
+	}
 	input::-webkit-input-placeholder {
 		color: #C6C6C6;
 		font-size: 1.3rem;
@@ -164,13 +178,28 @@
 		float: left;
 		line-height: 3rem;
 		border: none;
-		color: #38bae2;
+		color: #FF9800;
 		font-size: 1.4rem;
 	}
 	
 	@media only screen and (min-width:320px) {
 		.login_input input {
-			width: 18rem;
+			width: 20rem;
+		}
+	}
+	@media only screen and (min-width:340px) {
+		.login_input input {
+			width: 21rem;
+		}
+	}
+	@media only screen and (min-width:360px) {
+		.login_input input {
+			width: 22rem;
+		}
+	}
+	@media only screen and (min-width:375px) {
+		.login_input input {
+			width: 24rem;
 		}
 	}
 	

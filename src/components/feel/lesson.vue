@@ -15,16 +15,22 @@
 					<group>
 						<datetime class="top" v-model="value5" :min-year=2017 :max-year=2099 format="YYYY-MM-DD" :end-date="endDate" @on-change="change" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="确定" cancel-text=" "></datetime>
 					</group>
-					<a @click="add()" ref="add" style="color:#ccc">后一天</a>
+					<a @click="add()" ref="add" style="color:#8e8a8a">后一天</a>
 				</div>
 			</div>
-			<div class="list">
+			<div class="mailDiv">
+				<scroll class="mailHeight">
+				<div>
+					<div class="list">
 				<div class="kq-list" v-for="(item,index) in kqList" @click="selectItem(item,$event)">
 					<i class="iconfont icon-icon31"></i>
 					<h2>{{item.name}}</h2>
-					<span class="dk" v-show="item.isTemper== 1">已测量</span>
-					<span class="wdk" v-show="item.isTemper== 0">未测量</span>
+					<span class="dk" v-show="item.isWork== 1">已测量</span>
+					<span class="wdk" v-show="item.isWork== 0">未测量</span>
 				</div>
+			</div>
+				</div>
+			</scroll>
 			</div>
 			<div class="footer">
 				<div>
@@ -43,13 +49,14 @@
 	import kqCon from '@/components/kqCon/kqCon'
 	import { Datetime, Group } from 'vux'
 import { Toast ,Indicator } from 'mint-ui';
-	
+	import Scroll from '@/base/scroll/scroll';
 	import * as time from '@/common/util/time.js'
 	export default {
 		components: {
 			Datetime,
 			Group,
-			kqCon
+			kqCon,
+			Scroll
 		},
 		data() {
 			return {
@@ -83,7 +90,7 @@ import { Toast ,Indicator } from 'mint-ui';
 			//初始化方法
 			init(){
 				let self = this;
-				axios.get(address + 'index/api/getTemperList', {
+				axios.get(address2 + 'v1.0/terminal/getTemperList', {
 						params: {
 							userId: self.userId,
 							classId:self.classId,
@@ -91,7 +98,7 @@ import { Toast ,Indicator } from 'mint-ui';
 						}
 					}).then((relove) => {
 						console.log(relove.data)
-						if( relove.data.code == 0){
+						if( relove.data.code == 1000){
 							//返回的数据数组
 							self.kqList = relove.data.data;
 						}
@@ -102,19 +109,19 @@ import { Toast ,Indicator } from 'mint-ui';
 			change(value) {
 				let self = this;
 				if(new Date(self.value5).getTime() >= new Date().getTime()){
-					this.$refs.add.style.color = '#ccc'
+					this.$refs.add.style.color = '#8e8a8a'
 					self.value5 = time.getYYMMDD();//如果是今天以后 默认今天 不能向后查
 				}else{
 					this.$refs.add.style.color = '#fff'
 					self.value5 = value;
-					axios.get(address + 'index/api/getTemperList', {
+					axios.get(address2 + 'v1.0/terminal/getTemperList', {
 						params: {
 							userId: self.userId,
 							classId:self.classId,
 							selectTime: new Date(self.value5).getTime()
 						}
 					}).then((relove) => {
-						if( relove.data.code == 0){
+						if( relove.data.code == 1000){
 							//返回的数据数组
 							self.kqList = relove.data.data;
 						}
@@ -127,19 +134,21 @@ import { Toast ,Indicator } from 'mint-ui';
 			add: function() {
 				let self = this;
 				self.value5 = time.addDate(self.value5, 1)
+				console.log(self.value5,new Date(self.value5).getTime() )
 				if(new Date(self.value5).getTime() >new Date().getTime()){
-					this.$refs.add.style.color = '#ccc';
+					this.$refs.add.style.color = '#8e8a8a';
 					self.value5 = time.getYYMMDD();//如果是今天以后 默认今天 不能向后查
 				}else{
 					this.$refs.add.style.color = '#fff';
-					axios.get(address + 'index/api/getTemperList', {
+					axios.get(address2 + 'v1.0/terminal/getTemperList', {
 						params: {
 							userId: self.userId,
 							classId:self.classId,
 							selectTime: new Date(self.value5).getTime()
 						}
 					}).then((relove) => {
-						if( relove.data.code == 0){
+						console.log(relove.data)
+						if( relove.data.code == 1000){
 							//返回的数据数组
 							self.kqList = relove.data.data;
 						}
@@ -153,8 +162,10 @@ import { Toast ,Indicator } from 'mint-ui';
 			reduce: function() {
 				let self = this;
 				self.value5 = time.addDate(self.value5, -1)
+				console.log(self.value5,new Date(self.value5).getTime() )
+				
 				this.$refs.add.style.color = '#fff';
-				axios.get(address + 'index/api/getTemperList', {
+				axios.get(address2 + 'v1.0/terminal/getTemperList', {
 						params: {
 							userId: self.userId,
 							classId:self.classId,
@@ -162,13 +173,12 @@ import { Toast ,Indicator } from 'mint-ui';
 						}
 					}).then((relove) => {
 						console.log(relove.data)
-						if( relove.data.code == 0){
+						if( relove.data.code == 1000){
 							//返回的数据数组
 							self.kqList = relove.data.data;
 						}
 					}).catch((err) => {
 						console.log(err)
-
 					})
 			},
 			selectItem: function(item, event) {
@@ -184,6 +194,12 @@ import { Toast ,Indicator } from 'mint-ui';
 </script>
 
 <style scoped="scoped">
+	.mailDiv{
+		position: fixed;
+		top: 7rem;
+		bottom: 4rem;
+		width: 100%;
+	}
 	.lesson .title {
 		position: fixed;
 		width: 80%;
@@ -204,7 +220,7 @@ import { Toast ,Indicator } from 'mint-ui';
 	.lesson .wrap-box {
 		width: 100%;
 		height: 4rem;
-		background: #fb7065;
+		background: #ffc712;
 		display: flex;
 	}
 	

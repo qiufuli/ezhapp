@@ -203,6 +203,7 @@
 </script>
 
 <style scoped>
+	
 	.babyCircle {
 		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 		-webkit-user-select: none;

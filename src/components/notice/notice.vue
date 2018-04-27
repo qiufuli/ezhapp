@@ -73,6 +73,13 @@
 						},
 						type: "message"
 					}));
+					let params = new URLSearchParams();
+					params.append('userId', self.$store.state.userId)
+					params.append('title', '一纸鹤')
+					params.append('text', self.talk)
+					axios.post(address + 'push/api/pushNoticeShow', params).then((res) => {
+						console.log(res)
+					})
 					Toast({
 					  message: '发送成功！',
 					  duration: 2000

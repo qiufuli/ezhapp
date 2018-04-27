@@ -6,13 +6,18 @@
 					<mt-button icon="back"></mt-button>
 				</router-link>
 			</mt-header>
-			<div class="wrap ">
-				<div v-for="(item,index) in lesson" >
+			<div class="mailDiv ">
+				<scroll class="mailHeight">
+					<div>
+						<div v-for="(item,index) in lesson">
 					<router-link :to="{path:'/feel/lesson',query:{id:item.id,name:item.name}}" class="lesson-item" :key="index" tag="div">
 						<i class="iconfont icon-gerenxinxi_suozaibanji"></i>
 						<span>{{item.name}}</span>
 					</router-link>
 				</div>
+					</div>
+				</scroll>
+				
 			</div>
 			<router-view></router-view>
 		</div>
@@ -21,8 +26,11 @@
 
 <script>
 	import * as time from '@/common/util/time.js'
-
+	import Scroll from '@/base/scroll/scroll';
 	export default {
+		components:{
+			Scroll
+		},
 		data() {
 			return {
 				lesson: [],
@@ -64,13 +72,19 @@
 </script>
 
 <style scoped="scoped">
+	.mailDiv{
+		position: fixed;
+		top: 3rem;
+		bottom: 1rem;
+		width: 100%;
+	}
 	.kaoqin .lesson-info {
 		margin-top: 40px;
 	}
 	
 	.kaoqin .iconfont {
-		font-size: 1.2rem;
-		color: red;
+		font-size: 1.6rem;
+		color: #f6a305;
 	}
 	
 	.kaoqin .lesson-item {
@@ -79,6 +93,7 @@
 		line-height: 4rem;
 		background: #FFFFFF;
 		margin-bottom: 1rem;
+		border-radius: 0.5rem;
 	}
 	
 	.kaoqin .lesson-item i {

@@ -56,6 +56,9 @@
 </script>
 
 <style scoped>
+	.resetPW{
+		background:#ebebeb;
+	}
 	.numList{
 		background: #fff;
 		padding: 1rem 0.5rem;
@@ -78,10 +81,13 @@
 		outline: none;
 		border: 1px solid #ccc;
 		border-radius: 0.5rem;
+		font-size: 1.2rem;
 	}
 	.next {
 		width: 90%;
 		font-size: 1.4rem;
 		margin-top: 5rem;
+		height: 3rem;
+		line-height: 3rem;
 	}
 </style>

@@ -14,7 +14,7 @@
 					<textarea class="sendText" @input="descInput" placeholder="请输入内容..." maxlength="240" v-model="comText"></textarea>
 					<span>{{remnant}}/240</span>
 				</div>
-				<div class="up">
+				<!--<div class="up">
 					<img src="static/test/upload.png" @click.stop="addPic" />
 					<input ref="divGenres" type="file" accept="image/*" multiple="multiple" capture="camera" @change="onFileChange" style="display: none;">
 					<ul class="list-ul clearfix">
@@ -28,7 +28,11 @@
 				</div>
 				<div class="add-preview" v-show="isPreview" @click="closePreview">
 			      <img :src="previewImg">
-			    </div>
+			    </div>-->
+			    
+			    
+			    
+			    
 				<!--<div class="select" @click="selectShow">
 					<i class="iconfont icon-yanjing icon1"></i>
 					<span>选择可见范围</span>
@@ -91,7 +95,7 @@
 					axios.post(address + 'index/api/addBabyCri', params).then(function(res) {
 						if(res.data.code == 0) {
 							Toast({
-								message: res.data.msg,
+								message:"发布宝贝圈成功",
 								duration: 2000
 							})
 							self.$emit('flag');

@@ -18,8 +18,7 @@
 					<p>资源描述</p>
 					<scroll class="minHeight">
 						<div >
-							<div  style="padding-bottom: 6rem;">
-								{{allData.content}}
+							<div  style="padding-bottom: 6rem;" v-html="allData.content">
 							</div>
 						</div>
 					</scroll>
@@ -146,7 +145,8 @@ import Scroll from '@/base/scroll/scroll';
 		line-height: 2rem;
 	}
 	.video_con{
-		background: #fff;
+		background: #fff url('../../../static/test/ezh_bg01.png') no-repeat center bottom;
+		background-size:100% 14rem;
 		padding: 1rem;
 		margin-top: 1rem;
 		position: absolute;

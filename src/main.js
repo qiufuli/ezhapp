@@ -28,7 +28,19 @@ Vue.use(vueLazyLoad,{
 	loading: require('../static/test/test01.jpg')
 })
 axios.defaults.withCredentials = true //允许跨域
-global.address = 'http://192.168.9.172:4040/';//接口地址
+//global.address = 'http://192.168.3.19:9999/';
+//global.address = 'http://192.168.3.19:4040/';//接口地址
+//global.address2 = 'http://192.168.3.19:4050/';//接口地址
+//global.address3 = 'http://192.168.3.19:8081/';//接口地址
+//global.address = 'http://192.168.9.57:4040/';//接口地址
+//global.address2 = 'http://192.168.9.57:4050/';//接口地址
+//global.address3 = 'http://192.168.9.57:8081/';//接口地址
+global.address = 'http://info.ezhihe.cn/';//接口地址
+global.address2 = 'http://work.ezhihe.cn/';//接口地址
+global.address3 = 'http://sdapi.ezhihe.cn/';//接口地址
+//global.address = 'http://101.200.182.8:4040/';//接口地址
+//global.address2 = 'http://101.200.182.8:4050/';//接口地址
+//global.address3 = 'http://101.200.182.8:8081/';//接口地址
 global.axios = axios //设置为全局引用
 
 

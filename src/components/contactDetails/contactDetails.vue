@@ -62,7 +62,8 @@
 				userclass: '',
 				usertypename: '',
 				loginName:'',
-				id:''
+				id:'',
+				clientId:''
 			}
 		},
 		created() {
@@ -86,6 +87,9 @@
 						self.loginName = res.data.data.loginName;
 						self.username = res.data.data.name;
 						self.mobile = res.data.data.mobile;
+						if(res.data.data.userConfig!=null){
+							self.clientId=res.data.data.userConfig.clientId;
+						}
 						if(res.data.data.cclass == null){
 							self.userclass="暂无"
 						}else{
@@ -124,7 +128,7 @@
 				window.location.href = 'tel://'+this.mobile
 			},
 			mes(){
-				this.$router.push('/Recommond/maillist/contactDetails/mailsingle?name='+this.username+'&test=' + this.loginName+'&id='+this.id)
+				this.$router.push('/Recommond/maillist/contactDetails/mailsingle?name='+this.username+'&test=' + this.loginName+'&id='+this.id+'&clientId='+this.clientId)
 			}
 		}
 	}
@@ -133,7 +137,8 @@
 <style scoped="scoped">
 	.person_bg {
 		height: 15rem;
-		background: #fb7065;
+		background:url('../../../static/test/ezh_bg03.png') no-repeat center;
+		background-size: 100% 15rem;
 		text-align: center;
 		margin-top: -0.1rem;
 		margin-bottom: 1.2rem;
@@ -189,18 +194,43 @@
 	}
 	
 	.profile span {
-		font-size: 18px;
-		color: #fb7065;
+		font-size: 1.4rem;
+		color: #f6a305;
 		margin-left: 0.5rem;
 	}
 	
 	.weixin i {
 		font-size: 20px;
-		color: #fb7065;
+		color: #f6a305;
 	}
 	
 	.tel i {
-		font-size: 20px;
+		font-size: 1.6rem;
 		color: #fb7065;
+	}
+	@media only screen and (min-width:320px) {
+		.detail_person_list p {
+			width: 20rem;
+		}
+	}
+	@media only screen and (min-width:340px) {
+		.detail_person_list p {
+			width: 22rem;
+		}
+	}
+	@media only screen and (min-width:360px) {
+		.detail_person_list p {
+			width: 24rem;
+		}
+	}
+	@media only screen and (min-width:375px) {
+		.detail_person_list p {
+			width: 25rem;
+		}
+	}
+	@media only screen and (min-width:414px) {
+		.mail_item div {
+			width: 26rem;
+		}
 	}
 </style>

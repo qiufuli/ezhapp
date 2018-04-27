@@ -11,9 +11,9 @@
 					<group>
 						<datetime class="top" v-model="times" :min-year=2017 :max-year=2099 format="YYYY-MM-DD" :end-date="endDate" @on-change="change" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="确定" cancel-text=" "></datetime>
 					</group>
-					<div class="timeList" v-for="item in timeList" v-show="item.createDate != null">
-						<p>测量时间：{{getTimes(item.createDate)}}</p>
-						<p style="color:#fb7065">测量温度：{{item.temperVal}}℃</p>
+					<div class="timeList" v-for="item in timeList" v-show="item.signTime != null">
+						<p>测量时间：{{item.signTime}}</p>
+						<p style="color:#fb7065">测量温度：{{item.signTemp}}℃</p>
 					</div>
 					<div class="noTimeList" v-show="timeList[0] == null">当天没有体感记录哦~</div>
 				</div>
@@ -74,30 +74,33 @@
 		methods: {
 			change(value) {
 				if(this.$store.state.userType == 3 || this.$store.state.userType == 4) {
-					axios.get(address + 'index/api/getTemperDetail', {
+					axios.get(address2 + 'v1.0/terminal/getTemperDetail', {
 						params: {
 							userId: this.userId,
 							selUserId: this.selUserId,
 							selectTime: new Date(value).getTime()
 						}
-					}).then((resolve) => {
-						this.timeList = resolve.data.data;
-						console.log(resolve)
+					}).then((res) => {
+						if(res.data.code == 1000){
+						this.timeList = res.data.data;
+						}
 					}).catch((err) => {
 						console.log(err)
 
 					})
 				}
 				if(this.$store.state.userType == 5) {
-					axios.get(address + 'index/api/getTemperDetail', {
+					axios.get(address2 + 'v1.0/terminal/getTemperDetail', {
 						params: {
 							userId: this.userId,
 							selUserId: this.userId,
 							selectTime: new Date(value).getTime()
 						}
-					}).then((resolve) => {
-						this.timeList = resolve.data.data;
-						console.log(resolve)
+					}).then((res) => {
+						if(res.data.code == 1000){
+						this.timeList = res.data.data;
+						}
+						console.log(this.timeList)
 					}).catch((err) => {
 						console.log(err)
 
@@ -107,29 +110,33 @@
 			},
 			init() {
 				if(this.$store.state.userType == 3 || this.$store.state.userType == 4) {
-					axios.get(address + 'index/api/getTemperDetail', {
+					axios.get(address2 + 'v1.0/terminal/getTemperDetail', {
 						params: {
 							userId: this.userId,
 							selUserId: this.selUserId,
 							selectTime: new Date(this.times).getTime()
 						}
-					}).then((resolve) => {
-						this.timeList = resolve.data.data;
-						console.log(resolve)
+					}).then((res) => {
+						if(res.data.code == 1000){
+						this.timeList = res.data.data;
+						}
+						console.log(this.timeList)
 					}).catch((err) => {
 						console.log(err)
 					})
 				}
 				if(this.$store.state.userType == 5) {
-					axios.get(address + 'index/api/getTemperDetail', {
+					axios.get(address2 + 'v1.0/terminal/getTemperDetail', {
 						params: {
 							userId: this.userId,
 							selUserId: this.userId,
 							selectTime: new Date().getTime()
 						}
-					}).then((resolve) => {
-						this.timeList = resolve.data.data;
-						console.log(resolve)
+					}).then((res) => {
+						if(res.data.code == 1000){
+						this.timeList = res.data.data;
+						}
+						console.log(this.timeList)
 					}).catch((err) => {
 						console.log(err)
 

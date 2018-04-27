@@ -1,5 +1,4 @@
 <template>
-	<transition name="slideNav">
 	<div class="myself">
 		<mt-header fixed title="我的" ></mt-header>
 		<div class="wrap">
@@ -9,7 +8,7 @@
 			</div>
 			<router-link v-if="bookShow" tag="div" to="/myself/book" class="list clearfix mb_1" >
 				<div class="list_img">
-					<img src="static/test/xg.png" alt="" />
+					<img src="static/test/m4.png" alt="" />
 				</div>
 				<div class="list_title">
 					我的书架
@@ -18,9 +17,9 @@
 					</i>
 				</div>
 			</router-link>
-			<router-link tag="div" to="/myself/changePW" class="list clearfix mb_1" >
+			<router-link v-if="false" tag="div" to="/myself/changePW" class="list clearfix mb_1" >
 				<div class="list_img">
-					<img src="static/test/xg.png" alt="" />
+					<img src="static/test/m1.png" alt="" />
 				</div>
 				<div class="list_title">
 					修改密码
@@ -31,7 +30,7 @@
 			</router-link>
 			<router-link v-if="manageShow" tag="div" to="/myself/manage" class="list clearfix ">
 				<div class="list_img">
-					<img src="static/test/sz.png" alt="" />
+					<img src="static/test/m2.png" alt="" />
 				</div>
 				<div class="list_title">
 					设备管理
@@ -40,7 +39,7 @@
 					</i>
 				</div>
 			</router-link>
-			<router-link tag="div" to="/myself/feedback" class="list clearfix">
+			<!--<router-link tag="div" to="/myself/feedback" class="list clearfix">
 				<div class="list_img">
 					<img src="static/test/fk.png" alt="" />
 				</div>
@@ -50,10 +49,10 @@
 						<img src="static/test/right.png" alt="" />
 					</i>
 				</div>
-			</router-link>
+			</router-link>-->
 			<router-link tag="div" to="/myself/update" class="list clearfix">
 				<div class="list_img">
-					<img src="static/test/sx.png" alt="" />
+					<img src="static/test/m3.png" alt="" />
 				</div>
 				<div class="list_title noborder_bottom">
 					新版本检测
@@ -72,7 +71,6 @@
 		</v-confirm>
 		<router-view></router-view>
 	</div>
-	</transition>
 </template>
 
 <script>
@@ -126,7 +124,11 @@
 			},
 			changeshow(){
 				this.$store.dispatch('LogOut',this.$store.state).then(()=>{
+					if(this.websock){
 					this.websock.close()
+						
+					}
+
 					this.$router.push({
 						path: '/'
 					})
@@ -153,14 +155,14 @@
 	.mint-header{
 		width: 100%;
 		line-height: 3rem;
-		background:#fb7065;
 		text-align: center;
 		color: #fff;
 		font-weight: normal;
 	}
 	.person_bg{
 		height: 15rem;
-		background:#fb7065;
+		background:url('../../../static/test/ezh_bg03.png') no-repeat center;
+		background-size: 100% 15rem;
 		text-align: center;
 		margin-top: -0.1rem;
 	}
@@ -199,12 +201,12 @@
 	}
 	@media only screen and (min-width: 320px) {
 		.list .list_title{
-			width: 21rem;
+			width: 22rem;
 		}
 	}
 	@media only screen and (min-width:340px) {
 		.list .list_title{
-			width: 24rem;
+			width: 23rem;
 		}
 	}
 	@media only screen and (min-width:360px) {
@@ -215,6 +217,11 @@
 	@media only screen and (min-width:375px) {
 		.list .list_title{
 			width: 26rem;
+		}
+	}
+	@media only screen and (min-width:414px) {
+		.list .list_title{
+			width: 27rem;
 		}
 	}
 	.list .list_title i,.list .list_title i img{
@@ -237,5 +244,7 @@
 		height: 3rem;
 		line-height: 3rem;
 	}
-	
+	.mint-button--primary{
+		background-color:#f6a305;
+	}
 </style>

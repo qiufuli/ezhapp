@@ -1,7 +1,7 @@
 <template>
 	<transition name="slideX">
 		<div class="kqCon child" ref="kqCon">
-			<mt-header fixed :title="name+'考勤'">
+			<mt-header fixed :title="name+'考勤记录'">
 				<router-link :to="getParentLink" slot="left">
 					<mt-button icon="back"></mt-button>
 				</router-link>
@@ -11,7 +11,7 @@
 					<group>
 						<datetime class="top" v-model="times" :min-year=2017 :max-year=2099 format="YYYY-MM-DD" :end-date="endDate" @on-change="change" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="确定" cancel-text=" "></datetime>
 					</group>
-					<div class="timeList" v-for="item in timeList" v-show="item.clockTime != null">打卡时间：{{getTimes(item.clockTime)}}</div>
+					<div class="timeList" v-for="item in timeList" v-show="item.signTime != null">打卡时间：{{item.signTime}}</div>
 					<div class="noTimeList" v-show="timeList[0] == null">当天没有打卡记录哦~</div>
 				</div>
 			</div>
@@ -71,7 +71,7 @@
 		methods: {
 			change(value) {
 				if(this.$store.state.userType == 3 || this.$store.state.userType == 4) {
-					axios.get(address + 'index/api/getWorkDetail', {
+					axios.get(address2 + 'v1.0/terminal/getWorkDetail', {
 						params: {
 							userId: this.userId,
 							selUserId: this.selUserId,
@@ -82,11 +82,10 @@
 						console.log(resolve)
 					}).catch((err) => {
 						console.log(err)
-
 					})
 				}
 				if(this.$store.state.userType == 5) {
-					axios.get(address + 'index/api/getWorkDetail', {
+					axios.get(address2 + 'v1.0/terminal/getWorkDetail', {
 						params: {
 							userId: this.userId,
 							selUserId: this.userId,
@@ -104,7 +103,7 @@
 			},
 			init() {
 				if(this.$store.state.userType == 3 || this.$store.state.userType == 4) {
-					axios.get(address + 'index/api/getWorkDetail', {
+					axios.get(address2 + 'v1.0/terminal/getWorkDetail', {
 						params: {
 							userId: this.userId,
 							selUserId: this.selUserId,
@@ -118,7 +117,7 @@
 					})
 				}
 				if(this.$store.state.userType == 5) {
-					axios.get(address + 'index/api/getWorkDetail', {
+					axios.get(address2 + 'v1.0/terminal/getWorkDetail', {
 						params: {
 							userId: this.userId,
 							selUserId: this.userId,

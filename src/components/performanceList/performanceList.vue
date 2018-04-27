@@ -10,14 +10,13 @@
 				<scroll :data="test" class="perPosition" :pullup="pullup" @scrollToEnd="scrollToEnd">
 					<div>
 						<div class="perList clearfix" v-for="item in test">
-							<img class="per_img" :src="item.image" alt="" />
+							<img class="per_img" src="static/test/person.png" alt="" />
 							<div class="per_con">
 								<div class="per_h1">
 									{{item.from}}教师
 									<span class="time">{{item.createTime}}</span>
 								</div>
 								<div class="per_text clearfix">
-									<img src="static/test/good1.png" alt="" />
 									<p>{{item.text}}</p>
 								</div>
 							</div>
@@ -67,7 +66,7 @@
 			init() {
 				let self = this;
 				this.$nextTick(function() {
-					axios.get(address + 'index/api/getNoticeList', {
+					axios.get(address + 'push/api/getNoticeList', {
 						params: {
 							userId: this.$store.state.userId,
 							type: 'show',
@@ -78,13 +77,13 @@
 						console.log(res)
 						if(res.data.code == 0) {
 							if(self.test == '') {
-								self.test = res.data.data
+								self.test = res.data.data.list
 								self.start = true
 
 							} else {
-								if(res.data.data != '') {
+								if(res.data.data.list != '') {
 									self.start = true
-									res.data.data.forEach(function(data) {
+									res.data.data.list.forEach(function(data) {
 										self.test.push(data);
 									})
 								} else {

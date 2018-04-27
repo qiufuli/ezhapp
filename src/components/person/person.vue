@@ -10,18 +10,18 @@
 			<div class="wrap">
 				<div class="detail_person_img">
 					<img class="targetImg" id="preview" :src="targetImg" alt="" />
-					<i class="ca" @click="camera()">
+					<!--<i class="ca" @click="camera()">
 						<img src="static/test/ca.png" alt="" />
-					</i>
+					</i>-->
 					<input id="File2" runat="server" @change="changes($event)" type="file" accept="image/*" multiple="multiple" capture="camera" style="display:none" />
 				</div>
 				<div class="detail_person_list clearfix">
 					<span>姓&nbsp;&nbsp;&nbsp;&nbsp;名</span>
 					<p>{{name}}</p>
 				</div>
-				<div class="detail_person_list clearfix">
+				<div class="detail_person_list  clearfix">
 					<span>手机号</span>
-					<p>{{mobile}}</p>
+					<p class="noborder_bottom">{{mobile}}</p>
 				</div>
 				<div style="height: 1rem;"></div>
 				<div class="detail_person_list clearfix">
@@ -54,7 +54,7 @@
 				identity: '',
 				school: '',
 				className: '',
-				targetImg: ''
+				targetImg: 'static/test/person.png'
 			}
 		},
 		computed: {
@@ -79,7 +79,9 @@
 					self.sysUser = self.$store.state.sysUser;
 					self.mobile = self.sysUser.mobile;
 					self.school = self.sysUser.office.name;
-					self.targetImg = self.sysUser.avatar;
+					if(self.sysUser.avatar != null){
+						self.targetImg = self.sysUser.avatar;
+					}
 
 					if(self.$store.state.userType == 3) {
 						self.name = self.sysUser.name + '园长';
@@ -130,6 +132,8 @@
 		background: #fff;
 		position: relative;
 		margin-bottom: 1rem;
+		background:url('../../../static/test/ezh_bg03.png') no-repeat center;
+		background-size: 100% 10rem;
 	}
 	
 	.detail_person_img .targetImg {
@@ -141,6 +145,9 @@
 		left: 50%;
 		top: 2rem;
 		margin-left: -3rem;
+		border: 0.3rem solid #ebe8e8;
+		background: #fff;
+		
 	}
 	
 	.detail_person_img .ca,
@@ -184,13 +191,27 @@
 			width: 20rem;
 		}
 	}
+	@media only screen and (min-width:340px) {
+		.detail_person_list p {
+			width: 22rem;
+		}
+	}
+	@media only screen and (min-width:360px) {
+		.detail_person_list p {
+			width: 23rem;
+		}
+	}
 	
 	@media only screen and (min-width:375px) {
 		.detail_person_list p {
 			width: 24rem;
 		}
 	}
-	
+	@media only screen and (min-width:414px) {
+		.detail_person_list p {
+			width: 25rem;
+		}
+	}
 	.warn_p {
 		text-align: center;
 		line-height: 3rem;

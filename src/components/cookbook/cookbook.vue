@@ -20,21 +20,27 @@
 							<div class="food">
 								<ul>
 									<li>
-										<img src="../../assets/img/icon/icon_114-114.png" />
+										<div class="getImg colGre">
+											<i class="icon iconfont icon-baby_crockery"></i>
+										</div>
 										<div class="food-box">
 											<a>早餐: <span>{{mo1}}</span></a>
 											<a>早点: <span>{{mo2}}</span></a>
 										</div>
 									</li>
 									<li>
-										<img src="../../assets/img/icon/icon_114-114.png" />
+										<div class="getImg colblu">
+											<i class="icon iconfont icon-baby_crockery"></i>
+										</div>
 										<div class="food-box">
 											<a>午餐: <span>{{mo3}}</span></a>
 											<a>午点: <span>{{mo4}}</span></a>
 										</div>
 									</li>
 									<li>
-										<img src="../../assets/img/icon/icon_114-114.png" />
+										<div class="getImg colyel">
+											<i class="icon iconfont icon-baby_crockery"></i>
+										</div>
 										<div class="food-box">
 											<a>晚餐: <span>{{mo5}}</span></a>
 											<a>晚点: <span>{{mo6}}</span></a>
@@ -72,7 +78,7 @@
 				mo4: '',
 				mo5: '',
 				mo6: '',
-				getList:[]
+				getList: []
 			}
 		},
 		watch: {
@@ -81,32 +87,33 @@
 				this.getWeekTimeLong = time.getThisTime3()[n];
 				let self = this;
 
-					axios.get(address + 'index/api/getRecipes', {
-						params: {
-							userId: this.$store.state.userId,
-							createDate: new Date(self.getWeekTimeLong).getTime()
-						}
-					}).then((res) => {
-						if(res.data.data == null){
-							self.mo1 = '';
-							self.mo2 = '';
-							self.mo3 = '';
-							self.mo4 = '';
-							self.mo5 = '';
-							self.mo6 = '';
-						}else{
-							self.getList = eval(res.data.data.text);
-							self.mo1 = self.getList[0];
-							self.mo2 = self.getList[1];
-							self.mo3 = self.getList[2];
-							self.mo4 = self.getList[3];
-							self.mo5 = self.getList[4];
-							self.mo6 = self.getList[5];
-						}
-					}).catch((err) => {
-						console.log(err)
-					})
-				
+				axios.get(address + 'index/api/getRecipes', {
+					params: {
+						userId: this.$store.state.userId,
+						createDate: new Date(self.getWeekTimeLong).getTime()
+					}
+				}).then((res) => {
+					console.log('更新后的食谱',res)
+					if(res.data.data == null) {
+						self.mo1 = '';
+						self.mo2 = '';
+						self.mo3 = '';
+						self.mo4 = '';
+						self.mo5 = '';
+						self.mo6 = '';
+					} else {
+						self.getList = eval(res.data.data.text);
+						self.mo1 = self.getList[0];
+						self.mo2 = self.getList[1];
+						self.mo3 = self.getList[2];
+						self.mo4 = self.getList[3];
+						self.mo5 = self.getList[4];
+						self.mo6 = self.getList[5];
+					}
+				}).catch((err) => {
+					console.log(err)
+				})
+
 			}
 		},
 		computed: {
@@ -118,7 +125,7 @@
 			this.list2 = time.getThisTime();
 			this.demo2 = time.getDateWeek();
 			this.selectedTime = time.getDateWeek2();
-			
+
 			this.init();
 		},
 		mounted: function() {
@@ -128,13 +135,13 @@
 			flags(data) {
 				this.flag = data;
 			},
-			go(data){
-				if(data){
+			go(data) {
+				if(data) {
 					this.init();
 				}
 			},
 			init() {
-				
+
 				let self = this;
 				this.$nextTick(() => {
 					axios.get(address + 'index/api/getRecipes', {
@@ -144,7 +151,7 @@
 						}
 					}).then((res) => {
 						console.log(res)
-						if(res.data.code == 0){
+						if(res.data.code == 0) {
 							self.getList = eval(res.data.data.text);
 							self.mo1 = self.getList[0];
 							self.mo2 = self.getList[1];
@@ -153,7 +160,6 @@
 							self.mo5 = self.getList[4];
 							self.mo6 = self.getList[5];
 						}
-						
 
 					}).catch((err) => {
 						console.log(err)
@@ -183,12 +189,33 @@
 		}
 	}
 </script>
-
+<style type="text/css">
+	.scrollable .vux-tab-ink-bar {
+		display: none!important;
+	}
+		/* 判断ipad */	
+	@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+		.vux-slider{
+			margin-top: 20px;
+		}
+	}
+</style>
 <style scoped="scoped">
+	
 	.nav {
 		margin-top: 3rem;
 	}
 	
+	.vux-tab .vux-tab-item {
+		background: none!important;
+	}
+	
+	.scrollable .vux-tab-ink-bar {
+		display: none!important;
+	}
+	.scrollable .vux-tab-item{
+		flex:0 0 20%!important;	
+	}
 	.cookbook {
 		width: 100%;
 		height: 100%;
@@ -229,23 +256,44 @@
 		margin-top: 1rem;
 	}
 	
-	.food ul li img {
+	.food ul li .getImg {
 		display: inline-block;
 		width: 5rem;
 		height: 5rem;
 		border-radius: 50%;
 		margin: 1rem;
+		text-align: center;
+	}
+	.colGre{
+		background: #51da42;	
+	}
+	.colblu{
+		background: #76d8ff;	
+	}
+	.colyel{
+		background: #f9e237;	
+	}
+	.food ul li .getImg i{
+		color: #fff;
+		font-size: 3rem;
 	}
 	
 	.food-box {
 		flex: 1;
-		margin-top: 2rem;
+		padding-top: 1.2rem;
 	}
 	
 	.food-box a {
 		display: block;
 		font-size: 1.2rem;
 		margin-bottom: 0.5rem;
+    	line-height: 2.2rem;
 	}
-	
+	.food-box span{
+		display: inline-block;
+		 line-height: 2.2rem;
+		 width: 18rem;
+		 word-wrap: break-word;
+		 vertical-align: top;
+	}
 </style>

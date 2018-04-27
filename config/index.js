@@ -12,14 +12,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
 			'/auth': {
-				target: 'http://192.168.3.19:9999',
+				target: 'http://123.57.14.54:9999',
 				changeOrigin: true,
 				pathRewrite: {
 					'^/auth': '/auth'
 				}
 			},
 			'/ims': {
-				target: 'http://192.168.3.19:9999',
+				target: 'http://123.57.14.54:9999',
 				changeOrigin: true,
 				pathRewrite: {
 					'^/ims': '/ims'
@@ -28,8 +28,8 @@ module.exports = {
 		},
 
     // Various Dev Server settings
-    host: '192.168.9.243', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    host: 'localhost', // can be overwritten by process.env.HOST
+    port: 6088, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: true,

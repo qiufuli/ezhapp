@@ -14,8 +14,8 @@
 							<div class="monitor-left">
 								<img src="static/test/sxt.png" alt="" />
 								<div class="allSelect">
-									<input type="radio" value="1" :name="item.id" :checked="item.status == 1" @change="changes($event,item)" /><label >正常</label>
-									<input type="radio" value="0" :name="item.id"  :checked="item.status == 0" @change="changes($event,item)"  /><label >关闭</label>
+									<input type="radio" value="1" :name="item.id" :checked="item.status == 1" @change="changes($event,item)" /><label >关闭</label>
+									<input type="radio" value="0" :name="item.id"  :checked="item.status == 0" @change="changes($event,item)"  /><label >正常</label>
 								</div>
 							</div>
 							<div class="monitor-right">

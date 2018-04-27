@@ -1,5 +1,5 @@
 <template>
-	<transition name="slideY">
+	<transition name="slideX">
 		<div class="maillist child">
 			<mt-header fixed title="通讯录">
 				<router-link :to="getParentLink" slot="left">
@@ -20,7 +20,7 @@
 							<div class="mail_con" v-for="item in getData">
 								<h1 v-if="item.title != undefined">{{item.title}}</h1>
 								<div class="mail_item" v-for="test in item.items" @click="gosingle(test)">
-									<img src="static/test/test01.jpg" alt="" />
+									<img src="static/test/person.png" alt="" />
 									<div>
 										{{test.name}}
 									</div>
@@ -43,7 +43,8 @@
 				maillist: [],
 				getData:[],
 				getData2:[],
-				getname:''
+				getname:'',
+				clientId:''
 			}
 		},
 		components: {
@@ -112,11 +113,22 @@
 				this.init();
 			},
 			gosingle(test) {
+				if(test.userConfig!=null){
+					this.clientId=test.userConfig.clientId
+				}else{
+					this.clientId=''
+				}
+				//console.log(test.userConfig.)
 				if(this.$route.path.substring(this.$route.path.indexOf('/'), this.$route.path.lastIndexOf('/')) == '/Recommond') {
-					this.$router.push('/Recommond/maillist/contactDetails?name='+test.name+'&test=' + test.loginName+'&id='+test.id)
+				
+					this.$router.push('/Recommond/maillist/contactDetails?name='+test.name+'&test=' + test.loginName+'&id='+test.id+'&clientId='+this.clientId)
+					
 					
 				} else {
-					this.$router.push('/interact/maillist/mailsingle?name='+test.name+'&test=' + test.loginName+'&id='+test.id)
+				
+					this.$router.push('/interact/maillist/mailsingle?name='+test.name+'&test=' + test.loginName+'&id='+test.id+'&clientId='+this.clientId)
+					
+					
 				}
 			},
 			
@@ -195,7 +207,7 @@
 	.mail_item div {
 		display: inline-block;
 		width: 22rem;
-		border-bottom: 1px solid #efeded;
+		border-bottom: 1px solid #ededed;
 		line-height: 4.7rem;
 		font-size: 1.4rem;
 	}
@@ -206,12 +218,27 @@
 		}
 	}
 	
+	@media only screen and (min-width:340px) {
+		.mail_item div {
+			width: 22rem;
+		}
+	}
+	
+	@media only screen and (min-width:360px) {
+		.mail_item div {
+			width: 23rem;
+		}
+	}
 	@media only screen and (min-width:375px) {
 		.mail_item div {
 			width: 24rem;
 		}
 	}
-	
+	@media only screen and (min-width:414px) {
+		.mail_item div {
+			width: 25rem;
+		}
+	}
 	.mailDiv {
 		position: fixed;
 		top: 7.5rem;

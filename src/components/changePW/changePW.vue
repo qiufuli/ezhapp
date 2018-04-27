@@ -12,7 +12,7 @@
 			<div class="wrap">
 				<div class="common_list clearfix">
 					<span class="common_list_left">
-						原密码
+						原密码:
 					</span>
 					<div class="common_list_right">
 						<input class="inputStyle" ref="oldPS" type="password" placeholder="请输入原密码" />
@@ -20,7 +20,7 @@
 				</div>
 				<div class="common_list clearfix">
 					<span class="common_list_left">
-						新密码
+						新密码:
 					</span>
 					<div class="common_list_right">
 						<input class="inputStyle" ref="newPS" type="password" placeholder="请输入8-16位数字、字母的组合" />
@@ -28,7 +28,7 @@
 				</div>
 				<div class="common_list clearfix">
 					<span class="common_list_left">
-						确认密码
+						确认密码:
 					</span>
 					<div class="common_list_right">
 						<input class="inputStyle" ref="confirmPS" type="password" placeholder="请再次输入新密码" />
@@ -55,12 +55,12 @@
 		},
 		data() {
 			return {
+				websock:null,
 				show: false,
 				strs: ''
 			}
 		},
-		created(){
-		},
+		created() {},
 		methods: {
 			savePs() {
 				let self = this;
@@ -82,7 +82,7 @@
 					params.append('password', this.$refs.oldPS.value);
 					params.append('newPassword', this.$refs.newPS.value);
 					params.append('accessToken', this.$store.state.token);
-					params.append('refreshToken',this.$store.state.refresh_token);
+					params.append('refreshToken', this.$store.state.refresh_token);
 					axios.post(address + 'index/api/updatePwd', params).then(function(res) {
 						console.log(res)
 						if(res.data.code != 0) {
@@ -92,6 +92,9 @@
 							})
 						} else {
 							self.$store.dispatch('LogOut', self.$store.state).then(() => {
+								if(self.websock) {
+									self.websock.close()
+								}
 								self.$router.push({
 									path: '/'
 								})
@@ -132,5 +135,67 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
+	}
+	
+	.common_list {
+		height: 4rem;
+		line-height: 4rem;
+	}
+	
+	.common_list_left {
+		font-size: 1.2rem;
+	}
+	
+	input::-webkit-input-placeholder {
+		color: #C6C6C6;
+		font-size: 1.2rem;
+	}
+	
+	input::-moz-placeholder {
+		/* Mozilla Firefox 19+ */
+		color: #949494;
+		font-size: 1.2rem;
+	}
+	
+	input:-moz-placeholder {
+		/* Mozilla Firefox 4 to 18 */
+		color: #949494;
+		font-size: 1.2rem;
+	}
+	
+	input:-ms-input-placeholder {
+		/* Internet Explorer 10-11 */
+		color: #949494;
+		font-size: 1.2rem;
+	}
+	
+	@media only screen and (min-width:320px) {
+		.common_list_right {
+			width: 20rem;
+		}
+	}
+	
+	@media only screen and (min-width:340px) {
+		.common_list_right {
+			width: 22rem;
+		}
+	}
+	
+	@media only screen and (min-width:360px) {
+		.common_list_right {
+			width: 23rem;
+		}
+	}
+	
+	@media only screen and (min-width:375px) {
+		.common_list_right {
+			width: 24rem;
+		}
+	}
+	
+	@media only screen and (min-width:414px) {
+		.common_list_right {
+			width: 24rem;
+		}
 	}
 </style>

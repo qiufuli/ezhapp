@@ -2,12 +2,12 @@
 	<transition name="slideY">
 		<div class="mainsingle child">
 			<mt-header fixed :title="gname">
-				<router-link to="/interact/maillist" slot="left" @click="hide">
-					<mt-button icon="back" >关闭</mt-button>
-				</router-link>
+				<div class="mint-header-button is-left" @click="getlinkback()" slot="left">
+					<mt-button icon="back">关闭</mt-button>
+				</div>
 			</mt-header>
 			<div class="mainBox">
-				<scroll :data="maillist" :bottom="true" class="mainBox_1" ref="scrolls">
+				<scroll :data="maillist" :bottom="true" :pulldown="true" @scrollToEnd="scrollToEnd" class="mainBox_1" ref="scrolls">
 					<div class="clearfix">
 						<div class="mainbox_2_list clearfix" :class="item.align" v-for="item in maillist">
 							<div class="basestyle">
@@ -34,14 +34,16 @@
 			return {
 				//遍历的数组
 				maillist: [],
+				maillist2: [],
 				websock: null,
 				//发送的信息内容
 				talk: '',
 				gname: this.$route.query.name,
 				from: this.$store.state.name,
 				to: this.$route.query.test,
-				messages:'',
-				csh_scroll:{}
+				messages: '',
+				csh_scroll: {},
+				OFFSET: 1
 			}
 		},
 		components: {
@@ -53,17 +55,68 @@
 			}
 		},
 		created() {
-			this.$nextTick(function(){
+			this.$nextTick(function() {
 				this.csh_scroll = this.$refs.scrolls.$el.clientHeight;
+				this.init();
 			})
 		},
-		mounted(){
-			this.$nextTick(function(){
-				this.websock=this.$store.state.webSocket
+		mounted() {
+			this.$nextTick(function() {
+				this.websock = this.$store.state.webSocket;
 				this.websock.onmessage = this.websocketonmessage;
 			})
 		},
 		methods: {
+			scrollToEnd() {
+				this.OFFSET++;
+				console.log(this.OFFSET)
+				this.init();
+			},
+			init() {
+				let self = this;
+				console.log(this.csh_scroll, this.to, this.from)
+				let params = new URLSearchParams();
+				params.append('pageNum', self.OFFSET)
+				params.append('pageSize', '10')
+				params.append('from', self.from)
+				params.append('to', self.to)
+				axios.post(address3 + 'socket/msg/1/signle/msg', params).then((res) => {
+					if(res.data.code == 0) {
+						if(res.data.data != '') {
+							self.maillist2 = [];
+							console.log(res.data)
+							let getData = res.data.data;
+							getData.forEach(function(v, k) {
+								//								console.log(new Date(v.createTime))
+								let target_obj1 = {
+									align: 'right',
+									mes: ''
+								}
+								if(v.from == self.from) {
+									target_obj1 = {
+										align: 'right',
+										mes: JSON.parse(v.text)['message']['content']
+									}
+								} else {
+									target_obj1 = {
+										align: 'left',
+										mes: JSON.parse(v.text)['message']['content']
+									}
+
+								}
+
+								self.maillist2.push(target_obj1);
+							})
+							
+							self.maillist = self.maillist2.concat(self.maillist);
+						}
+					}
+
+				})
+			},
+			getlinkback() {
+				return this.$router.back(-1);
+			},
 			socket() {
 				let self = this;
 				if(self.talk != '') {
@@ -80,33 +133,42 @@
 						},
 						type: "message"
 					}));
-				}else{
+					if(self.$route.query.clientId != '') {
+						let params = new URLSearchParams();
+						params.append('userId', self.$store.state.userId)
+						params.append('clientId', self.$route.query.clientId)
+						params.append('text', self.talk)
+						axios.post(address + 'push/api/chatMessage', params).then((res) => {
+							console.log(res)
+						})
+					}
+				} else {
 					return false;
 				}
 			},
 			websocketonmessage(e) { //数据接收
-				console.log('消息列表接受',e)
+				console.log('消息列表接受', e)
 				let redata = JSON.parse(e.data);
-				let target_obj ={
-						align:'right',
-						mes:self.talk
-					}
+				let target_obj = {
+					align: 'right',
+					mes: self.talk
+				}
 
-				if(redata.message.from != undefined){
+				if(redata.message.from != undefined) {
 					console.log(redata.message.from)
-					if(redata.message.from == this.from){
+					if(redata.message.from == this.from) {
 						target_obj.align = 'right';
 						target_obj.mes = this.talk;
 						this.maillist.push(target_obj);
 						this.talk = '';
-					}else{
+					} else {
 						target_obj.align = 'left';
 						target_obj.mes = redata.message.content;
 						this.maillist.push(target_obj);
 					}
-					if(this.$refs.scrolls.scroll.scrollerHeight > this.csh_scroll){
-					this.$refs.scrolls.scrollTo(0,this.$refs.scrolls.scroll.maxScrollY-50);
-						
+					if(this.$refs.scrolls.scroll.scrollerHeight > this.csh_scroll) {
+						this.$refs.scrolls.scrollTo(0, this.$refs.scrolls.scroll.maxScrollY - 50);
+
 					}
 				}
 			},
@@ -114,16 +176,13 @@
 				this.websock.send(agentData);
 			},
 			websocketclose(e) { //关闭
-				console.log("connection closed (" +e.code + ")");
+				console.log("connection closed (" + e.code + ")");
 			},
 			//获取当前发送时间
 			getDateFull() {
 				var date = new Date();
 				var currentdate = date.getFullYear() + "-" + appendZero(date.getMonth() + 1) + "-" + appendZero(date.getDate()) + " " + appendZero(date.getHours()) + ":" + appendZero(date.getMinutes()) + ":" + appendZero(date.getSeconds());
 				return currentdate;
-			},
-			hide(){
-				
 			}
 		}
 	}
@@ -215,7 +274,7 @@
 		max-width: 16rem;
 		vertical-align: top;
 		font-size: 1.4rem;
-		word-wrap:break-word;
+		word-wrap: break-word;
 	}
 	
 	.mainbox_2_list .test::before {
