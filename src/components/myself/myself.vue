@@ -17,7 +17,7 @@
 					</i>
 				</div>
 			</router-link>
-			<router-link v-if="false" tag="div" to="/myself/changePW" class="list clearfix mb_1">
+			<router-link tag="div" to="/myself/changePW" class="list clearfix mb_1">
 				<div class="list_img">
 					<img src="static/test/m1.png" alt="" />
 				</div>

@@ -5,7 +5,7 @@
 				<div class="back" @click="hide" slot="left">
 					<mt-button icon="back"></mt-button>
 				</div>
-				<mt-button slot="right" @click="tj()">提交</mt-button>-->
+				<mt-button slot="right" @click="tj()" :class="{active:isPublish}">提交</mt-button>-->
 			</mt-header>
 			<div class="food-content">
 				<div class="foodBox">
@@ -43,9 +43,9 @@
 					<img src="static/test/upload.png" @click.stop="addPic" />
 					<input id="File2" runat="server" @change="changes($event)" type="file" accept="image/*" multiple="multiple" capture="camera" style="display:none" />
 					<ul class="list-ul clearfix" v-if="flag">
-						<li class="list-li " v-for="(iu, index) in imgUrls">
+						<li class="list-li " v-for="(iu, index) in imgUrls2">
 							<a class="list-link" @click='previewImage(iu)'>
-								<img :src="imgURL+iu">
+								<img :src="iu">
 							</a>
          				 <span class="list-img-close" @click="del(index)"></span>
 						</li>
@@ -77,10 +77,14 @@
 				middayName2: '',
 				eveningName1: '',
 				eveningName2: '',
+				imgUrls2:[],
 				list: [],
 				flag:false,
 				imgURL:imgURL,
-				imgUrls: []
+				imgUrls: [],
+				targetImg:'',
+				isPublish:false,
+				active:'active'
 			}
 		},
 		created() {
@@ -93,6 +97,7 @@
 				this.$emit('flags', false);
 			},
 			tj() {
+				if(this.isPublish)return;
 				var params = new URLSearchParams();
 				params.append('userId', this.$store.state.userId);
 				params.append('createDate', new Date(this.longtime).getTime());
@@ -100,12 +105,17 @@
 				params.append('img', this.imgUrls.join(','));
 				axios.post(address + 'index/api/iuRecipes', params).then((res) => {
 					if(res.data.code == 0) {
-						this.$emit('flags', false);
-						this.$emit('go', true);
+						
+						this.imgUrls=[];
+						this.imgUrls2=[];
+						this.comText='';
+//						this.targetImg='';
 						Toast({
 							message: '食谱提交成功',
 							duration: 2000
 						})
+						this.$emit('flags', false);
+						this.$emit('go', true);
 					}
 					console.log(res)
 				}).catch((err) => {
@@ -145,6 +155,9 @@
 				var dataURL;
 				if(fileObj && fileObj.files && fileObj.files[0]) {
 					dataURL = fileObj.files[0];
+					this.imgUrls2.push(windowURL.createObjectURL(fileObj.files[0]));
+						this.flag = true;
+						this.isPublish = true;
 					this.getImg(dataURL);
 				}
 			},
@@ -166,8 +179,9 @@
 					if(res.data.code == 0){
 						self.targetImg =res.data.data;
 						self.imgUrls.push(self.targetImg)
-						self.flag = true;
+//						self.imgUrls2= self.imgUrls;
 						console.log('imgUrls===>', self.imgUrls)
+						self.isPublish = false;
 					}
 				})
 				})
@@ -175,7 +189,7 @@
 			},
 			//删除图片
 			del(index){
-				console.log(index)
+				this.imgUrls2.splice(index,1)
 				this.imgUrls.splice(index,1)
 			}
 		}
@@ -380,5 +394,8 @@
   	position: absolute;
   	top: 50%;
   	transform: translateY(-50%);
+  }
+  .active{
+  	color: #CCCCCC;
   }
 </style>

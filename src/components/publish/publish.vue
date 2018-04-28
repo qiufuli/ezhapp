@@ -5,7 +5,7 @@
 				<mt-button slot="left" @click="hide">
 					<mt-button icon="back"></mt-button>
 				</mt-button>
-				<mt-button slot="right" @click.native="send()">
+				<mt-button slot="right" @click.native="send()"  :class="{active:isPublish}">
 					发布
 				</mt-button>
 			</mt-header>
@@ -18,9 +18,9 @@
 					<img src="static/test/upload.png" @click.stop="addPic" />
 					<input id="File2" runat="server" @change="changes($event)" type="file" accept="image/*" multiple="multiple" capture="camera" style="display:none" />
 					<ul class="list-ul clearfix" v-if="flag">
-						<li class="list-li " v-for="(iu, index) in imgUrls">
+						<li class="list-li " v-for="(iu, index) in imgUrls2">
 							<a class="list-link" @click='previewImage(iu)'>
-								<img :src="imgURL+iu">
+								<img :src="iu">
 							</a>
          				 <span class="list-img-close" @click="del(index)"></span>
 						</li>
@@ -53,10 +53,14 @@
 				remnant: 0,
 				comText: '',
 				imgUrls: [],
+				imgUrls2:[],
 				isPreview: false,
 				previewImg:'',
 				flag:false,
-				imgURL:imgURL
+				imgURL:imgURL,
+				targetImg:'',
+				isPublish:false,
+				active:'active'
 			}
 		},
 		components: {
@@ -83,6 +87,7 @@
 			},
 			send() {
 				console.log(this.imgUrls)
+				if(this.isPublish)return;
 				if(this.comText != '') {
 					let self = this;
 					let params = new URLSearchParams();
@@ -94,12 +99,17 @@
 					}
 					axios.post(address + 'index/api/addBabyCri', params).then(function(res) {
 						if(res.data.code == 0) {
+							
+							self.imgUrls=[];
+							self.imgUrls2=[];
+							self.comText='';
+							self.$emit('flag');
+							self.hide();
 							Toast({
 								message:"发布宝贝圈成功",
 								duration: 2000
 							})
-							self.$emit('flag');
-							self.hide();
+							
 						}
 					}).catch(function(err) {
 						console.log(err)
@@ -122,9 +132,16 @@
 				console.log(e.currentTarget)
 				var windowURL = window.URL || window.webkitURL;
 				var dataURL;
+				let self = this;
 				if(fileObj && fileObj.files && fileObj.files[0]) {
 					dataURL = fileObj.files[0];
+//					self.targetImg = windowURL.createObjectURL(fileObj.files[0]);
+					self.imgUrls2.push(windowURL.createObjectURL(fileObj.files[0]));
+						self.flag = true;
+					console.log('self.imgUrls2',self.imgUrls2)
+					this.isPublish = true;
 					this.getImg(dataURL);
+					
 				}
 			},
 			getImg(files) {
@@ -145,8 +162,9 @@
 					if(res.data.code == 0){
 						self.targetImg =res.data.data;
 						self.imgUrls.push(self.targetImg)
-						self.flag = true;
+//						self.imgUrls2= self.imgUrls;
 						console.log('imgUrls===>', self.imgUrls)
+						self.isPublish = false;
 					}
 				})
 				})
@@ -155,6 +173,7 @@
 			//删除图片
 			del(index){
 				console.log(index)
+				this.imgUrls2.splice(index,1)
 				this.imgUrls.splice(index,1)
 			}
 //			//创建图片
@@ -375,5 +394,8 @@
   	position: absolute;
   	top: 50%;
   	transform: translateY(-50%);
+  }
+  .active{
+  	color: #CCCCCC;
   }
 </style>

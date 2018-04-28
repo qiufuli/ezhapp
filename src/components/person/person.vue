@@ -113,12 +113,12 @@
 				var $img = document.getElementById("preview");
 				if(fileObj && fileObj.files && fileObj.files[0]) {
 					dataURL = fileObj.files[0];
+					this.targetImg = windowURL.createObjectURL(fileObj.files[0]);
 					this.getImg(dataURL);
 				}
 			},
 			getImg(files) {
 				let self = this;
-
 				//图片这里用new FormData()
 				 let params = new FormData()
 				params.append('userId', this.$store.state.sysUser.id)
@@ -133,11 +133,12 @@
 					console.log('上传图片成功返回===》', res)
 					if(res.data.code == 0){
 //						self.targetImg = imgURL+ res.data.data;
+					setTimeout(function(){
 						self.$store.state.sysUser.imageId = res.data.data;
-					self.targetImg = imgURL+self.$store.state.sysUser.imageId;
-						
-						console.log('getImg===>', self.$store.state.sysUser)
-						console.log('getImg===>', self.targetImg )
+//					self.targetImg = imgURL+self.$store.state.sysUser.imageId;
+					},1000)
+					
+
 					}
 				})
 			}

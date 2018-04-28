@@ -47,7 +47,7 @@
 
 <script>
 	import { MessageBox, Toast } from 'mint-ui';
-
+	import { removeUsert } from '@/utils/auth'
 	import vConfirm from '@/components/confirm/changeConfirm';
 	export default {
 		components: {
@@ -55,7 +55,7 @@
 		},
 		data() {
 			return {
-				websock:null,
+				websock: null,
 				show: false,
 				strs: ''
 			}
@@ -91,14 +91,29 @@
 								duration: 2000
 							})
 						} else {
-							self.$store.dispatch('LogOut', self.$store.state).then(() => {
-								if(self.websock) {
-									self.websock.close()
-								}
-								self.$router.push({
-									path: '/'
-								})
+							//							self.$store.dispatch('LogOut', self.$store.state).then(() => {
+							//								if(self.websock) {
+							//									self.websock.close()
+							//								}
+							//								self.$router.push({
+							//									path: '/'
+							//								})
+							//							})
+							if(self.websock) {
+								self.websock.close()
+							}
+							removeUsert();
+							self.$router.push({
+								path: '/'
 							})
+							let info = plus.push.getClientInfo();
+							if(info.clientid) {
+								let params1 = new URLSearchParams();
+								params1.append('clientId', info.clientid)
+								axios.post(address + 'push/api/loginOut', params1).then(function(res) {
+									console.log(res)
+								})
+							}
 						}
 					}).catch(function(err) {
 						console.log(err)

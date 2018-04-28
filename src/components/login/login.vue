@@ -43,20 +43,17 @@
 		},
 		methods: {
 			init() {
-				alert(1)
 				let info = plus.push.getClientInfo();
-				alert(2)
-				alert(info.clientid)
 				if(info.clientid){
 					let params = new URLSearchParams();
 					params.append('clientId', info.clientid)
+					var self = this;
 					axios.post(address+'push/api/checkLoginStatus',params).then(function(res){
-						alert(res.data.data.status)
-						alert(res.data.data.userId)
 						if(res.data.code == 0){
 							if(res.data.data.status == 1){
-								this.$store.state.userId = res.data.data.userId;
-								this.$router.push('/Recommond')
+								alert("skip")
+								self.$store.state.userId = res.data.data.userId;
+								self.$router.push('/Recommond')
 							}
 						}
 					})
