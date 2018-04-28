@@ -14,25 +14,21 @@
 					<textarea class="sendText" @input="descInput" placeholder="请输入内容..." maxlength="240" v-model="comText"></textarea>
 					<span>{{remnant}}/240</span>
 				</div>
-				<!--<div class="up">
+				<div class="up">
 					<img src="static/test/upload.png" @click.stop="addPic" />
-					<input ref="divGenres" type="file" accept="image/*" multiple="multiple" capture="camera" @change="onFileChange" style="display: none;">
-					<ul class="list-ul clearfix">
+					<input id="File2" runat="server" @change="changes($event)" type="file" accept="image/*" multiple="multiple" capture="camera" style="display:none" />
+					<ul class="list-ul clearfix" v-if="flag">
 						<li class="list-li " v-for="(iu, index) in imgUrls">
 							<a class="list-link" @click='previewImage(iu)'>
-								<img :src="iu">
+								<img :src="imgURL+iu">
 							</a>
-         			 <span class="list-img-close" @click='delImage(index)'></span>
+         				 <span class="list-img-close" @click="del(index)"></span>
 						</li>
 					</ul>
 				</div>
-				<div class="add-preview" v-show="isPreview" @click="closePreview">
+				<div class="add-preview" v-show="isPreview">
 			      <img :src="previewImg">
-			    </div>-->
-			    
-			    
-			    
-			    
+			    </div>
 				<!--<div class="select" @click="selectShow">
 					<i class="iconfont icon-yanjing icon1"></i>
 					<span>选择可见范围</span>
@@ -58,7 +54,9 @@
 				comText: '',
 				imgUrls: [],
 				isPreview: false,
-				previewImg:''
+				previewImg:'',
+				flag:false,
+				imgURL:imgURL
 			}
 		},
 		components: {
@@ -86,12 +84,14 @@
 			send() {
 				console.log(this.imgUrls)
 				if(this.comText != '') {
-
 					let self = this;
 					let params = new URLSearchParams();
 					params.append('userId', this.$store.state.userId);
 					params.append('createDate', new Date().getTime());
 					params.append('text', this.comText);
+					if(self.imgUrls){
+					params.append('img', self.imgUrls.join(','));
+					}
 					axios.post(address + 'index/api/addBabyCri', params).then(function(res) {
 						if(res.data.code == 0) {
 							Toast({
@@ -113,51 +113,85 @@
 			},
 			//触发input
 			addPic: function(e) {
-				let els = this.$refs.divGenres.click()
-				return false
+				document.getElementById('File2').click()
 			},
 			//input change事件
-			onFileChange(e) {
-				var files = e.target.files || e.dataTransfer.files;
-				console.log(files)
-				if(!files.length) return;
-				this.createImage(files, e);
+			changes(e) {
+				var fileObj = e.currentTarget;
+				console.log(e)
+				console.log(e.currentTarget)
+				var windowURL = window.URL || window.webkitURL;
+				var dataURL;
+				if(fileObj && fileObj.files && fileObj.files[0]) {
+					dataURL = fileObj.files[0];
+					this.getImg(dataURL);
+				}
 			},
-			//创建图片
-			createImage(file, e) {
-				Toast({
-					  message: '图片正在上传中...',
-					  duration: 2000
-					})
-				let vm = this;
-				lrz(file[0], {
-					width: 480
-				}).then(function(rst) {
-					
-					vm.imgUrls.push(rst.base64);
-					return rst;
-				}).always(function() {
-					// 清空文件上传控件的值
-					e.target.value = null;
-				});
-				console.log(vm.imgUrls)
-			},
-			//图片点击事件
-			previewImage(url){
-				let vm = this;
-		        vm.isPreview = true;
-		        vm.previewImg = url;
-			},
-			closePreview(){
-				let vm = this;
-		        vm.isPreview = false;
-		        vm.previewImg = "";
+			getImg(files) {
+				let self = this;
+				//图片这里用new FormData()
+				 let params = new FormData()
+				params.append('userId', this.$store.state.sysUser.id)
+				params.append('type', 'baby');
+				params.append('file', files);
+				let config = {
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}
+				};
+				this.$nextTick(function(){
+					axios.post(address + 'index/api/uploadPic', params,config).then(function(res) {
+					console.log('上传图片成功返回===》', res)
+					if(res.data.code == 0){
+						self.targetImg =res.data.data;
+						self.imgUrls.push(self.targetImg)
+						self.flag = true;
+						console.log('imgUrls===>', self.imgUrls)
+					}
+				})
+				})
+				
 			},
 			//删除图片
-			delImage(index){
-				let vm = this;
-				vm.imgUrls.splice(index, 1);
+			del(index){
+				console.log(index)
+				this.imgUrls.splice(index,1)
 			}
+//			//创建图片
+//			createImage(file, e) {
+//				Toast({
+//					  message: '图片正在上传中...',
+//					  duration: 1000
+//					})
+//				let vm = this;
+//				lrz(file[0], {
+//					width: 480
+//				}).then(function(rst) {
+//					console.log(rst)
+//					vm.imgUrls.push(rst.base64);
+//					return rst;
+//				}).always(function() {
+//					// 清空文件上传控件的值
+//					e.target.value = null;
+//				});
+//				console.log(vm.imgUrls)
+//			},
+//			//图片点击事件
+//			previewImage(url){
+//				let vm = this;
+//		        vm.isPreview = true;
+//		        vm.previewImg = url;
+//			},
+//			closePreview(){
+//				let vm = this;
+//		        vm.isPreview = false;
+//		        vm.previewImg = "";
+//			},
+//			//删除图片
+//			delImage(index){
+//				let vm = this;
+//				vm.imgUrls.splice(index, 1);
+//			}
 			
 		}
 	}

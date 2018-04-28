@@ -14,7 +14,6 @@
 								<div class="test">{{item.mes}}</div>
 								<img class="list_img" src="static/test/test01.jpg" alt="" />
 							</div>
-
 						</div>
 					</div>
 				</scroll>

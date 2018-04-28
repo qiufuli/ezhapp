@@ -20,11 +20,10 @@
 </template>
 
 <script>
-	import * as request from '@/utils/request.js'
-	import { getToken } from '@/utils/auth'
+//	import * as request from '@/utils/request.js'
+	import { setUsert,getUsert} from '@/utils/auth'
 	import * as scoket from '@/common/util/webscokt.js'
 	import {Toast} from 'mint-ui';
-	
 	export default {
 		data() {
 			return {
@@ -44,34 +43,73 @@
 		},
 		methods: {
 			init() {
-				if(getToken() != undefined) {
-					this.$router.push('/Recommond')
+				let info = plus.push.getClientInfo();
+				alert(info.clientid)
+				if(info.clientid){
+					let params = new URLSearchParams();
+					params.append('clientId', info.clientid)
+					axios.post(address+'push/api/checkLoginStatus',params).then(function(res){
+						alert(res)
+						if(res.data.code == 0){
+							if(res.data.data.status == 1){
+								this.$store.state.userId = res.data.data.userId;
+								this.$router.push('/Recommond')
+							}
+						}
+					})
 				}
+//				if(getUsert() != undefined) {
+//					this.$router.push('/Recommond')
+//				}
 			},
 			changeshow() {
 				console.log(this.value)
 			},
 			//登录接口
 			go() {
-				if(this.loginForm.username == '' || this.loginForm.password == '') {
-					Toast({
-					  message: '用户名和密码不能为空',
-					  duration: 2000
-					})
+//				if(this.loginForm.username == '' || this.loginForm.password == '') {
+//					Toast({
+//					  message: '用户名和密码不能为空',
+//					  duration: 2000
+//					})
+//
+//				} else {
+//					this.$store.dispatch('Login', this.loginForm).then(() => {
+//						this.$router.push({
+//							path: '/Recommond'
+//						})
+//					this.$store.dispatch('GetInfo', this.$store.state).then(() => { //加入聊天室
+//						this.getWebsoket()
+//						this.getPushInfo();
+//					})
+//					}).catch((error) => {
+//						console.log(error)
+//					})
+//				}
 
-				} else {
-					this.$store.dispatch('Login', this.loginForm).then(() => {
-						this.$router.push({
+				let self = this;
+				let params = new URLSearchParams();
+				params.append('encode', this.loginForm.username)
+				params.append('sign', this.loginForm.password)
+				axios.post(address+'index/api/login',params).then(function(res){
+						if(res.data.code == 0){
+							self.$store.state.userId =res.data.data;
+							self.$store.state.name =self.loginForm.username;
+							setUsert(self.$store.state.userId)
+							self.$router.push({
 							path: '/Recommond'
 						})
-					this.$store.dispatch('GetInfo', this.$store.state).then(() => { //加入聊天室
-						this.getWebsoket()
-						this.getPushInfo();
-					})
-					}).catch((error) => {
-						console.log(error)
-					})
-				}
+							//getWebsoket 需要传 name ---ezh qfl 这种 
+							self.getWebsoket()
+							self.getPushInfo();
+						}else{
+							Toast({
+							  message: res.data.msg,
+							  duration: 2000
+							})
+						}
+					console.log(res)
+				})
 			},
 			getWebsoket(){
 				this.websock=scoket.init()
@@ -208,10 +246,6 @@
 		height: 3rem;
 		margin: 2rem 0 0 15%;
 		font-size: 1.2rem;
-		 /*background: -webkit-linear-gradient(left,#f4ae00, #f1dd29f2); 
-		  background: -o-linear-gradient(right,#f4ae00, #f1dd29f2); 
-		  background: -moz-linear-gradient(right,#f4ae00, #f1dd29f2); 
-		  background: linear-gradient(to right,#f4ae00, #f1dd29f2); */
 	}
 	
 	.forgetPW {

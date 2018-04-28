@@ -32,7 +32,6 @@ export default {
   },
   created(){
   	this.init();
-  	console.log(this.$route.path)
   },
 	methods:{
 		init(){

@@ -10,7 +10,7 @@
 				<scroll :data="test" class="perPosition" :pullup="pullup" @scrollToEnd="scrollToEnd">
 					<div>
 						<div class="perList clearfix" v-for="item in test">
-							<img class="per_img" src="static/test/person.png" alt="" />
+							<img class="per_img" :src="imgURL+item.userImageId" onerror="src='static/test/person.png'" alt="" />
 							<div class="per_con">
 								<div class="per_h1">
 									{{item.from}}教师
@@ -45,7 +45,9 @@
 				],
 				pullup: true,
 				end: false,
-				start: false
+				start: false,
+				imgURL:imgURL
+				
 			}
 		},
 		created() {

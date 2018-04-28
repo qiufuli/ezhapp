@@ -7,6 +7,20 @@ const SelectTab='Admin-selectTab'
 const userId='Admin-userId'
 const userType='userType'
 const OfficeId="officeId"
+export function getUsert() {
+  return Cookies.get('usert')
+}
+
+export function setUsert(usert) {
+  return Cookies.set('usert', usert)
+}
+
+export function removeUsert() {
+  return Cookies.remove('usert')
+}
+
+
+
 export function getUserType() {
   return Cookies.get(userType)
 }

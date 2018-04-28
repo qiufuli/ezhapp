@@ -20,7 +20,7 @@
 							<div class="mail_con" v-for="item in getData">
 								<h1 v-if="item.title != undefined">{{item.title}}</h1>
 								<div class="mail_item" v-for="test in item.items" @click="gosingle(test)">
-									<img src="static/test/person.png" alt="" />
+									<img :src="imgURL+test.imageId" onerror="src='static/test/person.png'"  alt="" />
 									<div>
 										{{test.name}}
 									</div>
@@ -44,7 +44,9 @@
 				getData:[],
 				getData2:[],
 				getname:'',
-				clientId:''
+				clientId:'',
+				imgURL:imgURL
+				
 			}
 		},
 		components: {

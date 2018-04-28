@@ -4,6 +4,7 @@ export function login(username, password, randomStr, code) {
 	var grant_type = 'password'
 	var scope = 'server'
 	return request({
+		//http://gateway.ezhihe.cn
 		url: '/auth/oauth/token',
 		headers: {
 			'Authorization': 'Basic ZXpoOnNvbG9y'

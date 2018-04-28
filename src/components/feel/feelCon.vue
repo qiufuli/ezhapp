@@ -12,9 +12,19 @@
 						<datetime class="top" v-model="times" :min-year=2017 :max-year=2099 format="YYYY-MM-DD" :end-date="endDate" @on-change="change" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="确定" cancel-text=" "></datetime>
 					</group>
 					<div class="timeList" v-for="item in timeList" v-show="item.signTime != null">
-						<p>测量时间：{{item.signTime}}</p>
-						<p style="color:#fb7065">测量温度：{{item.signTemp}}℃</p>
+						
 					</div>
+					<scroll class="minHeight">
+						<div>
+							<div class="timeList" v-for="item in timeList" v-show="item.signTime != null">
+								<div class="timeItem">
+									<p>测量时间：{{item.signTime}}</p>
+									<p style="color:#f6a305">测量温度：{{item.signTemp}}℃</p>
+								</div>
+							</div>
+						</div>
+
+					</scroll>
 					<div class="noTimeList" v-show="timeList[0] == null">当天没有体感记录哦~</div>
 				</div>
 			</div>
@@ -26,6 +36,8 @@
 	import { Datetime, Group } from 'vux'
 	import * as time from '@/common/util/time.js'
 	import { Toast ,Indicator } from 'mint-ui';
+	import Scroll from '@/base/scroll/scroll';
+	
 	export default {
 		props: {
 			selectedItem: {
@@ -37,7 +49,8 @@
 		},
 		components: {
 			Datetime,
-			Group
+			Group,
+			Scroll
 		},
 		data() {
 			return {
@@ -187,5 +200,25 @@
 		font-size: 1.6rem;
 		text-align: center;
 		background: #fff;
+	}
+	.wrap-box{
+		position: absolute;
+		top: 3rem;
+		bottom: 0;
+		width: 100%;
+	}
+	.minHeight{
+		position: absolute;
+		top: 3rem;
+		bottom: 0;
+		width: 100%;
+		overflow: hidden;
+	}
+	.timeItem {
+		margin-bottom: 1rem;
+	}
+	.timeItem p {
+		display: block;
+		text-indent: 2rem;
 	}
 </style>

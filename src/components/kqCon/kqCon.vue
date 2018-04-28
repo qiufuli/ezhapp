@@ -11,7 +11,20 @@
 					<group>
 						<datetime class="top" v-model="times" :min-year=2017 :max-year=2099 format="YYYY-MM-DD" :end-date="endDate" @on-change="change" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="确定" cancel-text=" "></datetime>
 					</group>
-					<div class="timeList" v-for="item in timeList" v-show="item.signTime != null">打卡时间：{{item.signTime}}</div>
+					
+					<scroll class="minHeight">
+						<div>
+							<div class="timeList" v-for="item in timeList" v-show="item.signTime != null">
+								<div class="timeItem">
+									<img :src="item.picUrl? imgURL+item.picUrl : 'static/test/person.png'" onerror="src='static/test/person.png'" alt="" />
+									<p>打卡时间：{{item.signTime}}</p>
+								</div>
+							</div>
+							
+						</div>
+
+					</scroll>
+
 					<div class="noTimeList" v-show="timeList[0] == null">当天没有打卡记录哦~</div>
 				</div>
 			</div>
@@ -20,9 +33,10 @@
 </template>
 
 <script>
+	import Scroll from '@/base/scroll/scroll';
 	import { Datetime, Group } from 'vux'
 	import * as time from '@/common/util/time.js'
-	import { Toast ,Indicator } from 'mint-ui';
+	import { Toast, Indicator } from 'mint-ui';
 	export default {
 		props: {
 			selectedItem: {
@@ -34,7 +48,8 @@
 		},
 		components: {
 			Datetime,
-			Group
+			Group,
+			Scroll
 		},
 		data() {
 			return {
@@ -48,7 +63,8 @@
 				selectTime: new Date().getTime(), //当前时间
 				times: "", //当前时间
 				timeList: [],
-				endDate: ''
+				endDate: '',
+				imgURL:imgURL
 			}
 		},
 		computed: {
@@ -176,5 +192,39 @@
 		font-size: 1.6rem;
 		text-align: center;
 		background: #fff;
+	}
+	
+	.timeItem {
+		margin-bottom: 1rem;
+	}
+	
+	.timeItem div {
+		display: inline-block;
+		width: 4rem;
+		height: 4rem;
+	}
+	
+	.timeItem img {
+		display: inline-block;
+		width: 10rem;
+		height: 10rem;
+	}
+	
+	.timeItem p {
+		display: block;
+		text-indent: 2rem;
+	}
+	.wrap-box{
+		position: absolute;
+		top: 3rem;
+		bottom: 0;
+		width: 100%;
+	}
+	.minHeight{
+		position: absolute;
+		top: 3rem;
+		bottom: 0;
+		width: 100%;
+		overflow: hidden;
 	}
 </style>

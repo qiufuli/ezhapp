@@ -10,24 +10,25 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-			'/auth': {
-				target: 'http://123.57.14.54:9999',
-				changeOrigin: true,
-				pathRewrite: {
-					'^/auth': '/auth'
-				}
-			},
-			'/ims': {
-				target: 'http://123.57.14.54:9999',
-				changeOrigin: true,
-				pathRewrite: {
-					'^/ims': '/ims'
-				}
-			}
-		},
+//  proxyTable: {
+//			'/auth': {
+//				target: 'http://123.57.14.54:9999',
+//				changeOrigin: true,
+//				pathRewrite: {
+//					'^/auth': '/auth'
+//				}
+//			},
+//			'/ims': {
+//				target: 'http://123.57.14.54:9999',
+//				changeOrigin: true,
+//				pathRewrite: {
+//					'^/ims': '/ims'
+//				}
+//			}
+//		},
 
     // Various Dev Server settings
+    //123.57.14.54
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 6088, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,

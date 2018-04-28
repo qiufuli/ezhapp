@@ -9,7 +9,7 @@
 			</mt-header>
 			<div class="wrap">
 				<div class="person_bg">
-					<img src="static/test/test01.jpg" alt="" />
+					<img :src="avatar" onerror="src='static/test/person.png'" alt="" />
 					<p>{{username}}</p>
 				</div>
 				<div class="detail_person_list clearfix">
@@ -63,7 +63,8 @@
 				usertypename: '',
 				loginName:'',
 				id:'',
-				clientId:''
+				clientId:'',
+				avatar:''
 			}
 		},
 		created() {
@@ -103,6 +104,7 @@
 						} else if(res.data.data.userType == 5) {
 							self.usertypename = '家长'
 						}
+						self.avatar = imgURL+res.data.data.imageId;
 						self.menus1 = [{
 								name: self.mobile,
 								method: self.getStr

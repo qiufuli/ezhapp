@@ -3,16 +3,16 @@
 	<transition name="slideY">
 		<div class="detail_person child">
 			<mt-header fixed title="个人信息">
-				<router-link :to="getParentLink" slot="left">
+				<div class="mint-header-button is-left" @click="getlinkback()" slot="left">
 					<mt-button icon="back"></mt-button>
-				</router-link>
+				</div>
 			</mt-header>
 			<div class="wrap">
 				<div class="detail_person_img">
-					<img class="targetImg" id="preview" :src="targetImg" alt="" />
-					<!--<i class="ca" @click="camera()">
+					<img class="targetImg" id="preview" :src="targetImg" onerror="src='static/test/person.png'" alt="" />
+					<i class="ca" @click="camera()">
 						<img src="static/test/ca.png" alt="" />
-					</i>-->
+					</i>
 					<input id="File2" runat="server" @change="changes($event)" type="file" accept="image/*" multiple="multiple" capture="camera" style="display:none" />
 				</div>
 				<div class="detail_person_list clearfix">
@@ -58,15 +58,19 @@
 			}
 		},
 		computed: {
-			getParentLink() {
-				// 动态获取父路由
-				return this.$route.path.substring(this.$route.path.indexOf('/'), this.$route.path.lastIndexOf('/'));
-			}
+//			getParentLink() {
+//				// 动态获取父路由
+//				console.log( this.$route.path.substring(this.$route.path.indexOf('/'), this.$route.path.lastIndexOf('/')))
+//				return this.$route.path.substring(this.$route.path.indexOf('/'), this.$route.path.lastIndexOf('/'));
+//			}
 		},
 		created() {
 			this.init();
 		},
 		methods: {
+			getlinkback(){
+				return this.$router.back(-1)
+			},
 			camera() {
 				document.getElementById('File2').click()
 
@@ -74,15 +78,15 @@
 			init() {
 				let self = this;
 				this.$nextTick(function() {
-					console.log('sysuser这里', this.$store.state.sysUser)
+					console.log('sysuser这里', self.$store.state.sysUser)
 					console.log('comeon！', self.$store.state.userType)
+					self.targetImg = imgURL+self.$store.state.sysUser.imageId;
 					self.sysUser = self.$store.state.sysUser;
 					self.mobile = self.sysUser.mobile;
 					self.school = self.sysUser.office.name;
-					if(self.sysUser.avatar != null){
+					if(self.sysUser.avatar != null) {
 						self.targetImg = self.sysUser.avatar;
 					}
-
 					if(self.$store.state.userType == 3) {
 						self.name = self.sysUser.name + '园长';
 						self.identity = '园长';
@@ -108,9 +112,8 @@
 				var dataURL;
 				var $img = document.getElementById("preview");
 				if(fileObj && fileObj.files && fileObj.files[0]) {
-					dataURL = windowURL.createObjectURL(fileObj.files[0]);
-					//					$img.setAttribute('src', dataURL);
-					this.targetImg = dataURL
+					dataURL = fileObj.files[0];
+					this.getImg(dataURL);
 				} else {
 					dataURL = e.currentTarget.value;
 					var imgObj = document.getElementById("preview");
@@ -119,7 +122,30 @@
 					// 2、src属性需要像下面的方式添加，上面的两种方式添加，无效；
 					imgObj.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
 					imgObj.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = dataURL;
+					this.getImg(dataURL);
 				}
+			},
+			getImg(files) {
+				let self = this;
+
+				//图片这里用new FormData()
+				 let params = new FormData()
+				params.append('userId', this.$store.state.sysUser.id)
+				params.append('type', 'photo');
+				params.append('file', files);
+				let config = {
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}
+				};
+				axios.post(address + 'index/api/uploadPic', params,config).then(function(res) {
+					console.log('上传图片成功返回===》', res)
+					if(res.data.code == 0){
+						self.targetImg = imgURL+ res.data.data;
+						self.$store.state.sysUser.imageId = imgURL+ res.data.data;
+						console.log('getImg===>', self.$store.state.sysUser)
+					}
+				})
 			}
 		}
 	}
@@ -132,7 +158,7 @@
 		background: #fff;
 		position: relative;
 		margin-bottom: 1rem;
-		background:url('../../../static/test/ezh_bg03.png') no-repeat center;
+		background: url('../../../static/test/ezh_bg03.png') no-repeat center;
 		background-size: 100% 10rem;
 	}
 	
@@ -147,7 +173,6 @@
 		margin-left: -3rem;
 		border: 0.3rem solid #ebe8e8;
 		background: #fff;
-		
 	}
 	
 	.detail_person_img .ca,
@@ -159,8 +184,8 @@
 	
 	.detail_person_img .ca {
 		position: absolute;
-		left: 57%;
-		top: 6rem;
+		left: 66%;
+		top: 4.3rem;
 		margin-left: -1rem;
 	}
 	
@@ -191,11 +216,13 @@
 			width: 20rem;
 		}
 	}
+	
 	@media only screen and (min-width:340px) {
 		.detail_person_list p {
 			width: 22rem;
 		}
 	}
+	
 	@media only screen and (min-width:360px) {
 		.detail_person_list p {
 			width: 23rem;
@@ -207,11 +234,13 @@
 			width: 24rem;
 		}
 	}
+	
 	@media only screen and (min-width:414px) {
 		.detail_person_list p {
 			width: 25rem;
 		}
 	}
+	
 	.warn_p {
 		text-align: center;
 		line-height: 3rem;

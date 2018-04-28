@@ -33,15 +33,6 @@ export default new Router({
 			},
 			component: resolve => require(['@/components/Recommond/Recommond'], resolve),
 			children: [{
-					//个人信息
-					path: 'person',
-					component: resolve => require(['@/components/person/person'], resolve),
-					children: [{
-						path: 'editor',
-						component: resolve => require(['@/components/editor/editor'], resolve)
-					}]
-				},
-				{
 					//个人考勤
 					path: 'kqCon',
 					meta: {
@@ -274,6 +265,15 @@ export default new Router({
 				navShow: false
 			},
 			component: resolve => require(['@/components/noticeList/noticeList'], resolve)
-		}
+		},
+		{
+			//个人信息
+			path: '/person',
+			component: resolve => require(['@/components/person/person'], resolve),
+			children: [{
+				path: 'editor',
+				component: resolve => require(['@/components/editor/editor'], resolve)
+			}]
+		},
 	]
 })

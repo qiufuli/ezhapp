@@ -18,7 +18,7 @@
 							<div class="message-item">
 								<div class="message-pic">
 									<div class="img-box">
-										<i class="iconfont icon-icon32"></i>
+										<img :src="imgURL+item.userImageId" onerror="src='static/test/person.png'"  alt="" />
 									</div>
 									<div class="message-info">
 										<h2 class="spacing-name">{{item.userName}}</h2>
@@ -27,6 +27,9 @@
 								</div>
 								<div class="message-p">
 									<p>{{item.text}}</p>
+								</div>
+								<div class="mes_img clearfix" >
+									<img @click="viewImg(item.imgId.split(','),num)":src="imgURL+img" v-if="img" alt="" v-for="(img,num) in item.imgId.split(',')" />
 								</div>
 								<!--<div class="message-b">
 									<div class="message-p">
@@ -69,6 +72,11 @@
 				<button class="input-button" v-on:click.stop="inputClick()">发送</button>
 			</div>
 			<pub @submit="commit" ref="pub" @flag="flag"></pub>
+			<swiper v-model="targetindex" height="54rem" v-if="targets" class="targetSlider" :show-dots="false">
+					<swiper-item v-for="(item, index) in targetArr" :key="index">
+						<img :src="imgURL+item" alt="" @click="hideImg()"/>
+					</swiper-item>
+				</swiper>
 		</div>
 	</transition>
 </template>
@@ -76,10 +84,13 @@
 <script>
 	import pub from '@/components/publish/publish'
 	import Scroll from '@/base/scroll/scroll';
+	import { Swiper, SwiperItem } from 'vux'
 	export default {
 		components: {
 			Scroll,
-			pub
+			pub,
+			Swiper,
+			SwiperItem
 		},
 		data() {
 			return {
@@ -95,7 +106,11 @@
 					name: '王大毛(管理员)',
 					time: '一天前',
 					content: ''
-				}
+				},
+				imgURL:imgURL,
+				targetindex:0,//swiper index
+				targets:false, //swiper v-if
+				targetArr:[]
 			}
 		},
 		directives: {
@@ -150,6 +165,7 @@
 									self.end = true;
 								}
 							}
+							console.log('commentText===>',self.commentText)
 						}
 					}).catch(function(err) {
 						console.log(err)
@@ -197,7 +213,20 @@
 			},
 			deleteAll: function(idx) {
 				this.commentText.splice(idx, 1)
+			},
+			//显示
+			viewImg(arr,num){
+				console.log(arr,num)
+				this.targetArr = arr;
+				this.targetindex = num;
+				this.targets=true
+			},
+			//隐藏
+			hideImg(){
+				this.targets=false
+				
 			}
+			
 		}
 	}
 </script>
@@ -243,6 +272,7 @@
 	.message-pic img {
 		width: 4rem;
 		height: 4rem;
+		border-radius: 50%;
 	}
 	
 	.message-info {
@@ -250,6 +280,8 @@
 		width: 80%;
 		vertical-align: top;
 		margin-top: 0.8rem;
+		padding-left: 1rem;
+    	box-sizing: border-box;
 	}
 	
 	.message-info .spacing-name {
@@ -274,6 +306,7 @@
 	.message-p p {
 		font-size: 1.1rem;
 		word-break: break-word;
+    	line-height: 2rem;
 	}
 	
 	.delete {
@@ -343,4 +376,68 @@
 		font-size: 1.1rem;
 		line-height: 2rem;
 	}
+	.mes_img{
+		padding: 0 2rem;
+	}
+	.mes_img img{
+		display: inline-block;
+	    float: left;
+	    width: 8rem;
+	    height: 8rem;
+	    margin: 0.3rem;
+	    border: 0.2rem solid #f6f4f4;
+	    border-radius: 0.5rem;
+	}
+	@media only screen and (min-width:320px ) {
+		.mes_img{
+		padding: 0 3rem;
+		}
+		.mes_img img{
+			width:6rem;
+			height:6rem;
+		}
+	}
+	@media only screen and (min-width:340px ) {
+		.mes_img{
+		/*padding: 0 2rem;*/
+		}
+		.mes_img img{
+			width:6rem;
+			height:6rem;
+		}
+	}
+	@media only screen and (min-width:360px ) {
+		.mes_img{
+		/*padding: 0 2rem;*/
+		}
+		.mes_img img{
+			width:7rem;
+			height:7rem;
+		}
+	}
+	@media only screen and (min-width:375px ) {
+		.mes_img{
+		padding: 0 2rem;
+		}
+		.mes_img img{
+			width:8rem;
+			height:8rem;
+		}
+	}
+	.targetSlider{
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		width: 100%;
+		background: rgba(7,17,27,0.7);
+		z-index: 1000;
+	}
+	.targetSlider img{
+		display: inline-block;
+	  	max-width: 100%;
+	  	max-height: 100%;
+	  	position: absolute;
+	  	top: 50%;
+	  	transform: translateY(-50%);
+  }
 </style>

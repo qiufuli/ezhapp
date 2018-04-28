@@ -7,10 +7,10 @@
 					<img class="Rec_img" src="static/test/test01.jpg" alt="" />
 					<!--个人信息-->
 
-					<div class="person shadow clearfix" @click="person()">
-						<img class="person_img" src="static/test/person.png" alt="" />
+					<router-link tag="div" to="/person" class="person shadow clearfix">
+						<img class="person_img" :src="avatar"  onerror="src='static/test/person.png'" alt="" />
 						<p>您好，{{username}}</p>
-					</div>
+					</router-link>
 					<div class="baby_list clearfix">
 						<router-link to="/baby" class="baby_item " tag='div'>
 							<i class="icon iconfont icon-weibiaoti202-copy"></i>
@@ -41,7 +41,7 @@
 						</router-link>
 						<router-link to="/noticeList" class="recommond_item" tag='div'>
 							<i class="icon iconfont icon-tongzhi"></i>
-							<p>园长信箱</p>
+							<p>通知</p>
 							<b v-if="num1"></b>
 						</router-link>
 						<router-link to="/Recommond/maillist" class="recommond_item" tag='div'>
@@ -59,7 +59,6 @@
 
 <script>
 	import Scroll from '@/base/scroll/scroll';
-
 	export default {
 		components: {
 			Scroll
@@ -70,7 +69,8 @@
 				noticeNum: 0,
 				showNum: 0,
 				num1:false,
-				num2:false
+				num2:false,
+				avatar:'',
 			}
 		},
 		created() {
@@ -101,13 +101,14 @@
 			init() {
 				let self = this;
 				this.$nextTick(function() {
-					self.$store.dispatch('GetInfo', this.$store.state).then(() => {
+//					self.$store.dispatch('GetInfo', this.$store.state).then(() => {
 						axios.get(address + 'index/api/getUserInfo', {
 							params: {
 								userId: this.$store.state.userId
 							}
 						}).then(function(res) {
 							self.$store.state.sysUser = res.data.data;
+							self.avatar = imgURL + self.$store.state.sysUser.imageId;
 							console.log('用户1', self.$store.state.sysUser)
 							self.$store.state.userId = res.data.data.id;
 							self.$store.state.token = res.data.data.userToken;
@@ -126,7 +127,7 @@
 							self.showNumFn();
 
 						})
-					})
+//					})
 
 				})
 
