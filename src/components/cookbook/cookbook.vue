@@ -47,7 +47,16 @@
 										</div>
 									</li>
 								</ul>
+								<div class="mes_img clearfix">
+									<p>图片展示</p>
+									<img @click="viewImg(targetImg,num)" :src="imgURL+img" v-if="img" alt="" v-for="(img,num) in targetImg" />
+								</div>
 							</div>
+						</swiper-item>
+					</swiper>
+					<swiper v-model="targetindex" height="54rem" v-if="targets" class="targetSlider" :show-dots="false">
+						<swiper-item v-for="(item, index) in targetArr" :key="index">
+							<img :src="imgURL+item" alt="" @click="hideImg()" />
 						</swiper-item>
 					</swiper>
 				</div>
@@ -78,7 +87,12 @@
 				mo4: '',
 				mo5: '',
 				mo6: '',
-				getList: []
+				getList: [],
+				imgURL: imgURL,
+				targetImg: [],
+				targetindex: 0, //swiper index
+				targets: false, //swiper v-if
+				targetArr: []
 			}
 		},
 		watch: {
@@ -93,7 +107,7 @@
 						createDate: new Date(self.getWeekTimeLong).getTime()
 					}
 				}).then((res) => {
-					console.log('更新后的食谱',res)
+					console.log('更新后的食谱', res)
 					if(res.data.data == null) {
 						self.mo1 = '';
 						self.mo2 = '';
@@ -110,6 +124,8 @@
 						self.mo5 = self.getList[4];
 						self.mo6 = self.getList[5];
 					}
+					self.targetImg = res.data.data.img.split(',');
+					console.log(self.targetImg)
 				}).catch((err) => {
 					console.log(err)
 				})
@@ -125,7 +141,6 @@
 			this.list2 = time.getThisTime();
 			this.demo2 = time.getDateWeek();
 			this.selectedTime = time.getDateWeek2();
-
 			this.init();
 		},
 		mounted: function() {
@@ -159,6 +174,7 @@
 							self.mo4 = self.getList[3];
 							self.mo5 = self.getList[4];
 							self.mo6 = self.getList[5];
+							self.targetImg = res.data.data.img.split(',');
 						}
 
 					}).catch((err) => {
@@ -178,6 +194,18 @@
 				this.selectedTime = time.getThisTime2()[index]
 				this.getWeekTimeLong = time.getThisTime3()[index];
 				console.log(this.getWeekTimeLong)
+			},
+			//显示
+			viewImg(arr, num) {
+				console.log(arr, num)
+				this.targetArr = arr;
+				this.targetindex = num;
+				this.targets = true
+			},
+			//隐藏
+			hideImg() {
+				this.targets = false
+
 			}
 		},
 		components: {
@@ -193,15 +221,15 @@
 	.scrollable .vux-tab-ink-bar {
 		display: none!important;
 	}
-		/* 判断ipad */	
+	/* 判断ipad */
+	
 	@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-		.vux-slider{
+		.vux-slider {
 			margin-top: 20px;
 		}
 	}
 </style>
 <style scoped="scoped">
-	
 	.nav {
 		margin-top: 3rem;
 	}
@@ -213,9 +241,11 @@
 	.scrollable .vux-tab-ink-bar {
 		display: none!important;
 	}
-	.scrollable .vux-tab-item{
-		flex:0 0 20%!important;	
+	
+	.scrollable .vux-tab-item {
+		flex: 0 0 20%!important;
 	}
+	
 	.cookbook {
 		width: 100%;
 		height: 100%;
@@ -264,16 +294,20 @@
 		margin: 1rem;
 		text-align: center;
 	}
-	.colGre{
-		background: #51da42;	
+	
+	.colGre {
+		background: #51da42;
 	}
-	.colblu{
-		background: #76d8ff;	
+	
+	.colblu {
+		background: #76d8ff;
 	}
-	.colyel{
-		background: #f9e237;	
+	
+	.colyel {
+		background: #f9e237;
 	}
-	.food ul li .getImg i{
+	
+	.food ul li .getImg i {
 		color: #fff;
 		font-size: 3rem;
 	}
@@ -287,13 +321,93 @@
 		display: block;
 		font-size: 1.2rem;
 		margin-bottom: 0.5rem;
-    	line-height: 2.2rem;
+		line-height: 2.2rem;
 	}
-	.food-box span{
+	
+	.food-box span {
 		display: inline-block;
-		 line-height: 2.2rem;
-		 width: 18rem;
-		 word-wrap: break-word;
-		 vertical-align: top;
+		line-height: 2.2rem;
+		width: 18rem;
+		word-wrap: break-word;
+		vertical-align: top;
+	}
+	
+	.mes_img {
+		padding: 0 2rem;
+		background: #fff;
+		margin-top: 1rem;
+	}
+	
+	.mes_img p {
+		line-height: 2.6rem;
+		font-size: 1.2rem;
+	}
+	
+	.mes_img img {
+		display: inline-block;
+		float: left;
+		width: 8rem;
+		height: 8rem;
+		margin: 0.3rem;
+		border: 0.2rem solid #f6f4f4;
+		border-radius: 0.5rem;
+	}
+	
+	@media only screen and (min-width:320px) {
+		.mes_img {
+			padding: 0 3rem;
+		}
+		.mes_img img {
+			width: 6rem;
+			height: 6rem;
+		}
+	}
+	
+	@media only screen and (min-width:340px) {
+		.mes_img {
+			/*padding: 0 2rem;*/
+		}
+		.mes_img img {
+			width: 6rem;
+			height: 6rem;
+		}
+	}
+	
+	@media only screen and (min-width:360px) {
+		.mes_img {
+			/*padding: 0 2rem;*/
+		}
+		.mes_img img {
+			width: 7rem;
+			height: 7rem;
+		}
+	}
+	
+	@media only screen and (min-width:375px) {
+		.mes_img {
+			padding: 0 2rem;
+		}
+		.mes_img img {
+			width: 8rem;
+			height: 8rem;
+		}
+	}
+	
+	.targetSlider {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		width: 100%;
+		background: rgba(7, 17, 27, 0.7);
+		z-index: 1000;
+	}
+	
+	.targetSlider img {
+		display: inline-block;
+		max-width: 100%;
+		max-height: 100%;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
 	}
 </style>

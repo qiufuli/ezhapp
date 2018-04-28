@@ -29,7 +29,7 @@
 									<p>{{item.text}}</p>
 								</div>
 								<div class="mes_img clearfix" >
-									<img @click="viewImg(item.imgId.split(','),num)":src="imgURL+img" v-if="img" alt="" v-for="(img,num) in item.imgId.split(',')" />
+									<img @click="viewImg(item.imgId.split(','),num)" :src="imgURL+img" v-if="img" alt="" v-for="(img,num) in item.imgId.split(',')" />
 								</div>
 								<!--<div class="message-b">
 									<div class="message-p">
@@ -76,7 +76,7 @@
 					<swiper-item v-for="(item, index) in targetArr" :key="index">
 						<img :src="imgURL+item" alt="" @click="hideImg()"/>
 					</swiper-item>
-				</swiper>
+			</swiper>
 		</div>
 	</transition>
 </template>

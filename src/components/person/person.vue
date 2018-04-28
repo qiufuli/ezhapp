@@ -114,15 +114,6 @@
 				if(fileObj && fileObj.files && fileObj.files[0]) {
 					dataURL = fileObj.files[0];
 					this.getImg(dataURL);
-				} else {
-					dataURL = e.currentTarget.value;
-					var imgObj = document.getElementById("preview");
-					// 两个坑:
-					// 1、在设置filter属性时，元素必须已经存在在DOM树中，动态创建的Node，也需要在设置属性前加入到DOM中，先设置属性在加入，无效；
-					// 2、src属性需要像下面的方式添加，上面的两种方式添加，无效；
-					imgObj.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
-					imgObj.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = dataURL;
-					this.getImg(dataURL);
 				}
 			},
 			getImg(files) {
@@ -141,9 +132,12 @@
 				axios.post(address + 'index/api/uploadPic', params,config).then(function(res) {
 					console.log('上传图片成功返回===》', res)
 					if(res.data.code == 0){
-						self.targetImg = imgURL+ res.data.data;
-						self.$store.state.sysUser.imageId = imgURL+ res.data.data;
+//						self.targetImg = imgURL+ res.data.data;
+						self.$store.state.sysUser.imageId = res.data.data;
+					self.targetImg = imgURL+self.$store.state.sysUser.imageId;
+						
 						console.log('getImg===>', self.$store.state.sysUser)
+						console.log('getImg===>', self.targetImg )
 					}
 				})
 			}

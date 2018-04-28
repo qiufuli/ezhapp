@@ -109,6 +109,7 @@
 						}).then(function(res) {
 							self.$store.state.sysUser = res.data.data;
 							self.avatar = imgURL + self.$store.state.sysUser.imageId;
+							self.$store.state.sysUser.imageId
 							console.log('用户1', self.$store.state.sysUser)
 							self.$store.state.userId = res.data.data.id;
 							self.$store.state.token = res.data.data.userToken;

@@ -12,7 +12,7 @@
 						<div class="mainbox_2_list clearfix" :class="item.align" v-for="item in maillist">
 							<div class="basestyle">
 								<div class="test">{{item.mes}}</div>
-								<img class="list_img" src="static/test/test01.jpg" alt="" />
+								<img class="list_img" :src="item.avatar" alt="" />
 							</div>
 						</div>
 					</div>
@@ -40,9 +40,11 @@
 				gname: this.$route.query.name,
 				from: this.$store.state.name,
 				to: this.$route.query.test,
+				id: this.$route.query.id,
 				messages: '',
 				csh_scroll: {},
-				OFFSET: 1
+				OFFSET: 1,
+				otherAvatar:'1111'
 			}
 		},
 		components: {
@@ -56,6 +58,7 @@
 		created() {
 			this.$nextTick(function() {
 				this.csh_scroll = this.$refs.scrolls.$el.clientHeight;
+				
 				this.init();
 			})
 		},
@@ -71,8 +74,22 @@
 				console.log(this.OFFSET)
 				this.init();
 			},
+			getAvatar() {
+				let self =this;
+				axios.get(address + 'index/api/getUserInfo', {
+					params: {
+						userId: this.id
+					}
+				}).then(function(res){
+
+					self.otherAvatar = imgURL+res.data.data.imageId;
+
+				})
+			},
 			init() {
+				this.getAvatar();
 				let self = this;
+
 				console.log(this.csh_scroll, this.to, this.from)
 				let params = new URLSearchParams();
 				params.append('pageNum', self.OFFSET)
@@ -81,6 +98,8 @@
 				params.append('to', self.to)
 				axios.post(address3 + 'socket/msg/1/signle/msg', params).then((res) => {
 					if(res.data.code == 0) {
+				console.log(self.otherAvatar)
+						
 						if(res.data.data != '') {
 							self.maillist2 = [];
 							console.log(res.data)
@@ -89,24 +108,26 @@
 								//								console.log(new Date(v.createTime))
 								let target_obj1 = {
 									align: 'right',
-									mes: ''
+									mes: '',
+									avatar:self.otherAvatar
 								}
 								if(v.from == self.from) {
 									target_obj1 = {
 										align: 'right',
-										mes: JSON.parse(v.text)['message']['content']
+										mes: JSON.parse(v.text)['message']['content'],
+										avatar:imgURL+self.$store.state.sysUser.imageId
 									}
 								} else {
 									target_obj1 = {
 										align: 'left',
-										mes: JSON.parse(v.text)['message']['content']
+										mes: JSON.parse(v.text)['message']['content'],
+										avatar:self.otherAvatar
 									}
-
 								}
 
 								self.maillist2.push(target_obj1);
 							})
-							
+
 							self.maillist = self.maillist2.concat(self.maillist);
 						}
 					}
@@ -150,7 +171,8 @@
 				let redata = JSON.parse(e.data);
 				let target_obj = {
 					align: 'right',
-					mes: self.talk
+					mes: this.talk,
+					avatar:this.otherAvatar
 				}
 
 				if(redata.message.from != undefined) {
@@ -158,11 +180,13 @@
 					if(redata.message.from == this.from) {
 						target_obj.align = 'right';
 						target_obj.mes = this.talk;
+						target_obj.avatar = imgURL+this.$store.state.sysUser.imageId;
 						this.maillist.push(target_obj);
 						this.talk = '';
 					} else {
 						target_obj.align = 'left';
 						target_obj.mes = redata.message.content;
+						target_obj.avatar =self.otherAvatar;
 						this.maillist.push(target_obj);
 					}
 					if(this.$refs.scrolls.scroll.scrollerHeight > this.csh_scroll) {

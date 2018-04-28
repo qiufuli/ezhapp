@@ -111,6 +111,7 @@
 					this.manageShow = true;
 				}
 				this.avatar = imgURL + this.$store.state.sysUser.imageId;
+				console.log(this.avatar)
 			},
 			changePW() {
 				this.$router.push('/myself/changePW');
@@ -194,6 +195,7 @@
 		height: 5.6rem;
 		border-radius: 50%;
 		margin-top: 3rem;
+		border: 0.3rem solid #ebe8e8;
 	}
 	
 	.person_bg p {
