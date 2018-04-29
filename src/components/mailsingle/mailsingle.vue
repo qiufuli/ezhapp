@@ -12,7 +12,7 @@
 						<div class="mainbox_2_list clearfix" :class="item.align" v-for="item in maillist">
 							<div class="basestyle">
 								<div class="test">{{item.mes}}</div>
-								<img class="list_img" :src="item.avatar" alt="" />
+								<img class="list_img" :src="item.avatar" onerror="src='static/test/person.png'" alt="" />
 							</div>
 						</div>
 					</div>
@@ -28,6 +28,8 @@
 
 <script>
 	import Scroll from '@/base/scroll/scroll';
+	import * as scoket from '@/common/util/webscokt.js'
+	
 	export default {
 		data() {
 			return {
@@ -97,12 +99,14 @@
 				params.append('from', self.from)
 				params.append('to', self.to)
 				axios.post(address3 + 'socket/msg/1/signle/msg', params).then((res) => {
+//							console.log('历史记录',res.data)
+					
 					if(res.data.code == 0) {
-				console.log(self.otherAvatar)
+//							console.log('历史记录',res.data)
 						
 						if(res.data.data != '') {
 							self.maillist2 = [];
-							console.log(res.data)
+							console.log('历史记录',res.data)
 							let getData = res.data.data;
 							getData.forEach(function(v, k) {
 								//								console.log(new Date(v.createTime))

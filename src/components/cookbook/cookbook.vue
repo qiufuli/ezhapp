@@ -124,6 +124,9 @@
 						self.mo5 = self.getList[4];
 						self.mo6 = self.getList[5];
 					}
+					if(res.data.data == null) {
+						self.targetImg = ''
+					}
 					self.targetImg = res.data.data.img.split(',');
 					console.log(self.targetImg)
 				}).catch((err) => {
@@ -141,6 +144,7 @@
 			this.list2 = time.getThisTime();
 			this.demo2 = time.getDateWeek();
 			this.selectedTime = time.getDateWeek2();
+			this.getWeekTimeLong = time.getThisTime3()[0]
 			this.init();
 		},
 		mounted: function() {
@@ -156,9 +160,11 @@
 				}
 			},
 			init() {
-
+			
 				let self = this;
+
 				this.$nextTick(() => {
+				console.log('时间',self.getWeekTimeLong)
 					axios.get(address + 'index/api/getRecipes', {
 						params: {
 							userId: this.$store.state.userId,
@@ -174,7 +180,11 @@
 							self.mo4 = self.getList[3];
 							self.mo5 = self.getList[4];
 							self.mo6 = self.getList[5];
+							if(res.data.data == null) {
+								self.targetImg = ''
+							}
 							self.targetImg = res.data.data.img.split(',');
+//							console.log(self.targetImg)
 						}
 
 					}).catch((err) => {
@@ -407,7 +417,9 @@
 		max-width: 100%;
 		max-height: 100%;
 		position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
+		position: absolute;
+	  	top: 50%;
+	  	left:50%;
+	  	transform: translate3d(-50%,-50%,0);
 	}
 </style>

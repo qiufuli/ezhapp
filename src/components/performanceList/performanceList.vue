@@ -21,8 +21,11 @@
 								</div>
 							</div>
 						</div>
-						<p v-show="end" class="dataP">数据已加载完毕</p>
-						<p v-show="start" class="dataP">数据加载中....</p>
+						<div >
+							<p v-show="end" class="dataP">数据已加载完毕</p>
+							<p v-show="start" class="dataP">数据加载中....</p>
+						</div>
+						
 					</div>
 				</scroll>
 			</div>
@@ -46,7 +49,8 @@
 				pullup: true,
 				end: false,
 				start: false,
-				imgURL:imgURL
+				imgURL:imgURL,
+				flag:false
 			}
 		},
 		created() {
@@ -78,10 +82,15 @@
 						console.log(res)
 						if(res.data.code == 0) {
 							if(self.test == '') {
-								self.test = res.data.data.list
-								self.start = true
-
-							} else {
+								self.test = res.data.data.list;
+								if(self.test.length < 10){
+									self.start = false;
+									self.end = false;
+									
+								}else{
+									self.start = true
+								}
+							}else {
 								if(res.data.data.list != '') {
 									self.start = true
 									res.data.data.list.forEach(function(data) {

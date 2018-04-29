@@ -11,22 +11,25 @@
 					<group>
 						<datetime class="top" v-model="times" :min-year=2017 :max-year=2099 format="YYYY-MM-DD" :end-date="endDate" @on-change="change" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="确定" cancel-text=" "></datetime>
 					</group>
-					
+
 					<scroll class="minHeight">
 						<div>
 							<div class="timeList" v-for="item in timeList" v-show="item.signTime != null">
 								<div class="timeItem">
-									<img :src="item.picUrl? imgURL+item.picUrl : 'static/test/person.png'" onerror="src='static/test/person.png'" alt="" />
+									<img @click="showImgFn(item.picUrl)" :src="item.picUrl? imgURL+item.picUrl : 'static/test/person.png'" onerror="src='static/test/person.png'" alt="" />
 									<p>打卡时间：{{item.signTime}}</p>
 								</div>
 							</div>
-							
+
 						</div>
 
 					</scroll>
 
 					<div class="noTimeList" v-show="timeList[0] == null">当天没有打卡记录哦~</div>
 				</div>
+			</div>
+			<div class="tc" v-if="showFlag">
+				<img :src="showImg" @click="hideImgFn()" alt="" />
 			</div>
 		</div>
 	</transition>
@@ -64,7 +67,9 @@
 				times: "", //当前时间
 				timeList: [],
 				endDate: '',
-				imgURL:imgURL
+				imgURL: imgURL,
+				showImg: '',
+				showFlag: false
 			}
 		},
 		computed: {
@@ -151,6 +156,18 @@
 			},
 			getTimes(data) {
 				return time.getTimes(data);
+			},
+			showImgFn(src) {
+				if(src) {
+					this.showImg = imgURL + src;
+				} else {
+					this.showImg = 'static/test/person.png'
+				}
+				this.showFlag = true;
+			},
+			hideImgFn(){
+				this.showFlag = false;
+				
 			}
 		}
 	}
@@ -214,17 +231,38 @@
 		display: block;
 		text-indent: 2rem;
 	}
-	.wrap-box{
+	
+	.wrap-box {
 		position: absolute;
 		top: 3rem;
 		bottom: 0;
 		width: 100%;
 	}
-	.minHeight{
+	
+	.minHeight {
 		position: absolute;
 		top: 3rem;
 		bottom: 0;
 		width: 100%;
 		overflow: hidden;
+	}
+	
+	.tc {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		width: 100%;
+		background: rgba(7, 17, 27, 0.7);
+		z-index: 1000;
+	}
+	
+	.tc img {
+		display: inline-block;
+		max-width: 100%;
+		max-height: 100%;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate3d(-50%, -50%, 0);
 	}
 </style>

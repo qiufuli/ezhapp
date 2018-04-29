@@ -1,5 +1,5 @@
 <template>
-	<transition name="slideX">
+	<transition name="showed">
 		<div class="login child">
 			<p class="logo_img">
 				<img src="static/test/lg.png" alt="" />
@@ -14,20 +14,23 @@
 			</div>
 			<mt-button type="primary" class="save" @click="go()">登录</mt-button>
 			<router-link tag="p" to="/login/forgetPW" class="forgetPW">忘记密码？</router-link>
+			<div class="transitionImg" ref="transitionImg">
+				<img src="static/test/ezhapp01.png" alt="" />
+			</div>
 			<router-view></router-view>
 		</div>
 	</transition>
 </template>
 
 <script>
-//	import * as request from '@/utils/request.js'
-	import { setUsert,getUsert} from '@/utils/auth'
+	//	import * as request from '@/utils/request.js'
+	import { setUsert, getUsert } from '@/utils/auth'
 	import * as scoket from '@/common/util/webscokt.js'
-	import {Toast} from 'mint-ui';
+	import { Toast } from 'mint-ui';
 	export default {
 		data() {
 			return {
-				webscoket:null,
+				webscoket: null,
 				loginForm: {
 					username: '',
 					password: null,
@@ -35,7 +38,8 @@
 					code: 'qw12',
 					grant_type: 'password',
 					scope: 'server'
-				}
+				},
+				flag: false
 			}
 		},
 		created() {
@@ -43,83 +47,108 @@
 		},
 		methods: {
 			init() {
-				let info = plus.push.getClientInfo();
-				if(info.clientid){
-					let params = new URLSearchParams();
-					params.append('clientId', info.clientid)
-					var self = this;
-					axios.post(address+'push/api/checkLoginStatus',params).then(function(res){
-						if(res.data.code == 0){
-							if(res.data.data.status == 1){
-								alert("skip")
-								self.$store.state.userId = res.data.data.userId;
-								self.$router.push('/Recommond')
+				let self = this;
+				setTimeout(function() {
+					let info = plus.push.getClientInfo();
+					if(info.clientid) {
+						let params = new URLSearchParams();
+						params.append('clientId', info.clientid)
+						axios.post(address + 'push/api/checkLoginStatus', params).then(function(res) {
+							if(res.data.code == 0) {
+								if(res.data.data.status == 1) {
+									self.$store.state.userId = res.data.data.userId;
+									axios.get(address + 'index/api/getUserInfo', {
+										params: {
+											userId: self.$store.state.userId
+										}
+									}).then(function(res) {
+										self.$store.state.name = res.data.data.loginName;
+										setUsert(self.$store.state.userId)
+										self.$router.push({
+											path: '/Recommond'
+										})
+										//getWebsoket 需要传 name ---ezh qfl 这种 
+										self.getWebsoket()
+										self.flag = true;
+									})
+
+								}
 							}
-						}
-					})
-				}
-//				if(getUsert() != undefined) {
-//					this.$router.push('/Recommond')
-//				}
+						})
+					}
+				}, 2500);
+
+				setTimeout(function() {
+					if(!self.flag) {
+						self.$refs.transitionImg.style.display = "none";
+					}
+				}, 3000);
+
+				//				if(getUsert() != undefined) {
+				//					this.$router.push('/Recommond')
+				//				}
 			},
 			changeshow() {
 				console.log(this.value)
 			},
 			//登录接口
 			go() {
-//				if(this.loginForm.username == '' || this.loginForm.password == '') {
-//					Toast({
-//					  message: '用户名和密码不能为空',
-//					  duration: 2000
-//					})
-//
-//				} else {
-//					this.$store.dispatch('Login', this.loginForm).then(() => {
-//						this.$router.push({
-//							path: '/Recommond'
-//						})
-//					this.$store.dispatch('GetInfo', this.$store.state).then(() => { //加入聊天室
-//						this.getWebsoket()
-//						this.getPushInfo();
-//					})
-//					}).catch((error) => {
-//						console.log(error)
-//					})
-//				}
+				//				if(this.loginForm.username == '' || this.loginForm.password == '') {
+				//					Toast({
+				//					  message: '用户名和密码不能为空',
+				//					  duration: 2000
+				//					})
+				//
+				//				} else {
+				//					this.$store.dispatch('Login', this.loginForm).then(() => {
+				//						this.$router.push({
+				//							path: '/Recommond'
+				//						})
+				//					this.$store.dispatch('GetInfo', this.$store.state).then(() => { //加入聊天室
+				//						this.getWebsoket()
+				//						this.getPushInfo();
+				//					})
+				//					}).catch((error) => {
+				//						console.log(error)
+				//					})
+				//				}
 
 				let self = this;
 				let params = new URLSearchParams();
 				params.append('encode', this.loginForm.username)
 				params.append('sign', this.loginForm.password)
-				axios.post(address+'index/api/login',params).then(function(res){
-						if(res.data.code == 0){
-							self.$store.state.userId =res.data.data;
-							self.$store.state.name =self.loginForm.username;
-							setUsert(self.$store.state.userId)
-							self.$router.push({
+				axios.post(address + 'index/api/login', params).then(function(res) {
+					if(res.data.code == 0) {
+						self.$store.state.userId = res.data.data;
+						self.$store.state.name = self.loginForm.username;
+						setUsert(self.$store.state.userId)
+						self.$router.push({
 							path: '/Recommond'
 						})
-							//getWebsoket 需要传 name ---ezh qfl 这种 
-							self.getWebsoket()
-							self.getPushInfo();
-						}else{
-							Toast({
-							  message: res.data.msg,
-							  duration: 2000
-							})
-						}
+						//getWebsoket 需要传 name ---ezh qfl 这种 
+						self.getWebsoket()
+						self.getPushInfo();
+					} else {
+						Toast({
+							message: res.data.msg,
+							duration: 2000
+						})
+					}
 					console.log(res)
 				})
 			},
-			getWebsoket(){
-				this.websock=scoket.init()
+			getWebsoket() {
+				if(this.websock != null) {
+					this.websock.close();
+				}
+				this.websock = scoket.init()
 				//scoket.setWs(this.websock)
-				this.$store.dispatch('setScoket',this.websock)
+				this.$store.dispatch('setScoket', this.websock)
 				this.websock.onmessage = this.websocketonmessage;
 				this.websock.onclose = this.websocketclose;
 			},
 			websocketonmessage(e) { //数据接收
-				console.log('loGIn接收',e)
+				console.log('loGIn接收', e)
 			},
 			websocketsend(agentData) { //数据发送
 				this.websock.send(agentData);
@@ -127,12 +156,12 @@
 			websocketclose(e) { //关闭
 				console.log("connection closed (" + e.code + ")");
 			},
-			getPushInfo(){
+			getPushInfo() {
 				let info = plus.push.getClientInfo();
 				let params = new URLSearchParams();
-				params.append('userId',this.$store.state.userId)
-				params.append('clientId',info.clientid)
-				axios.post(address+'push/api/bindPushConfig',params).then((res)=>{
+				params.append('userId', this.$store.state.userId)
+				params.append('clientId', info.clientid)
+				axios.post(address + 'push/api/bindPushConfig', params).then((res) => {
 					console.log(res)
 				})
 			}
@@ -141,10 +170,11 @@
 </script>
 
 <style scoped>
-	.child{
+	.child {
 		background: url('../../../static/test/ezh_bg06.png') no-repeat center bottom;
-		background-size:100% 14rem;
+		background-size: 100% 14rem;
 	}
+	
 	input::-webkit-input-placeholder {
 		color: #C6C6C6;
 		font-size: 1.3rem;
@@ -225,16 +255,19 @@
 			width: 20rem;
 		}
 	}
+	
 	@media only screen and (min-width:340px) {
 		.login_input input {
 			width: 21rem;
 		}
 	}
+	
 	@media only screen and (min-width:360px) {
 		.login_input input {
 			width: 22rem;
 		}
 	}
+	
 	@media only screen and (min-width:375px) {
 		.login_input input {
 			width: 24rem;
@@ -254,5 +287,19 @@
 		font-size: 1.4rem;
 		margin-top: 1rem;
 		color: #7C807C;
+	}
+	
+	.transitionImg {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		z-index: 10000;
+		width: 100%;
+	}
+	
+	.transitionImg img {
+		display: inline-block;
+		width: 100%;
+		height: 100%;
 	}
 </style>

@@ -23,7 +23,7 @@
 						新密码:
 					</span>
 					<div class="common_list_right">
-						<input class="inputStyle" ref="newPS" type="password" placeholder="请输入8-16位数字、字母的组合" />
+						<input class="inputStyle" ref="newPS" type="password" placeholder="请输入新密码" />
 					</div>
 				</div>
 				<div class="common_list clearfix">
@@ -64,19 +64,13 @@
 		methods: {
 			savePs() {
 				let self = this;
-				if(this.$refs.oldPS.value == '') {
-					this.strs = '请输入原始密码'
+				if(this.$refs.oldPS.value == '' || this.$refs.newPS.value == '' || this.$refs.confirmPS.value == '') {
+					this.strs = '信息填写不全'
 					this.show = true;
-				} else if(this.$refs.oldPS.value != '' && this.$refs.newPS.value == '') {
-					this.strs = '请输入8-16位数字、字母的组合'
+				}else if(this.$refs.oldPS.value != '' && this.$refs.newPS.value != '' && this.$refs.confirmPS.value != this.$refs.newPS.value) {
+					this.strs = '两次密码不一致'
 					this.show = true;
-				} else if(this.$refs.oldPS.value != '' && this.$refs.oldPS.value.length < 6 || this.$refs.oldPS.value.length > 16) {
-					this.strs = '请输入6-16位数字、字母的组合'
-					this.show = true;
-				} else if(this.$refs.oldPS.value != '' && this.$refs.newPS.value != '' && this.$refs.confirmPS.value != this.$refs.newPS.value) {
-					this.strs = '请输入正确的确认密码'
-					this.show = true;
-				} else {
+				}else {
 					let params = new URLSearchParams();
 					params.append('userId', this.$store.state.userId);
 					params.append('password', this.$refs.oldPS.value);

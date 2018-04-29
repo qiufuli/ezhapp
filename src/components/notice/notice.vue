@@ -28,6 +28,8 @@
 
 <script>
 	import {Toast} from 'mint-ui';
+	import * as scoket from '@/common/util/webscokt.js'
+	
 	export default {
 		data() {
 			return {
@@ -48,6 +50,9 @@
 		mounted() {
 			this.$nextTick(function() {
 				this.websock = this.$store.state.webSocket
+				if(this.websock == null) {
+					getWebsoket();
+				}
 				console.log(this.websock);
 				this.websock.onmessage = this.websocketonmessage;
 			})
@@ -57,6 +62,7 @@
 				this.slname = this.$route.params.selectName
 			},
 			send() {
+				
 					let self = this;
 //				let chatType = self.slname.split(',').length > 1 ? 'GROUP' : 'SIGNLE';
 				if(self.talk != '') {
@@ -92,6 +98,11 @@
 					})
 				}
 				
+			},
+			getWebsoket() {
+				this.websock = scoket.init()
+				//scoket.setWs(this.websock)
+				this.$store.dispatch('setScoket', this.websock)
 			},
 			websocketonmessage(e) {
 				console.log('通知列表接收', e)

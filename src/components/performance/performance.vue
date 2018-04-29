@@ -115,6 +115,9 @@
 			this.$nextTick(function() {
 				this.websock = this.$store.state.webSocket
 				console.log(this.websock);
+				if(this.websock == null) {
+					getWebsoket();
+				}
 				this.websock.onmessage = this.websocketonmessage;
 			})
 		},
@@ -171,6 +174,11 @@
 						duration: 2000
 					})
 				}
+			},
+			getWebsoket() {
+				this.websock = scoket.init()
+				//scoket.setWs(this.websock)
+				this.$store.dispatch('setScoket', this.websock)
 			},
 			websocketonmessage(e) {
 				console.log('表现接收', e)

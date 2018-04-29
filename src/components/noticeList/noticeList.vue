@@ -46,8 +46,8 @@
 				pullup: true,
 				end: false,
 				start: false,
-				imgURL:imgURL
-				
+				imgURL: imgURL
+
 			}
 		},
 		created() {
@@ -79,7 +79,13 @@
 						if(res.data.code == 0) {
 							if(self.test == '') {
 								self.test = res.data.data.list
-								self.start = true
+								if(self.test.length < 10) {
+									self.start = false;
+									self.end = false;
+
+								} else {
+									self.start = true
+								}
 
 							} else {
 								if(res.data.data.list != '') {

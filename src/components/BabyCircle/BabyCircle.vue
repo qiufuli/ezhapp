@@ -152,7 +152,13 @@
 						if(res.data.code == 0) {
 							if(self.commentText == '') {
 								self.commentText = res.data.data;
-								self.start = true
+								if(self.commentText.length < 10) {
+									self.start = false;
+									self.end = false;
+
+								} else {
+									self.start = true
+								}
 							} else {
 								if(res.data.data != '') {
 									self.start = true
@@ -438,6 +444,7 @@
 	  	max-height: 100%;
 	  	position: absolute;
 	  	top: 50%;
-	  	transform: translateY(-50%);
+	  	left:50%;
+	  	transform: translate3d(-50%,-50%,0);
   }
 </style>

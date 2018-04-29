@@ -3,7 +3,7 @@
 		<mt-header fixed title="我的"></mt-header>
 		<div class="wrap">
 			<router-link tag="div" to="/person" class="person_bg" >
-				<img :src="avatar" alt="" />
+				<img :src="avatar" onerror="src='static/test/person.png'" alt="" />
 				<p>{{name}}</p>
 			</router-link>
 			<router-link v-if="bookShow" tag="div" to="/myself/book" class="list clearfix mb_1">
