@@ -3,7 +3,7 @@
 		<div class="kqCon child" ref="kqCon">
 			<mt-header fixed :title="name+'体感'">
 				<router-link :to="getParentLink" slot="left">
-					<mt-button icon="back"></mt-button>
+					<mt-button icon="back">返回</mt-button>
 				</router-link>
 			</mt-header>
 			<div class="wrap">

@@ -3,7 +3,7 @@
 		<div class="pub child" v-show="showFlag">
 			<mt-header fixed title="发布动态">
 				<mt-button slot="left" @click="hide">
-					<mt-button icon="back"></mt-button>
+					<mt-button icon="back">返回</mt-button>
 				</mt-button>
 				<mt-button slot="right" @click.native="send()"  :class="{active:isPublish}">
 					发布

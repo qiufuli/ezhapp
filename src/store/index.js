@@ -44,7 +44,9 @@ const state = {
 //	userId:3, //3
 	sysUser:{},
 	officeId:getOfficeId(),
-	webSocket:null
+	webSocket:null,
+	//引导页显示
+	guide:true,
 }
 const getters = {
 	token: state => state.token

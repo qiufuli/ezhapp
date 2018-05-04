@@ -3,7 +3,7 @@
 		<div class="kaoqin">
 			<mt-header fixed title="班级选择">
 				<router-link to="/Recommond" slot="left">
-					<mt-button icon="back"></mt-button>
+					<mt-button icon="back">返回</mt-button>
 				</router-link>
 			</mt-header>
 			<div class="mailDiv ">
@@ -80,7 +80,7 @@
 	
 	.kaoqin .iconfont {
 		font-size: 2rem;
-	    color: #f6a305;
+	    color: #ff7800;
 	    vertical-align: -0.1rem;
 	}
 	

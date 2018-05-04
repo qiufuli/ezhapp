@@ -6,7 +6,7 @@
 			</div>
 			<mt-header fixed title="">
 				<router-link :to="getParentLink" slot="left">
-					<mt-button icon="back"></mt-button>
+					<mt-button icon="back">返回</mt-button>
 				</router-link>
 			</mt-header>
 			<div class="wrap">
@@ -218,10 +218,12 @@
 	.lesson .wrap-box {
 		width: 100%;
 		height: 4rem;
-		background: #ffc712;
+		background: #ff7800;
 		display: flex;
 	}
-	
+	.mailHeight{
+		    background: #fff;
+	}
 	.lesson .wrap a {
 		display: inline-block;
 		color: #FFFFFF;

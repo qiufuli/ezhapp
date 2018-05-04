@@ -11,6 +11,7 @@
 					<ul class="video-box" ref="videoBox">
 
 						<li v-for="(item,index) in videoUrl" @click="switchHandle(index)">
+							<div>{{}}</div>
 							<div class="img"></div>
 							<span>{{item.name}}</span>
 							<i v-html="item.status == 0 ? '正常' : '<span style=color:#f45a5a>关闭</span>'"></i>
@@ -38,7 +39,7 @@
 
 				video: {
 					url: '',
-					pic: '',
+					pic: 'static/test/test01.jpg',
 					type: 'hls'
 				},
 				lang: 'zh-cn',
@@ -64,7 +65,8 @@
 		methods: {
 			init() {
 				let self = this;
-				axios.get(address + 'index/api/monitorList', {
+				//address + 'index/api/monitorList'
+				axios.get('http://192.168.9.172:4040/index/api/monitorList', {
 					params: {
 						userId: self.$store.state.userId
 					}
@@ -74,8 +76,18 @@
 					if(res.data.code == 0) {
 						//					self.flag=true;
 						self.$nextTick(function() {
-							console.log('返回的ip', res.data.data[0].ip)
-							self.videoUrl = res.data.data;
+							console.log('返回的ip', res.data.data)
+							
+							for(var i in res.data.data){
+								let objs={}
+								console.log(i)
+								objs[i] = res.data.data[i]
+								self.videoUrl.push(objs)
+							}
+
+							
+							console.log('videoUrl====>', self.videoUrl)
+							
 							//							self.video = {
 							//								url: self.videoUrl[0].ip,
 							//								pic: '',
@@ -112,6 +124,7 @@
 					this.player.switchVideo({
 						url: this.videoUrl[index].ip
 					})
+					this.player.play();
 					console.log(this.player)
 				}
 
@@ -139,16 +152,18 @@
 	}
 	
 	.title .iconfont {
+		display: inline-block;
 		color: #FFFFFF;
-		width: 4rem;
-		height: 4rem;
-		line-height: 4rem;
+		width: 2rem;
+		height: 2rem;
+		line-height: 2rem;
 		text-align: center;
 		border-radius: 50%;
-		background: #000000;
-		opacity: 0.5;
+		background: #fff;
+		opacity: 0.8;
 		margin-left: 1rem;
-		font-size: 1.2rem;
+		font-size: 1.4rem;
+		color:#000;
 	}
 	
 	.baby {

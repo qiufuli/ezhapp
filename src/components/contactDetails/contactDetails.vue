@@ -2,8 +2,8 @@
 	<transition name="slideX">
 		<div class="contactdetail child" ref="contactdetail">
 			<mt-header fixed title="个人信息">
-				<router-link to="/Recommond/maillist" slot="left">
-					<mt-button icon="back"></mt-button>
+				<router-link to="/maillist" slot="left">
+					<mt-button icon="back">返回</mt-button>
 				</router-link>
 
 			</mt-header>

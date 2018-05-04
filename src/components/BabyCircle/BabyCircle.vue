@@ -2,8 +2,8 @@
 	<transition name="slideX">
 		<div class="babyCircle child">
 			<mt-header fixed title="宝贝圈">
-				<router-link to="/Recommond" slot="left">
-					<mt-button icon="back"></mt-button>
+				<router-link to="/interact" slot="left">
+					<mt-button icon="back">返回</mt-button>
 				</router-link>
 				<mt-button slot="right" @click="show">
 
@@ -12,7 +12,12 @@
 			</mt-header>
 			<scroll class="mailHeight" :pullup="pullup" @scrollToEnd="scrollToEnd">
 				<div>
-					<img class="Rec_img" src="static/test/test01.jpg" alt="" />
+					<!--<img class="Rec_img" src="static/test/test01.jpg" alt="" />-->
+					<mt-swipe :auto="4000" class="Rec_img1">
+						<mt-swipe-item><img class="Rec_img" src="static/test/img01.png" alt="" /></mt-swipe-item>
+						<mt-swipe-item><img class="Rec_img" src="static/test/img02.png" alt="" /></mt-swipe-item>
+						<mt-swipe-item><img class="Rec_img" src="static/test/img03.png" alt="" /></mt-swipe-item>
+					</mt-swipe>
 					<div class="message">
 						<div v-for="(item,index) in commentText">
 							<div class="message-item">
@@ -30,6 +35,9 @@
 								</div>
 								<div class="mes_img clearfix" >
 									<img @click="viewImg(item.imgId.split(','),num)" :src="imgURL+img" v-if="img" alt="" v-for="(img,num) in item.imgId.split(',')" />
+								</div>
+								<div class="del">
+									<i class="icon iconfont icon-shanchu"></i>
 								</div>
 								<!--<div class="message-b">
 									<div class="message-p">
@@ -84,13 +92,17 @@
 <script>
 	import pub from '@/components/publish/publish'
 	import Scroll from '@/base/scroll/scroll';
-	import { Swiper, SwiperItem } from 'vux'
+	import { Swiper, SwiperItem } from 'vux';
+	import { Swipe, SwipeItem } from 'mint-ui';
+	
 	export default {
 		components: {
 			Scroll,
 			pub,
 			Swiper,
-			SwiperItem
+			SwiperItem,
+			Swipe,
+			SwipeItem
 		},
 		data() {
 			return {
@@ -248,11 +260,13 @@
 		font-size: 2.2rem;
 	}
 	
-	.Rec_img {
+	.Rec_img1 {
+		margin-top: 3rem;
+	}
+	.Rec_img,.Rec_img1 {
 		display: inline-block;
 		width: 100%;
 		height: 15rem;
-		margin-top: 3rem;
 	}
 	
 	.img-box {
@@ -272,20 +286,24 @@
 		background: #fff;
 		border-radius: 0.5rem;
 		margin-bottom: 0.5rem;
-		padding: 1rem 0;
+		padding: 0.5rem 1rem;
 	}
-	
+	.message-pic{
+		/*f6f5f4*/
+		border-bottom: 1px solid #f6f5f4;
+	}
 	.message-pic img {
 		width: 4rem;
 		height: 4rem;
 		border-radius: 50%;
+		border: 0.2rem solid #ff7800;
 	}
 	
 	.message-info {
 		display: inline-block;
-		width: 80%;
+		width: 78%;
 		vertical-align: top;
-		margin-top: 0.8rem;
+		margin-top: 1.5rem;
 		padding-left: 1rem;
     	box-sizing: border-box;
 	}
@@ -293,6 +311,8 @@
 	.message-info .spacing-name {
 		display: inline-block;
 		font-size: 1.2rem;
+		color: #333333;
+    	font-weight: normal;
 	}
 	
 	.message-info .spacing-time {
@@ -313,6 +333,9 @@
 		font-size: 1.1rem;
 		word-break: break-word;
     	line-height: 2rem;
+    	color: 333333;
+    	text-indent: 2em;
+    	margin-top: 1rem;
 	}
 	
 	.delete {
@@ -383,24 +406,24 @@
 		line-height: 2rem;
 	}
 	.mes_img{
-		padding: 0 2rem;
+		padding: 0 1rem;
 	}
 	.mes_img img{
 		display: inline-block;
 	    float: left;
 	    width: 8rem;
-	    height: 8rem;
+	    height: 6rem;
 	    margin: 0.3rem;
 	    border: 0.2rem solid #f6f4f4;
 	    border-radius: 0.5rem;
 	}
 	@media only screen and (min-width:320px ) {
 		.mes_img{
-		padding: 0 3rem;
+		padding: 0 1rem;
 		}
 		.mes_img img{
-			width:6rem;
-			height:6rem;
+			width:10rem;
+			height:7.5rem;
 		}
 	}
 	@media only screen and (min-width:340px ) {
@@ -408,8 +431,8 @@
 		/*padding: 0 2rem;*/
 		}
 		.mes_img img{
-			width:6rem;
-			height:6rem;
+			width:11rem;
+			height:8.25rem;
 		}
 	}
 	@media only screen and (min-width:360px ) {
@@ -417,17 +440,26 @@
 		/*padding: 0 2rem;*/
 		}
 		.mes_img img{
-			width:7rem;
-			height:7rem;
+			width:12rem;
+			height:9rem;
 		}
 	}
 	@media only screen and (min-width:375px ) {
 		.mes_img{
-		padding: 0 2rem;
+		padding: 0 1rem;
 		}
 		.mes_img img{
-			width:8rem;
-			height:8rem;
+			width:12rem;
+			height:9rem;
+		}
+	}
+	@media only screen and (min-width:414px ) {
+		.mes_img{
+		padding: 0 1rem;
+		}
+		.mes_img img{
+			width:13rem;
+			height:9rem;
 		}
 	}
 	.targetSlider{
@@ -446,5 +478,13 @@
 	  	top: 50%;
 	  	left:50%;
 	  	transform: translate3d(-50%,-50%,0);
+  }
+  .del{
+  	text-align: right;
+  }
+  .del .icon{
+  	font-size: 2rem;
+  	margin-top: 0;
+  	margin-left: 1rem;
   }
 </style>

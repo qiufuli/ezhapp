@@ -1,6 +1,6 @@
 <template>
 	<div class="myself">
-		<mt-header fixed title="我的"></mt-header>
+		<!--<mt-header fixed title="我的"></mt-header>-->
 		<div class="wrap">
 			<router-link tag="div" to="/person" class="person_bg" >
 				<img :src="avatar" onerror="src='static/test/person.png'" alt="" />
@@ -143,9 +143,7 @@
 					this.websock.close()
 				}
 				removeUsert();
-				this.$router.push({
-					path: '/'
-				})
+				this.$router.push('/login?guide=0')
 				let info = plus.push.getClientInfo();
 				if(info.clientid) {
 					let params = new URLSearchParams();
@@ -173,6 +171,9 @@
 </script>
 
 <style scoped>
+	.wrap{
+		padding-top: 0;
+	}
 	.mint-header {
 		width: 100%;
 		line-height: 3rem;
@@ -210,13 +211,13 @@
 	
 	.list .list_img {
 		float: left;
-		margin: 0.5rem 1rem 0.5rem 1rem;
+		margin: 0.8rem 1rem 0.5rem 1rem;
 	}
 	
 	.list .list_img img {
 		display: inline-block;
-		width: 2.6rem;
-		height: 2.6rem;
+		width: 2rem;
+		height: 2rem;
 	}
 	
 	.list .list_title {
@@ -285,6 +286,6 @@
 	}
 	
 	.mint-button--primary {
-		background-color: #f6a305;
+		background-color: #ff7800;
 	}
 </style>

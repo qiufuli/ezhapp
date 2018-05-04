@@ -3,7 +3,7 @@
 		<div class="mainsingle child">
 			<mt-header fixed :title="gname">
 				<div class="mint-header-button is-left" @click="getlinkback()" slot="left">
-					<mt-button icon="back">关闭</mt-button>
+					<mt-button icon="back">返回</mt-button>
 				</div>
 			</mt-header>
 			<div class="mainBox">

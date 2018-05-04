@@ -275,5 +275,21 @@ export default new Router({
 				component: resolve => require(['@/components/editor/editor'], resolve)
 			}]
 		},
+		{
+			path: '/maillist', //通讯录（发消息）
+			meta: {
+				navShow: false
+			},
+			component: resolve => require(['@/components/maillist/maillist'], resolve),
+			children: [{
+				path: 'contactDetails', //通讯录致电
+				component: resolve => require(['@/components/contactDetails/contactDetails'], resolve),
+				children: [{
+					//单个通讯人
+					path: 'mailsingle',
+					component: resolve => require(['@/components/mailsingle/mailsingle'], resolve)
+				}]
+			}]
+		}
 	]
 })

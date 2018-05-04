@@ -2,7 +2,8 @@
 	<transition name="showed">
 		<div class="login child">
 			<p class="logo_img">
-				<img src="static/test/lg.png" alt="" />
+				<img src="static/test/logo02.png" alt="" />
+				<span>欢迎您来到<b>翼智园</b>,请登陆</span>
 			</p>
 			<div class="login_input clearfix">
 				<i class="un"></i>
@@ -12,9 +13,9 @@
 				<i class="ps"></i>
 				<input type="password" v-model="loginForm.password" placeholder="请输入密码" />
 			</div>
-			<mt-button type="primary" class="save" @click="go()">登录</mt-button>
+			<mt-button type="primary" class="save" @click="go()">点击登录</mt-button>
 			<router-link tag="p" to="/login/forgetPW" class="forgetPW">忘记密码？</router-link>
-			<div class="transitionImg" ref="transitionImg">
+			<div class="transitionImg" ref="transitionImg" >
 				<img src="static/test/ezhapp01.png" alt="" />
 			</div>
 			<router-view></router-view>
@@ -43,11 +44,18 @@
 			}
 		},
 		created() {
+			this.$nextTick(function(){
 			this.init()
+				
+			})
+
 		},
 		methods: {
 			init() {
 				let self = this;
+				if(this.$route.query.guide == 0){
+					self.$refs.transitionImg.style.display = "none";
+				}
 				setTimeout(function() {
 					let info = plus.push.getClientInfo();
 					if(info.clientid) {
@@ -170,9 +178,10 @@
 </script>
 
 <style scoped>
+	
 	.child {
-		background: url('../../../static/test/ezh_bg06.png') no-repeat center bottom;
-		background-size: 100% 14rem;
+		background:#fff url('../../../static/test/ezh_bg07.png') no-repeat center bottom;
+		background-size: 100% 32rem;
 	}
 	
 	input::-webkit-input-placeholder {
@@ -203,20 +212,30 @@
 	
 	.logo_img img {
 		display: inline-block;
-		width: 10rem;
-		height: 10rem;
+		width: 100%;
+		/*height: 10rem;
 		border-radius: 50%;
-		border: 5px solid #fff;
+		border: 5px solid #fff;*/
 	}
-	
+	.logo_img span{
+		display: block;
+		line-height: 2rem;
+		font-size: 1.2rem;
+		color: #333333;
+		letter-spacing: 0.1rem;
+	}
+	.logo_img span b{
+		color: #ffae7a;
+	}
 	.login_input {
 		width: 90%;
 		height: 3rem;
-		background: #fff;
+		/*background: #fff;*/
 		margin: 0 auto;
-		border-top-left-radius: 0.3rem;
-		border-top-right-radius: 0.3rem;
+		/*border-top-left-radius: 0.3rem;
+		border-top-right-radius: 0.3rem;*/
 		margin-bottom: 0.2rem;
+		border-bottom: 1px solid #ccc;
 	}
 	
 	.login_input.bor {
@@ -278,15 +297,16 @@
 		width: 70%;
 		height: 3rem;
 		margin: 2rem 0 0 15%;
-		font-size: 1.2rem;
+		font-size: 1.4rem !important;
 	}
 	
 	.forgetPW {
 		line-height: 3rem;
 		text-align: center;
-		font-size: 1.4rem;
+		font-size: 1.2rem;
 		margin-top: 1rem;
 		color: #7C807C;
+		text-decoration: underline;
 	}
 	
 	.transitionImg {
@@ -301,5 +321,8 @@
 		display: inline-block;
 		width: 100%;
 		height: 100%;
+	}
+	.mint-button-text{
+		font-size: 1.4rem;
 	}
 </style>

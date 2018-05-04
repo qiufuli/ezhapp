@@ -3,11 +3,11 @@
 		<div class="book child">
 			<mt-header fixed :title="getName">
 				<router-link to="/myself" slot="left">
-					<mt-button icon="back">关闭</mt-button>
+					<mt-button icon="back">返回</mt-button>
 				</router-link>
 			</mt-header>
 			<div class="wrap">
-				<swiper v-model="targetindex" height="54rem">
+				<swiper v-model="targetindex" height="54rem" >
 					<swiper-item v-for="(item, index) in getList" :key="index">
 						<div class="bookList">
 							<router-link tag="div" :to="'/myself/book/bookDetail?id='+ item2.id" class="bookItem" :key="index2" v-for="(item2,index2) in item.bookList" >

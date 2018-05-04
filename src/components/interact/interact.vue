@@ -6,7 +6,22 @@
 			<scroll class="inter_list">
 				<div>
 					
-				
+				<router-link tag="div" to="/BabyCircle" class="inter_item clearfix">
+					<div class="inter_img colpink">
+						<i class="icon iconfont icon-pengyouquan"></i>
+					</div>
+					<div class="inter_title">
+						宝贝圈
+					</div>
+				</router-link>
+				<router-link tag="div" to="/maillist" class="inter_item clearfix">
+					<div class="inter_img colViolet">
+						<i class="icon iconfont icon-tongxunlu"></i>
+					</div>
+					<div class="inter_title">
+						通讯录
+					</div>
+				</router-link>
 				<router-link tag="div" to="/interact/maillist" class="inter_item clearfix">
 					<div class="inter_img colGre">
 						<img src="static/test/xx.png" alt="" />
@@ -99,6 +114,11 @@
 </script>
 
 <style scoped>
+	.icon{
+		margin:0;
+		font-size: 2rem;
+		color: #fff;
+	}
 	.wrap{
 		padding: 0;
 		position: fixed;
@@ -130,6 +150,12 @@
 	}
 	.colyel{
 		background: #f9e237;	
+	}
+	.colpink{
+		background: #fba986;	
+	}
+	.colViolet{
+		background: #ecb3ef;	
 	}
 	.inter_item .inter_img img{
 		display: inline-block;

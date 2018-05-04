@@ -3,7 +3,7 @@
 		<div class="maillist child">
 			<mt-header fixed title="通讯录">
 				<router-link :to="getParentLink" slot="left">
-					<mt-button icon="back">关闭</mt-button>
+					<mt-button icon="back">返回</mt-button>
 				</router-link>
 				<div class="update" slot="right">
 					<img src="static/test/sx02.png" alt="" />
@@ -60,7 +60,13 @@
 		computed: {
 			getParentLink() {
 				// 动态获取父路由
-				return this.$route.path.substring(this.$route.path.indexOf('/'), this.$route.path.lastIndexOf('/'));
+				console.log('现在的路由',this.$route.path)
+				if(this.$route.path == '/maillist'){
+					return '/interact'
+				}else{
+					return this.$route.path.substring(this.$route.path.indexOf('/'), this.$route.path.lastIndexOf('/'));
+				}
+
 			}
 		},
 		created() {
@@ -145,7 +151,7 @@
 					this.clientId = ''
 				}
 				//console.log(test.userConfig.)
-				if(this.$route.path.substring(this.$route.path.indexOf('/'), this.$route.path.lastIndexOf('/')) == '/Recommond') {
+				if(this.$route.path == '/maillist') {
 
 					this.$router.push('/Recommond/maillist/contactDetails?name=' + test.name + '&test=' + test.loginName + '&id=' + test.id + '&clientId=' + this.clientId)
 

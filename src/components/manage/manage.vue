@@ -3,7 +3,7 @@
 		<div class="manage child">
 			<mt-header fixed title="摄像头">
 				<router-link to="/myself" slot="left">
-					<mt-button icon="back">关闭</mt-button>
+					<mt-button icon="back">返回</mt-button>
 				</router-link>
 
 			</mt-header>

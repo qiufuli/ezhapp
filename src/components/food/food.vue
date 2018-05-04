@@ -3,7 +3,7 @@
 		<div class="food" ref="header">
 			<mt-header fixed :title="time">
 				<div class="back" @click="hide" slot="left">
-					<mt-button icon="back"></mt-button>
+					<mt-button icon="back">返回</mt-button>
 				</div>
 				<mt-button slot="right" @click="tj()" :class="{active:isPublish}">提交</mt-button>-->
 			</mt-header>

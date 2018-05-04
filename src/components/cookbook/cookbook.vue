@@ -3,7 +3,7 @@
 		<div class="cookbook">
 			<mt-header fixed title="食谱">
 				<router-link to="/Recommond" slot="left">
-					<mt-button icon="back"></mt-button>
+					<mt-button icon="back">返回</mt-button>
 				</router-link>
 				<mt-button slot="right" @click="a" v-show="userT == 3">编辑食谱</mt-button>
 			</mt-header>

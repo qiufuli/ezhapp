@@ -6,7 +6,7 @@
 			</div>
 			<mt-header fixed title="">
 				<router-link :to="getParentLink" slot="left">
-					<mt-button icon="back"></mt-button>
+					<mt-button icon="back">返回</mt-button>
 				</router-link>
 			</mt-header>
 			<div class="wrap">
@@ -220,7 +220,7 @@ import { Toast ,Indicator } from 'mint-ui';
 	.lesson .wrap-box {
 		width: 100%;
 		height: 4rem;
-		background: #ffc712;
+		background: #ff7800;
 		display: flex;
 	}
 	
@@ -330,5 +330,8 @@ import { Toast ,Indicator } from 'mint-ui';
 		line-height: 1rem;
 		border: 1px solid deeppink;
 		border-radius: 1rem 1rem 1rem 1rem;
+	}
+	.mailHeight{
+		background: #fff;
 	}
 </style>
