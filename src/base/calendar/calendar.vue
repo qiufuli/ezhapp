@@ -145,7 +145,7 @@
 		margin: 2px !important;
 		padding: 0px 0;
 		width: 14.28571429%;
-		height: 44px;
+		height: 54px;
 		text-align: center;
 		vertical-align: middle;
 		font-size: 14px;
@@ -717,6 +717,12 @@
 			// 获取自定义事件
 			getEvents(y, m, d) {
 				if(Object.keys(this.events).length == 0) return false;
+				if(d < 10){
+					d = '0' + d;
+				}
+				if(m < 10){
+					m = '0' + m;
+				}
 				let eventName = this.events[y + "-" + m + "-" + d]
 				let data = {}
 				if(eventName != undefined) {

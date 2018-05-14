@@ -11,32 +11,36 @@
 				<scroll class="mailHeight">
 					<div>
 						<div class="monitor_list clearfix" v-for="item in getData">
-							<div class="monitor-left">
-								<img src="static/test/sxt.png" alt="" />
-								<div class="allSelect">
-									<input type="radio" value="1" :name="item.id" :checked="item.status == 1" @change="changes($event,item)" /><label >关闭</label>
-									<input type="radio" value="0" :name="item.id"  :checked="item.status == 0" @change="changes($event,item)"  /><label >正常</label>
+							<p class="itemP">{{item.title}}</p>
+							<div  v-for="(test,num) in item.items" class="testCon">
+								<div class="monitor-left">
+									<img src="static/test/sxt.png" alt="" />
+									<div class="allSelect">
+										<input type="radio" value="1" :name="test.id" :checked="test.status == 1" @change="changes($event,test)" /><label>关闭</label>
+										<input type="radio" value="0" :name="test.id" :checked="test.status == 0" @change="changes($event,test)" /><label>正常</label>
+									</div>
+								</div>
+								<div class="monitor-right">
+									<p>设备编码: <span>{{test.deviceId}}</span></p>
+									<div class="name">
+										<span>班级：{{test.officeName}}</span>
+
+									</div>
+									<div class="name">
+										<div @click="trigger($event)" class="inp_pev">
+											<span>{{test.name}}</span>
+											<i></i>
+										</div>
+										<div class="inp">
+											<input type="text" v-model="test.name" />
+											<button class="t1" @click="sendMes(test,$event)">确定</button>
+											<button class="t2" @click="trigger2($event)">取消</button>
+										</div>
+
+									</div>
 								</div>
 							</div>
-							<div class="monitor-right">
-								<p>设备编码: <span>{{item.deviceId}}</span></p>
-								<div class="name">
-									<span>班级：{{item.officeName}}</span>
-								
-								</div>
-								<div class="name">
-									<div @click="trigger($event)" class="inp_pev">
-										<span>{{item.name}}</span>
-										<i></i>
-									</div>
-									<div class="inp" >
-										<input type="text" v-model="item.name"/>
-										<button class="t1" @click="sendMes(item,$event)">确定</button>
-										<button class="t2" @click="trigger2($event)">取消</button>
-									</div>
-									
-								</div>
-							</div>
+
 						</div>
 
 					</div>
@@ -56,8 +60,8 @@
 			return {
 				userId: this.$store.state.userId,
 				getData: [],
-				value:false,
-				
+				value: false,
+
 			}
 		},
 		created() {
@@ -70,57 +74,59 @@
 			init() {
 				let self = this;
 				this.$nextTick(function() {
-					axios.get(address + 'index/api/monitorList', {
+					axios.get(address+'index/api/monitorList', {
 						params: {
 							userId: self.userId
 						}
 					}).then(function(res) {
+						console.log('获取到的总数据', res)
 						if(res.data.code == 0) {
 							self.getData = res.data.data
-						}else{
+						} else {
 							Toast({
-							message: res.data.msg,
-							duration: 2000
-						})
+								message: res.data.msg,
+								duration: 2000
+							})
 						}
 					}).catch(function(err) {
 						Toast({
 							message: err,
 							duration: 2000
 						})
-						
+
 					})
 				})
 			},
-			changes(obj,item){
+			changes(obj, item) {
 				let stus = obj.target.attributes.value.value;
-				let  params = new URLSearchParams();
-				params.append('userId',this.$store.state.userId);
-				params.append('monitorId',item.id);
-				params.append('monitorStatus',stus);
-				axios.post(address+'index/api/updateMonitor',params).then((res)=>{
-					if(res.data.code == 0){
+				let params = new URLSearchParams();
+				params.append('userId', this.$store.state.userId);
+				params.append('monitorId', item.id);
+				params.append('monitorStatus', stus);
+				axios.post(address+'index/api/updateMonitor', params).then((res) => {
+					if(res.data.code == 0) {
 						this.init()
 					}
 				})
 			},
-			trigger(obj){
-				let  tardiv = obj.target.parentNode.parentNode.children[1];
-				tardiv.style.display="block";
-				obj.target.parentNode.style.display="none";
+			trigger(obj) {
+				let tardiv = obj.target.parentNode.parentNode.children[1];
+				tardiv.style.display = "block";
+				obj.target.parentNode.style.display = "none";
 			},
-			trigger2(obj){
+			trigger2(obj) {
 				let tardiv = obj.target.parentNode.parentNode.children[0];
-				tardiv.style.display="block";
-				obj.target.parentNode.style.display="none";
+				tardiv.style.display = "block";
+				obj.target.parentNode.style.display = "none";
 			},
-			sendMes(item,$event){
-				let  params = new URLSearchParams();
-				params.append('userId',this.$store.state.userId);
-				params.append('monitorId',item.id);
-				params.append('monitorName',item.name);
-				axios.post(address+'index/api/updateMonitor',params).then((res)=>{
-					if(res.data.code == 0){
+			sendMes(item, $event) {
+				let params = new URLSearchParams();
+				params.append('userId', this.$store.state.userId);
+				params.append('monitorId', item.id);
+				params.append('monitorName', item.name);
+				axios.post(address+'index/api/updateMonitor', params).then((res) => {
+					console.log(res)
+					if(res.data.code == 0) {
 						this.init()
 						this.trigger2($event)
 					}
@@ -233,6 +239,7 @@
 			width: 22rem;
 		}
 	}
+	
 	.allSelect input[type="radio"] {
 		-webkit-appearance: none;
 		/*清除复选框默认样式*/
@@ -257,14 +264,17 @@
 		margin-left: 0.5rem;
 		vertical-align: middle;
 	}
-	.inp_pev{
+	
+	.inp_pev {
 		height: 2rem;
 	}
-	.inp{
+	
+	.inp {
 		display: inline-block;
 		display: none;
 	}
-	.inp input{
+	
+	.inp input {
 		display: inline-block;
 		outline: none;
 		width: 8rem;
@@ -273,24 +283,42 @@
 		border-radius: 0.3rem;
 		box-sizing: border-box;
 	}
-	.inp button{
+	
+	.inp button {
 		background: #fff;
 		border: none;
 		outline: none;
 		border-radius: 0.2rem;
-		height:2rem;
+		height: 2rem;
 		width: 3rem;
-		line-height:2rem;
+		line-height: 2rem;
 		font-size: 1.1rem;
-		color: #323232;		
+		color: #323232;
 		background: #fb7065;
 		margin-right: 0.3rem;
 		box-sizing: border-box;
 	}
-	.inp .t1{
+	
+	.inp .t1 {
 		color: #fff;
 	}
-	.inp .t2{
+	
+	.inp .t2 {
 		background: #ccc;
+	}
+	
+	.itemP {
+		font-size: 1.2rem;
+		background: #fff2f2;
+		/* display: inline-block; */
+		padding: 0.5rem 1rem;
+		margin-bottom: 0.5rem;
+	}
+	.testCon{
+		display: inline-block;
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+		    margin-bottom: 0.5rem;
 	}
 </style>

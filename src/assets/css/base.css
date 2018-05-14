@@ -306,6 +306,11 @@ input {
 	border-radius: 20px 20px 20px 20px!important;
 	margin-top: 0.6rem!important;
 }
+.lesson .weui-cells{
+		display: inline-block;
+		width: 100%;
+		margin-top: 0 !important;
+	}
 
 .kqCon .weui-cells {
 	background-color: #FFFFFF!important;

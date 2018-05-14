@@ -3,6 +3,7 @@ import Cookies from 'js-cookie'
 const webscoket='ws'
 export function init() {
 	let ws=null
+	//123.57.14.54:8081
 	const wsuri = "ws://123.57.14.54:8081/socket/socketServer?userid=" + store.state.name;
 	if('WebSocket' in window) {
 		ws = new WebSocket(wsuri);
@@ -17,4 +18,4 @@ export function init() {
 }
 export function setWs(ws) {
   return Cookies.set(webscoket, ws)
-}
+}  

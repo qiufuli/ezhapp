@@ -5,9 +5,9 @@
 				<router-link :to="getParentLink" slot="left">
 					<mt-button icon="back">返回</mt-button>
 				</router-link>
-				<div class="update" slot="right">
+				<!--<div class="update" slot="right">
 					<img src="static/test/sx02.png" alt="" />
-				</div>
+				</div>-->
 			</mt-header>
 			<div class="wrap">
 				<div class="search">
@@ -60,10 +60,10 @@
 		computed: {
 			getParentLink() {
 				// 动态获取父路由
-				console.log('现在的路由',this.$route.path)
-				if(this.$route.path == '/maillist'){
+				console.log('现在的路由', this.$route.path)
+				if(this.$route.path == '/maillist') {
 					return '/interact'
-				}else{
+				} else {
 					return this.$route.path.substring(this.$route.path.indexOf('/'), this.$route.path.lastIndexOf('/'));
 				}
 
@@ -127,9 +127,9 @@
 					self.getData.forEach(function(v, k) {
 						v.items.forEach(function(vv, kk) { //title items
 							if(self.onlineUser.indexOf(vv.loginName) != -1) {
-								vv.online='green';
-							}else{
-								vv.online='gray';
+								vv.online = 'green';
+							} else {
+								vv.online = 'gray';
 							}
 						});
 					})
@@ -141,25 +141,37 @@
 				})
 
 			},
-//			update() {
-//				this.init();
-//			},
+			//			update() {
+			//				this.init();
+			//			},
 			gosingle(test) {
-				if(test.userConfig != null) {
-					this.clientId = test.userConfig.clientId
-				} else {
-					this.clientId = ''
-				}
+				let self = this;
+				axios.get(address + 'push/api/getUserConfig', {
+					params: {
+						selUserId: test.id
+					}
+				}).then(function(res) {
+					console.log(res)
+					if(res.data.data == null){
+						self.clientId = ''
+					}else{
+					self.clientId = res.data.data.clientId;
+						
+					}
+
+					if(self.$route.path == '/maillist') {
+						self.$router.push('/Recommond/maillist/contactDetails?name=' + test.name + '&test=' + test.loginName + '&id=' + test.id + '&clientId=' + self.clientId)
+					} else {
+						self.$router.push('/interact/maillist/mailsingle?name=' + test.name + '&test=' + test.loginName + '&id=' + test.id + '&clientId=' + self.clientId)
+					}
+				})
+				//				if(test.userConfig != null) {
+				//					this.clientId = test.userConfig.clientId
+				//				} else {
+				//					this.clientId = ''
+				//				}
 				//console.log(test.userConfig.)
-				if(this.$route.path == '/maillist') {
 
-					this.$router.push('/Recommond/maillist/contactDetails?name=' + test.name + '&test=' + test.loginName + '&id=' + test.id + '&clientId=' + this.clientId)
-
-				} else {
-
-					this.$router.push('/interact/maillist/mailsingle?name=' + test.name + '&test=' + test.loginName + '&id=' + test.id + '&clientId=' + this.clientId)
-
-				}
 			},
 			getWebsoket() {
 				console.log(this.websock)

@@ -22,14 +22,14 @@
 					<input type="text" v-model="talk" placeholder="说点什么" />
 				</div>
 			</div>
-		</div>
+		</div> 
 	</transition>
 </template>
 
 <script>
 	import Scroll from '@/base/scroll/scroll';
 	import * as scoket from '@/common/util/webscokt.js'
-	
+
 	export default {
 		data() {
 			return {
@@ -43,10 +43,12 @@
 				from: this.$store.state.name,
 				to: this.$route.query.test,
 				id: this.$route.query.id,
+				clientId: this.$route.query.clientId,
 				messages: '',
 				csh_scroll: {},
 				OFFSET: 1,
-				otherAvatar:'1111'
+				otherAvatar: '',
+				fromClientId: ''
 			}
 		},
 		components: {
@@ -58,102 +60,124 @@
 			}
 		},
 		created() {
+			let self = this;
 			this.$nextTick(function() {
-				this.csh_scroll = this.$refs.scrolls.$el.clientHeight;
-				
-				this.init();
+				self.csh_scroll = this.$refs.scrolls.$el.clientHeight;
+				self.init();
+				let info = plus.push.getClientInfo();
+				self.fromClientId = info.clientid;
 			})
 		},
 		mounted() {
 			this.$nextTick(function() {
 				this.websock = this.$store.state.webSocket;
+				this.getWebsoket();
 				this.websock.onmessage = this.websocketonmessage;
 			})
 		},
 		methods: {
+			getWebsoket() {
+				if(this.websock != null) {
+					this.websock.close();
+				}
+				this.websock = scoket.init()
+				//scoket.setWs(this.websock)
+				this.$store.dispatch('setScoket', this.websock)
+				this.websock.onmessage = this.websocketonmessage;
+				this.websock.onclose = this.websocketclose;
+			},
 			scrollToEnd() {
 				this.OFFSET++;
 				console.log(this.OFFSET)
 				this.init();
 			},
 			getAvatar() {
-				let self =this;
+
+			},
+			init() {
+				let self = this;
+				console.log('sysUser=>>>', this.$store.state.sysUser)
+				console.log(this.csh_scroll, this.to, this.from)
 				axios.get(address + 'index/api/getUserInfo', {
 					params: {
 						userId: this.id
 					}
-				}).then(function(res){
-
-					self.otherAvatar = imgURL+res.data.data.imageId;
-
-				})
-			},
-			init() {
-				this.getAvatar();
-				let self = this;
-
-				console.log(this.csh_scroll, this.to, this.from)
-				let params = new URLSearchParams();
-				params.append('pageNum', self.OFFSET)
-				params.append('pageSize', '10')
-				params.append('from', self.from)
-				params.append('to', self.to)
-				axios.post(address3 + 'socket/msg/1/signle/msg', params).then((res) => {
-//							console.log('历史记录',res.data)
-					
-					if(res.data.code == 0) {
-//							console.log('历史记录',res.data)
-						
-						if(res.data.data != '') {
-							self.maillist2 = [];
-							console.log('历史记录',res.data)
-							let getData = res.data.data;
-							getData.forEach(function(v, k) {
-								//								console.log(new Date(v.createTime))
-								let target_obj1 = {
-									align: 'right',
-									mes: '',
-									avatar:self.otherAvatar
-								}
-								if(v.from == self.from) {
-									target_obj1 = {
+				}).then(function(res) {
+					self.otherAvatar = imgURL + res.data.data.imageId;
+					console.log('self.otherAvatar ', self.otherAvatar)
+					let params = new URLSearchParams();
+					params.append('pageNum', 0)
+					params.append('pageSize', self.OFFSET)
+					params.append('from', self.from)
+					params.append('to', self.to)
+					console.log('self.otherAvatar11111 ', self.otherAvatar)
+					axios.post(address3 + 'socket/msg/1/signle/msg', params).then((res) => {
+						console.log('历史记录', res.data)
+						if(res.data.code == 0) {
+							//							console.log('历史记录',res.data)
+							if(res.data.data != '') {
+								self.maillist2 = [];
+								self.maillist = [];
+								//							console.log('历史记录',res.data)
+								let getData = res.data.data;
+								getData.forEach(function(v, k) {
+									//								console.log(new Date(v.createTime))
+									let target_obj1 = {
 										align: 'right',
-										mes: JSON.parse(v.text)['message']['content'],
-										avatar:imgURL+self.$store.state.sysUser.imageId
+										mes: '',
+										avatar: self.otherAvatar
 									}
-								} else {
-									target_obj1 = {
-										align: 'left',
-										mes: JSON.parse(v.text)['message']['content'],
-										avatar:self.otherAvatar
+									if(v.from == self.from) {
+										target_obj1 = {
+											align: 'right',
+											mes: JSON.parse(v.text)['message']['content'],
+											avatar: imgURL + self.$store.state.sysUser.imageId
+										}
+									} else {
+										target_obj1 = {
+											align: 'left',
+											mes: JSON.parse(v.text)['message']['content'],
+											avatar: self.otherAvatar
+										}
 									}
-								}
 
-								self.maillist2.push(target_obj1);
-							})
-
-							self.maillist = self.maillist2.concat(self.maillist);
+									self.maillist2.unshift(target_obj1);
+								})
+								//							self.maillist = self.maillist2.concat(self.maillist);
+								self.maillist = self.maillist2;
+							}
 						}
-					}
 
+					})
 				})
+
 			},
 			getlinkback() {
 				return this.$router.back(-1);
 			},
 			socket() {
 				let self = this;
+
+				console.log()
 				if(self.talk != '') {
 					self.websock.send(JSON.stringify({
 						message: {
 							room: 1,
-							group: 1, //或班级id
+							group: self.$store.state.sysUser.officeId, //或班级id
 							chatType: 'SIGNLE',
 							msgType: 'TEXT',
 							content: self.talk,
 							from: self.from,
 							to: self.to, //接收人,如果没有则置空,如果有多个接收人则用,分隔
-							time: this.getDateFull
+							time: this.getDateFull,
+							toName: self.gname,
+							toId: self.id,
+							toClientId: self.clientId,
+							toAvatar: self.otherAvatar,
+							fromName: self.$store.state.sysUser.name,
+							fromId: self.$store.state.sysUser.id,
+							fromClientId: self.fromClientId,
+							fromAvatar: imgURL + self.$store.state.sysUser.imageId,
 						},
 						type: "message"
 					}));
@@ -171,31 +195,39 @@
 				}
 			},
 			websocketonmessage(e) { //数据接收
+				//				e['toAvatar'] = this.otherAvatar;
+				//				e['fromAvatar'] =imgURL+this.$store.state.sysUser.imageId;
+				//				e['toName'] =this.gname;
+				//				e['toId'] =this.id;
+				//				e['toClientId'] =this.clientId;
+				//				e['fromName'] =this.$store.state.sysUser.name;
+
 				console.log('消息列表接受', e)
+				console.log('消息列表头像', this.otherAvatar)
 				let redata = JSON.parse(e.data);
 				let target_obj = {
 					align: 'right',
 					mes: this.talk,
-					avatar:this.otherAvatar
+					avatar: this.otherAvatar
 				}
 
 				if(redata.message.from != undefined) {
-					console.log(redata.message.from)
 					if(redata.message.from == this.from) {
 						target_obj.align = 'right';
 						target_obj.mes = this.talk;
-						target_obj.avatar = imgURL+this.$store.state.sysUser.imageId;
+						target_obj.avatar = imgURL + this.$store.state.sysUser.imageId;
 						this.maillist.push(target_obj);
 						this.talk = '';
+						console.log('this.talk====>', this.talk)
 					} else {
 						target_obj.align = 'left';
 						target_obj.mes = redata.message.content;
-						target_obj.avatar =self.otherAvatar;
+						target_obj.avatar = this.otherAvatar;
 						this.maillist.push(target_obj);
 					}
+					console.log(this.maillist)
 					if(this.$refs.scrolls.scroll.scrollerHeight > this.csh_scroll) {
 						this.$refs.scrolls.scrollTo(0, this.$refs.scrolls.scroll.maxScrollY - 50);
-
 					}
 				}
 			},

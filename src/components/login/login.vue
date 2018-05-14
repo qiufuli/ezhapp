@@ -15,7 +15,7 @@
 			</div>
 			<mt-button type="primary" class="save" @click="go()">点击登录</mt-button>
 			<router-link tag="p" to="/login/forgetPW" class="forgetPW">忘记密码？</router-link>
-			<div class="transitionImg" ref="transitionImg" >
+			<div class="transitionImg" ref="transitionImg">
 				<img src="static/test/ezhapp01.png" alt="" />
 			</div>
 			<router-view></router-view>
@@ -44,16 +44,14 @@
 			}
 		},
 		created() {
-			this.$nextTick(function(){
-			this.init()
-				
+			this.$nextTick(function() {
+				this.init()
 			})
-
 		},
 		methods: {
 			init() {
 				let self = this;
-				if(this.$route.query.guide == 0){
+				if(this.$route.query.guide == 0) {
 					self.$refs.transitionImg.style.display = "none";
 				}
 				setTimeout(function() {
@@ -91,13 +89,6 @@
 						self.$refs.transitionImg.style.display = "none";
 					}
 				}, 3000);
-
-				//				if(getUsert() != undefined) {
-				//					this.$router.push('/Recommond')
-				//				}
-			},
-			changeshow() {
-				console.log(this.value)
 			},
 			//登录接口
 			go() {
@@ -165,22 +156,35 @@
 				console.log("connection closed (" + e.code + ")");
 			},
 			getPushInfo() {
+
 				let info = plus.push.getClientInfo();
-				let params = new URLSearchParams();
-				params.append('userId', this.$store.state.userId)
-				params.append('clientId', info.clientid)
-				axios.post(address + 'push/api/bindPushConfig', params).then((res) => {
-					console.log(res)
-				})
+				let mobileType = '';
+				if(info != undefined && info != null && info != '') {
+					let ua = navigator.userAgent.toLowerCase();
+					let isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
+					if(isIos) {
+						mobileType = '0';
+					} else {
+						mobileType = '1'
+					}
+					alert(mobileType)
+					let params = new URLSearchParams();
+					params.append('userId', this.$store.state.userId)
+					params.append('clientId', info.clientid)
+					params.append('mobileType', mobileType)
+					axios.post(address + 'push/api/bindPushConfig', params).then((res) => {
+						console.log(res)
+					})
+				}
+
 			}
 		}
 	}
 </script>
 
 <style scoped>
-	
 	.child {
-		background:#fff url('../../../static/test/ezh_bg07.png') no-repeat center bottom;
+		background: #fff url('../../../static/test/ezh_bg07.png') no-repeat center bottom;
 		background-size: 100% 32rem;
 	}
 	
@@ -217,16 +221,19 @@
 		border-radius: 50%;
 		border: 5px solid #fff;*/
 	}
-	.logo_img span{
+	
+	.logo_img span {
 		display: block;
 		line-height: 2rem;
 		font-size: 1.2rem;
 		color: #333333;
 		letter-spacing: 0.1rem;
 	}
-	.logo_img span b{
+	
+	.logo_img span b {
 		color: #ffae7a;
 	}
+	
 	.login_input {
 		width: 90%;
 		height: 3rem;
@@ -322,7 +329,8 @@
 		width: 100%;
 		height: 100%;
 	}
-	.mint-button-text{
+	
+	.mint-button-text {
 		font-size: 1.4rem;
 	}
 </style>

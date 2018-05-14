@@ -152,10 +152,20 @@
 						} else if(self.$store.state.userType == 5) {
 							self.username = res.data.data.name + '家长';
 						}
-						self.noticeNum = res.data.data.userConfig.noticeNum;
-						self.showNum = res.data.data.userConfig.showNum;
-						self.noticeNumFn();
-						self.showNumFn();
+						axios.get(address+'push/api/getUserConfig',{
+							params:{
+								selUserId:self.$store.state.userId
+							}
+						}).then(function(res){
+							console.log('获取getUserConfig====>',res)
+							self.noticeNum = res.data.data.noticeNum; 
+							self.showNum = res.data.data.showNum; 
+							self.noticeNumFn();
+							self.showNumFn();
+						})
+//						self.noticeNum = res.data.data.userConfig.noticeNum;
+//						self.showNum = res.data.data.userConfig.showNum;
+						
 
 					})
 					//					})
@@ -164,6 +174,7 @@
 
 			},
 			noticeNumFn() {
+				console.log('noticeNum',this.noticeNum)
 				axios.get(address + 'push/api/getNoticeList', {
 					params: {
 						userId: this.$store.state.userId,
@@ -171,8 +182,10 @@
 						isNum: 1
 					}
 				}).then((res) => {
+					console.log('noticeNum',res.data.data.totalSize)
 					if(this.noticeNum < res.data.data.totalSize) {
 						this.num1 = true;
+						console.log(this.num1)
 					}
 
 				})
@@ -250,6 +263,7 @@
 		box-shadow: 0px 0.2rem 0.5rem rgba(217, 178, 178, 0.2);
 		border-radius: 0.2rem;
 		box-sizing: border-box;
+		position: relative;
 	}
 	
 	.baby_list .baby_item:nth-child(odd) {
@@ -286,7 +300,7 @@
 		position: relative;
 	}
 	
-	.recommond_item b {
+	.baby_item b {
 		display: inline-block;
 		position: absolute;
 		top: 0.5rem;

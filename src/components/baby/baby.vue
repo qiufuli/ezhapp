@@ -10,17 +10,25 @@
 				<scroll :data="videoUrl" class="mailHeight">
 					<ul class="video-box" ref="videoBox">
 
-						<li v-for="(item,index) in videoUrl" @click="switchHandle(index)">
-							<div>{{}}</div>
-							<div class="img"></div>
-							<span>{{item.name}}</span>
-							<i v-html="item.status == 0 ? '正常' : '<span style=color:#f45a5a>关闭</span>'"></i>
-							<b :class="item.status == 0 ? 'v_bg1':'v_bg2'"></b>
-							<div class="tc" ref="tc">
-								正在播放
+						<li v-for="(item,index) in videoUrl">
+							<div>
+
+								<p class="itemP">{{item.title}}</p>
+
+								<div v-for="(test,num) in item.items" class="testCon" @click="switchHandle(index,num,$event)">
+									<div class="img"></div>
+									<span>{{test.name}}</span>
+									<i v-show="nowhour >= test.beginTime && nowhour <= test.endTime" v-html="test.status == 0 ? '正常' : '<span style=color:#f45a5a>关闭</span>'"></i>
+									<b :class="test.status == 0 ? 'v_bg1':'v_bg2'"></b>
+									<div class="tc" ref="tc">
+										正在播放
+									</div>
+									<div class="hours" v-show="nowhour < test.beginTime || nowhour > test.endTime">
+										观看时间为<br/>{{test.beginTime}}:00 -- {{test.endTime}}:00
+									</div>
+								</div>
 							</div>
 						</li>
-
 					</ul>
 				</scroll>
 			</div>
@@ -49,7 +57,8 @@
 					link: 'https://github.com/MoePlayer/vue-dplayer'
 				}],
 				player: null,
-				flag: false
+				flag: false,
+				nowhour: new Date().getHours()
 			}
 		},
 		components: {
@@ -66,7 +75,7 @@
 			init() {
 				let self = this;
 				//address + 'index/api/monitorList'
-				axios.get('http://192.168.9.172:4040/index/api/monitorList', {
+				axios.get(address+'index/api/monitorList', {
 					params: {
 						userId: self.$store.state.userId
 					}
@@ -77,17 +86,9 @@
 						//					self.flag=true;
 						self.$nextTick(function() {
 							console.log('返回的ip', res.data.data)
-							
-							for(var i in res.data.data){
-								let objs={}
-								console.log(i)
-								objs[i] = res.data.data[i]
-								self.videoUrl.push(objs)
-							}
-
-							
+							self.videoUrl = res.data.data;
 							console.log('videoUrl====>', self.videoUrl)
-							
+
 							//							self.video = {
 							//								url: self.videoUrl[0].ip,
 							//								pic: '',
@@ -110,22 +111,28 @@
 			play() {
 				console.log('play callback')
 			},
-			switchHandle(index) {
-				if(this.videoUrl[index].status == 0) {
-					this.$refs.tc.forEach(function(data) {
-						data.style.display = 'none';
-					})
-					this.$refs.tc[index].style.display = 'block';
-					console.log(index)
-					console.log(this.videoUrl[index].ip)
-					var hls = new Hls();
-					hls.loadSource(this.videoUrl[index].ip);
-					hls.attachMedia(this.player);
-					this.player.switchVideo({
-						url: this.videoUrl[index].ip
-					})
-					this.player.play();
-					console.log(this.player)
+			switchHandle(index, num, ev) {
+				let targetDiv = ev.target.parentNode.children[4];
+				console.log(ev.target.parentNode.children[5])
+				if(ev.target.parentNode.children[5].style.display == 'none') {
+					if(this.videoUrl[index]['items'][num].status == 0) {
+						this.$refs.tc.forEach(function(data) {
+							data.style.display = 'none';
+						})
+						targetDiv.style.display = 'block';
+						console.log(index)
+						console.log(this.videoUrl[index]['items'][num].ip)
+						var hls = new Hls();
+						hls.loadSource(this.videoUrl[index]['items'][num].ip);
+						hls.attachMedia(this.player);
+						this.player.switchVideo({
+							url: this.videoUrl[index]['items'][num].ip
+						})
+						this.player.play();
+						console.log(this.player)
+					}
+				} else {
+					return false
 				}
 
 			},
@@ -163,7 +170,7 @@
 		opacity: 0.8;
 		margin-left: 1rem;
 		font-size: 1.4rem;
-		color:#000;
+		color: #000;
 	}
 	
 	.baby {
@@ -183,10 +190,10 @@
 	
 	.video-box li {
 		display: inline-block;
-		width: 12rem;
-		height: 10rem;
-		text-align: center;
-		margin-right: 2.5rem;
+		width: 100%;
+		/*height: 10rem;*/
+		/*text-align: center;*/
+		/*margin-right: 2.5rem;*/
 		position: relative;
 	}
 	
@@ -199,8 +206,28 @@
 		box-shadow: 0px 0.2rem 0.5rem rgba(34, 25, 25, 0.2);
 	}
 	
+	.video-box li>div {
+		display: inline-block;
+		width: 100%;
+		height: auto;
+		padding-bottom: 0.5rem;
+		overflow: hidden;
+	}
+	
+	.testCon {
+		display: inline-block;
+		width: 12rem;
+		margin: 0 1rem;
+		float: left;
+		position: relative;
+	}
+	
 	.video-box li span {
+		display: inline-block;
+		width: 100%;
+		line-height: 2rem;
 		font-size: 1rem;
+		text-align: center;
 	}
 	
 	.video-box li i {
@@ -218,7 +245,8 @@
 		margin-right: 0;
 	}
 	
-	.video-box li .tc {
+	.video-box li .testCon .tc,
+	.video-box li .hours {
 		display: inline-block;
 		position: absolute;
 		top: 0;
@@ -231,7 +259,16 @@
 		background: rgba(7, 17, 27, 0.5);
 		color: #fff;
 		font-size: 1.2rem;
+		text-align: center;
 		display: none;
+	}
+	
+	.video-box li .hours {
+		display: block;
+		font-size: 1.1rem;
+		line-height: 1.5rem;
+		padding-top: 3rem;
+		box-sizing: border-box;
 	}
 	
 	.v_bg1,
@@ -265,38 +302,62 @@
 	}
 	
 	@media only screen and (min-width:320px) {
-		.video-box li {
-			width: 10rem;
+		.video-box .testCon {
+			width: 9rem;
 		}
-		.video-box li div {
-			width: 10rem;
+		.video-box li .img {
+			width: 9rem;
+		}
+		.v_bg1,
+		.v_bg2 {
+			left: 3rem;
 		}
 	}
 	
 	@media only screen and (min-width:340px) {
-		.video-box li {
-			width: 11rem;
+		.video-box .testCon {
+			width: 10rem;
 		}
-		.video-box li div {
-			width: 11rem;
+		.video-box li .img {
+			width: 10rem;
+		}
+		.v_bg1,
+		.v_bg2 {
+			left: 4rem;
 		}
 	}
 	
 	@media only screen and (min-width:360px) {
-		.video-box li {
-			width: 12rem;
+		.video-box .testCon {
+			width: 11rem;
 		}
-		.video-box li div {
-			width: 12rem;
+		.video-box li .img {
+			width: 11rem;
+		}
+		.v_bg1,
+		.v_bg2 {
+			left: 4rem;
 		}
 	}
 	
 	@media only screen and (min-width:375px) {
-		.video-box li {
-			width: 12rem;
+		.video-box .testCon {
+			width: 11rem;
 		}
-		.video-box li div {
-			width: 12rem;
+		.video-box li .img {
+			width: 11rem;
 		}
+		.v_bg1,
+		.v_bg2 {
+			left: 4rem;
+		}
+	}
+	
+	.itemP {
+		font-size: 1.2rem;
+		background: #fff;
+		margin-bottom: 1rem;
+		/* display: inline-block; */
+		padding: 0.5rem 1rem;
 	}
 </style>

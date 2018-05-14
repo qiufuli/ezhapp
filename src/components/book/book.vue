@@ -14,10 +14,8 @@
 								<p :class="'p'+index2">
 								<img :src="item2.thumbnailUrl" alt="" />
 								</p>
-								<!--<span>{{item2.name}}</span>-->
 						</router-link>
 						</div>
-						
 					</swiper-item>
 				</swiper>
 			</div>
@@ -58,7 +56,7 @@
 								userId: this.$store.state.userId
 							}
 						}).then((res) => {
-							this.getList = res.data.data
+							this.getList = res.data.data;
 							this.getName = this.getList[this.targetindex].bookShelf.name;
 						}).catch((err) => {
 							console.log(err)

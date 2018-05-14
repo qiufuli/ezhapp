@@ -127,6 +127,8 @@ export default {
 	.tabList p{
 		color: #666;
 	}
-
+	.router-link-active p{
+		color: #ff7800;
+	}
 	
 </style>

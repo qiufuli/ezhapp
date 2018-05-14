@@ -36,7 +36,7 @@
 								<div class="mes_img clearfix" >
 									<img @click="viewImg(item.imgId.split(','),num)" :src="imgURL+img" v-if="img" alt="" v-for="(img,num) in item.imgId.split(',')" />
 								</div>
-								<div class="del">
+								<div class="del" v-if="showDel" @click="del(item.id)">
 									<i class="icon iconfont icon-shanchu"></i>
 								</div>
 								<!--<div class="message-b">
@@ -122,7 +122,8 @@
 				imgURL:imgURL,
 				targetindex:0,//swiper index
 				targets:false, //swiper v-if
-				targetArr:[]
+				targetArr:[],
+				showDel:false
 			}
 		},
 		directives: {
@@ -153,6 +154,9 @@
 			},
 			init() {
 				let self = this;
+				if(self.$store.state.userId == 3){
+					self.showDel = true;
+				}
 				this.$nextTick(function() {
 					axios.get(address + 'index/api/getBabyCriList', {
 						params: {
@@ -167,7 +171,6 @@
 								if(self.commentText.length < 10) {
 									self.start = false;
 									self.end = false;
-
 								} else {
 									self.start = true
 								}
@@ -242,7 +245,20 @@
 			//隐藏
 			hideImg(){
 				this.targets=false
-				
+			},
+			del(itemId){
+				console.log(itemId)
+				let self = this;
+				let params = new URLSearchParams();
+				params.append('id', itemId)
+				axios.post(address+'index/api/delFlagBaby',params).then(function(res){
+					console.log(res)
+					if(res.data.code == 0){
+					self.OFFSET = 1;
+					self.commentText = []
+						self.init()
+					}
+				})
 			}
 			
 		}

@@ -39,8 +39,7 @@
 									 :weeks="calendar1.weeks" 
 									 :months="calendar1.months" 
 									 @select="select"
-									  @selectMonth="calendar1.selectMonth" 
-									  @selectYear="calendar1.selectYear"
+									  @selectMonth="selectMonth" 
 									  ></calendar>
 								<!--<button @click="changeEvents">异步更新Price</button>
             <button @click="calendar1.value=[2018,1,Math.floor(Math.random()*30+1)]">动态设置日期</button>
@@ -114,9 +113,9 @@
 						self.times = value.join('-');
 						self.init();
 					},
-					selectMonth(month, year) {
-						console.log(year, month)
-					},
+//					selectMonth(month, year) {
+//						console.log(year, month)
+//					},
 					selectYear(year) {
 						console.log(year)
 					},
@@ -145,10 +144,17 @@
 		methods: {
 			select(value){
 				console.log(value.join('-'));
+				this.calendar1.value = value;
+				
 				this.times = value.join('-');
 				this.init();
 			},
+			selectMonth(month, year){
+				this.init(year,month)
+			},
 			change(value) {
+				value = value.join('-').replace(/\-/g, "/");
+				alert(value)
 				if(this.$store.state.userType == 3 || this.$store.state.userType == 4) {
 					axios.get(address2 + 'v1.0/terminal/getWorkDetail', {
 						params: {
@@ -180,13 +186,65 @@
 				}
 
 			},
-			init() {
+			Calendar(year,month){
+				let Year = '';
+				let Month = ''
+				if(year){
+					Year = year;
+					Month = month;
+				}else{
+					Year = this.times.split('-')[0];
+					if(this.times.split('-')[1].substring(0,1) == 0){
+						Month = this.times.split('-')[1].substring(1)
+					}else{
+						Month = this.times.split('-')[1]
+					}
+				}
+				
+				let self = this;
+				if(this.$store.state.userType == 3 || this.$store.state.userType == 4) {
+				axios.get(address2+'v1.0/terminal/getMonthWorkList',{
+					params:{
+						userId:this.userId,
+						selUserId:this.$route.query.selUserId,
+						year:Year,
+						month:Month
+					}
+				}).then(function(res){
+					console.log('当月===>',res)
+					if(res.data.code == 1000){
+						self.calendar1.events = res.data.data;
+					}
+
+				})
+				}
+				if(this.$store.state.userType == 5) {
+				axios.get(address2+'v1.0/terminal/getMonthWorkList',{
+					params:{
+						userId:this.userId,
+						selUserId:this.userId,
+						year:Year,
+						month:Month
+					}
+				}).then(function(res){
+					console.log('当月===>',res)
+					if(res.data.code == 1000){
+						self.calendar1.events = res.data.data;
+					}
+
+				})
+				}
+				
+			},
+			init(year,month) {
+				console.log('this.times===>',this.times)
+				this.Calendar(year,month);
 				if(this.$store.state.userType == 3 || this.$store.state.userType == 4) {
 					axios.get(address2 + 'v1.0/terminal/getWorkDetail', {
 						params: {
 							userId: this.userId,
 							selUserId: this.selUserId,
-							selectTime: new Date(this.times).getTime()
+							selectTime: new Date(this.times.replace(/\-/g, "/")).getTime()
 						}
 					}).then((resolve) => {
 						this.timeList = resolve.data.data;
@@ -200,7 +258,7 @@
 						params: {
 							userId: this.userId,
 							selUserId: this.userId,
-							selectTime: new Date().getTime()
+							selectTime: new Date(this.times).getTime()
 						}
 					}).then((resolve) => {
 						this.timeList = resolve.data.data;

@@ -10,12 +10,12 @@
 				</router-link>
 			</mt-header>
 			<div class="wrap">
-				<div class="wrap-box">
+				<div class="wrap-box clearfix">
 					<a @click="reduce">前一天</a>
 					<group>
 						<datetime class="top" v-model="value5" :min-year=2017 :max-year=2099 format="YYYY-MM-DD" :end-date="endDate" @on-change="change" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="确定" cancel-text=" "></datetime>
 					</group>
-					<a @click="add()" ref="add" style="color:#8e8a8a">后一天</a>
+					<a @click="add()" ref="add" style="background:#ccc;color:#fff" >后一天</a>
 				</div>
 			</div>
 			<div class="mailDiv">
@@ -23,7 +23,8 @@
 				<div>
 					<div class="list">
 				<div class="kq-list" v-for="(item,index) in kqList" @click="selectItem(item,$event)">
-					<i class="iconfont icon-icon31"></i>
+					<!--<i class="iconfont icon-icon31"></i>-->
+					<img :src="imgURL+item.userImageId" onerror="src='static/test/person.png'" alt="" />
 					<h2>{{item.name}}</h2>
 					<span class="dk" v-show="item.isWork== 1">已打卡</span>
 					<span class="wdk" v-show="item.isWork== 0">未打卡</span>
@@ -70,7 +71,8 @@
 				userId:this.$store.state.userId, //userid
 				kqList: [],//渲染内容数组
 				selectedItem: {},
-				endDate:''//设置结束日期
+				endDate:'',//设置结束日期
+				imgURL:imgURL
 			}
 		},
 		created() {
@@ -111,11 +113,13 @@
 			},
 			change(value) {
 				let self = this;
-				if(new Date(self.value5).getTime() >= new Date().getTime()){
-					this.$refs.add.style.color = '#8e8a8a'
+				if(new Date(self.value5).getTime() >= new Date(time.getYYMMDD()).getTime()){
+					this.$refs.add.style.color = '#fff';
+					this.$refs.add.style.background = '#ccc';
 					self.value5 = time.getYYMMDD();//如果是今天以后 默认今天 不能向后查
 				}else{
-					this.$refs.add.style.color = '#fff'
+					this.$refs.add.style.background = '#fff';
+					this.$refs.add.style.color = '#323232';
 					self.value5 = value;
 					axios.get(address2 + 'v1.0/terminal/getWorkList', {
 						params: {
@@ -137,11 +141,13 @@
 			add: function() {
 				let self = this;
 				self.value5 = time.addDate(self.value5, 1)
-				if(new Date(self.value5).getTime() >new Date().getTime()){
-					this.$refs.add.style.color = '#8e8a8a';
+				if(new Date(self.value5).getTime() >=new Date(time.getYYMMDD()).getTime()){
+					this.$refs.add.style.color = '#fff';
+					this.$refs.add.style.background = '#ccc';
 					self.value5 = time.getYYMMDD();//如果是今天以后 默认今天 不能向后查
 				}else{
-					this.$refs.add.style.color = '#fff';
+					this.$refs.add.style.background = '#fff';
+					this.$refs.add.style.color = '#323232';
 					axios.get(address2 + 'v1.0/terminal/getWorkList', {
 						params: {
 							userId: self.userId,
@@ -162,7 +168,8 @@
 			reduce: function() {
 				let self = this;
 				self.value5 = time.addDate(self.value5, -1)
-				this.$refs.add.style.color = '#fff';
+				this.$refs.add.style.background = '#fff';
+				this.$refs.add.style.color = '#323232';
 				axios.get(address2 + 'v1.0/terminal/getWorkList', {
 						params: {
 							userId: self.userId,
@@ -198,6 +205,9 @@
 		bottom: 4rem;
 		width: 100%;
 	}
+	.lesson{
+		background: #fff;
+	}
 	.lesson .title {
 		position: fixed;
 		width: 80%;
@@ -219,15 +229,14 @@
 		width: 100%;
 		height: 4rem;
 		background: #ff7800;
-		display: flex;
+		/*display: flex;*/
 	}
 	.mailHeight{
-		    background: #fff;
+		background: #fff;
 	}
-	.lesson .wrap a {
+	/*.lesson .wrap a {
 		display: inline-block;
 		color: #FFFFFF;
-		flex: 1;
 		margin: 1.5rem 0.5rem 0 0.5rem;
 		font-size: 1.2rem;
 		
@@ -246,6 +255,24 @@
 	
 	.lesson .weui-cells a div p {
 		color: red;
+	}*/
+	.wrap-box > div{
+		display: inline-block;
+		float: left;
+		width: 60%;
+		margin-top: 0.4rem;
+	}
+	.wrap-box >a{
+		display: inline-block;
+		float: left;
+		width: 16%;
+		margin: 0.8rem 2% 0;
+		height: 2rem;
+		line-height: 2rem;
+		background: #fff;
+		border-radius: 3rem;
+		text-align: center;
+		font-size: 1rem;
 	}
 	.lesson .list {
 		margin: 1rem 1.5rem;
@@ -253,11 +280,32 @@
 	
 	.lesson .kq-list {
 		display: inline-block;
-		margin-right: 1.2rem;
+		margin:0 0.6rem;
 	}
-	
-	.lesson .kq-list:nth-child(4n) {
-		margin-right: 0;
+	@media only screen and (min-width:320px ) {
+		.lesson .kq-list{
+			margin:0 1rem 0.5rem;
+		}
+	}
+	@media only screen and (min-width:340px ) {
+		.lesson .kq-list{
+			margin:0 0.2rem 0.5rem;
+		}
+	}
+	@media only screen and (min-width:360px ) {
+		.lesson .kq-list{
+			margin:0 0.4rem 0.5rem;
+		}
+	}
+	@media only screen and (min-width:375px ) {
+		.lesson .kq-list{
+			margin:0 0.5rem 0.5rem;
+		}
+	}
+	@media only screen and (min-width:414px ) {
+		.lesson .kq-list{
+			margin:0 0.6rem 0.5rem;
+		}
 	}
 	/*.lesson .kq-list img{
 		width: 6rem;
@@ -268,7 +316,12 @@
 	.lesson .iconfont {
 		font-size: 6rem;
 	}
-	
+	.kq-list img{
+		display: inline-block;
+		width: 6rem;
+		height: 6rem;
+		border-radius: 50%;
+	}
 	.lesson .kq-list h2 {
 		text-align: center;
 		color: black;

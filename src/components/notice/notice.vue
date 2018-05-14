@@ -172,6 +172,7 @@
 		outline: none;
 		padding: 1rem 0;
 		text-indent: 1rem;
+		font-size:1.1rem;
 	}
 	
 	.sendBtn {

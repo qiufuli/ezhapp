@@ -100,7 +100,7 @@
 				console.log(n, o)
 				this.getWeekTimeLong = time.getThisTime3()[n];
 				let self = this;
-
+				self.getWeekTimeLong = self.getWeekTimeLong.replace(/\-/g, "/");
 				axios.get(address + 'index/api/getRecipes', {
 					params: {
 						userId: this.$store.state.userId,
@@ -162,7 +162,8 @@
 			init() {
 			
 				let self = this;
-
+				self.getWeekTimeLong = self.getWeekTimeLong.replace(/\-/g, "/");
+				
 				this.$nextTick(() => {
 				console.log('时间',self.getWeekTimeLong)
 					axios.get(address + 'index/api/getRecipes', {

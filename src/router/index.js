@@ -85,6 +85,11 @@ export default new Router({
 					}]
 				},
 				{
+					//单个通讯人
+					path: 'mailsingle',
+					component: resolve => require(['@/components/mailsingle/mailsingle'], resolve)
+				},
+				{
 					//发通知
 					path: 'notice',
 					component: resolve => require(['@/components/notice/notice'], resolve),

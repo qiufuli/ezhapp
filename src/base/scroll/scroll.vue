@@ -81,7 +81,6 @@
 				if(this.pulldown){
 					this.scroll.on('scrollEnd',()=>{
 						if(this.scroll.y >= 0){
-						
 							this.$emit('scrollToEnd',this.scroll.y)
 						}
 					})

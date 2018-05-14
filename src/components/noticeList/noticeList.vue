@@ -16,7 +16,7 @@
 									<img class="per_img" :src="imgURL+item.userImageId" onerror="src='static/test/person.png'" alt="" />
 								
 								<div class="per_h1">
-									{{item.from}}教师
+									{{item.from}}园长
 									<img class="ling" src="static/test/ling.png" alt="" />
 								</div>
 								
@@ -26,10 +26,9 @@
 							<div class="per_text clearfix">
 									<p>{{item.text}}</p>
 									<div class="text-con clearfix">
-										<i class="icon iconfont icon-shanchu" v-if="showIcon"></i>
+										<i class="icon iconfont icon-shanchu" v-if="showIcon" @click="del(item.id)"></i>
 										<span class="time">{{item.createTime}}</span>
 									</div>
-
 								</div>
 						</div>
 						<p v-show="end" class="dataP">数据已加载完毕</p>
@@ -116,6 +115,20 @@
 
 						}
 					})
+				})
+			},
+			del(itemId){
+				console.log(itemId)
+				let self = this;
+				let params = new URLSearchParams();
+				params.append('id', itemId)
+				axios.post(address+'index/api/delFlagNotice',params).then(function(res){
+					console.log(res)
+					if(res.data.code == 0){
+					self.OFFSET = 1;
+					self.test = []
+					self.init()
+					}
 				})
 			}
 		}

@@ -15,22 +15,22 @@
 					<group>
 						<datetime class="top" v-model="value5" :min-year=2017 :max-year=2099 format="YYYY-MM-DD" :end-date="endDate" @on-change="change" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="确定" cancel-text=" "></datetime>
 					</group>
-					<a @click="add()" ref="add" style="color:#8e8a8a">后一天</a>
+					<a @click="add()" ref="add"  style="background:#ccc;color:#fff">后一天</a>
 				</div>
 			</div>
 			<div class="mailDiv">
 				<scroll class="mailHeight">
-				<div>
-					<div class="list">
-				<div class="kq-list" v-for="(item,index) in kqList" @click="selectItem(item,$event)">
-					<i class="iconfont icon-icon31"></i>
-					<h2>{{item.name}}</h2>
-					<span class="dk" v-show="item.isWork== 1">已测量</span>
-					<span class="wdk" v-show="item.isWork== 0">未测量</span>
-				</div>
-			</div>
-				</div>
-			</scroll>
+					<div>
+						<div class="list">
+							<div class="kq-list" v-for="(item,index) in kqList" @click="selectItem(item,$event)">
+								<img :src="imgURL+item.userImageId" onerror="src='static/test/person.png'" alt="" />
+								<h2>{{item.name}}</h2>
+								<span class="dk" v-show="item.isWork== 1">已测量</span>
+								<span class="wdk" v-show="item.isWork== 0">未测量</span>
+							</div>
+						</div>
+					</div>
+				</scroll>
 			</div>
 			<div class="footer">
 				<div>
@@ -48,7 +48,7 @@
 <script>
 	import kqCon from '@/components/kqCon/kqCon'
 	import { Datetime, Group } from 'vux'
-import { Toast ,Indicator } from 'mint-ui';
+	import { Toast, Indicator } from 'mint-ui';
 	import Scroll from '@/base/scroll/scroll';
 	import * as time from '@/common/util/time.js'
 	export default {
@@ -62,12 +62,13 @@ import { Toast ,Indicator } from 'mint-ui';
 			return {
 				readonly: true,
 				value5: '', //日历初始化
-				name: this.$route.query.name,//班级名
-				classId:this.$route.query.id, //classid
-				userId:this.$store.state.userId, //userid
-				kqList: [],//渲染内容数组
+				name: this.$route.query.name, //班级名
+				classId: this.$route.query.id, //classid
+				userId: this.$store.state.userId, //userid
+				kqList: [], //渲染内容数组
 				selectedItem: {},
-				endDate:''//设置结束日期
+				endDate: '', //设置结束日期
+				imgURL:imgURL
 			}
 		},
 		created() {
@@ -76,8 +77,8 @@ import { Toast ,Indicator } from 'mint-ui';
 			this.endDate = time.getYYMMDD();
 		},
 		watch: {
-			value5(n,o){
-				
+			value5(n, o) {
+
 			}
 		},
 		computed: {
@@ -88,40 +89,42 @@ import { Toast ,Indicator } from 'mint-ui';
 		},
 		methods: {
 			//初始化方法
-			init(){
+			init() {
 				let self = this;
 				axios.get(address2 + 'v1.0/terminal/getTemperList', {
-						params: {
-							userId: self.userId,
-							classId:self.classId,
-							selectTime: new Date().getTime()
-						}
-					}).then((relove) => {
-						console.log(relove.data)
-						if( relove.data.code == 1000){
-							//返回的数据数组
-							self.kqList = relove.data.data;
-						}
-					}).catch((err) => {
-						console.log(err)
-					})
+					params: {
+						userId: self.userId,
+						classId: self.classId,
+						selectTime: new Date().getTime()
+					}
+				}).then((relove) => {
+					console.log(relove.data)
+					if(relove.data.code == 1000) {
+						//返回的数据数组
+						self.kqList = relove.data.data;
+					}
+				}).catch((err) => {
+					console.log(err)
+				})
 			},
 			change(value) {
 				let self = this;
-				if(new Date(self.value5).getTime() >= new Date().getTime()){
-					this.$refs.add.style.color = '#8e8a8a'
-					self.value5 = time.getYYMMDD();//如果是今天以后 默认今天 不能向后查
-				}else{
-					this.$refs.add.style.color = '#fff'
+				if(new Date(self.value5).getTime() >= new Date(time.getYYMMDD()).getTime()) {
+					this.$refs.add.style.color = '#fff';
+					this.$refs.add.style.background = '#ccc';
+					self.value5 = time.getYYMMDD(); //如果是今天以后 默认今天 不能向后查
+				} else {
+					this.$refs.add.style.background = '#fff';
+					this.$refs.add.style.color = '#323232';
 					self.value5 = value;
 					axios.get(address2 + 'v1.0/terminal/getTemperList', {
 						params: {
 							userId: self.userId,
-							classId:self.classId,
+							classId: self.classId,
 							selectTime: new Date(self.value5).getTime()
 						}
 					}).then((relove) => {
-						if( relove.data.code == 1000){
+						if(relove.data.code == 1000) {
 							//返回的数据数组
 							self.kqList = relove.data.data;
 						}
@@ -129,26 +132,28 @@ import { Toast ,Indicator } from 'mint-ui';
 						console.log(err)
 					})
 				}
-				
+
 			},
 			add: function() {
 				let self = this;
 				self.value5 = time.addDate(self.value5, 1)
-				console.log(self.value5,new Date(self.value5).getTime() )
-				if(new Date(self.value5).getTime() >new Date().getTime()){
-					this.$refs.add.style.color = '#8e8a8a';
-					self.value5 = time.getYYMMDD();//如果是今天以后 默认今天 不能向后查
-				}else{
+				console.log(self.value5, new Date(self.value5).getTime())
+				if(new Date(self.value5).getTime() >= new Date(time.getYYMMDD()).getTime()) {
 					this.$refs.add.style.color = '#fff';
+					this.$refs.add.style.background = '#ccc';
+					self.value5 = time.getYYMMDD(); //如果是今天以后 默认今天 不能向后查
+				} else {
+					this.$refs.add.style.background = '#fff';
+					this.$refs.add.style.color = '#323232';
 					axios.get(address2 + 'v1.0/terminal/getTemperList', {
 						params: {
 							userId: self.userId,
-							classId:self.classId,
+							classId: self.classId,
 							selectTime: new Date(self.value5).getTime()
 						}
 					}).then((relove) => {
 						console.log(relove.data)
-						if( relove.data.code == 1000){
+						if(relove.data.code == 1000) {
 							//返回的数据数组
 							self.kqList = relove.data.data;
 						}
@@ -157,48 +162,52 @@ import { Toast ,Indicator } from 'mint-ui';
 
 					})
 				}
-				
+
 			},
 			reduce: function() {
 				let self = this;
 				self.value5 = time.addDate(self.value5, -1)
-				console.log(self.value5,new Date(self.value5).getTime() )
-				
-				this.$refs.add.style.color = '#fff';
+				console.log(self.value5, new Date(self.value5).getTime())
+
+				this.$refs.add.style.background = '#fff';
+				this.$refs.add.style.color = '#323232';
 				axios.get(address2 + 'v1.0/terminal/getTemperList', {
-						params: {
-							userId: self.userId,
-							classId:self.classId,
-							selectTime: new Date(self.value5).getTime()
-						}
-					}).then((relove) => {
-						console.log(relove.data)
-						if( relove.data.code == 1000){
-							//返回的数据数组
-							self.kqList = relove.data.data;
-						}
-					}).catch((err) => {
-						console.log(err)
-					})
+					params: {
+						userId: self.userId,
+						classId: self.classId,
+						selectTime: new Date(self.value5).getTime()
+					}
+				}).then((relove) => {
+					console.log(relove.data)
+					if(relove.data.code == 1000) {
+						//返回的数据数组
+						self.kqList = relove.data.data;
+					}
+				}).catch((err) => {
+					console.log(err)
+				})
 			},
 			selectItem: function(item, event) {
 				this.selectedItem = item;
-				this.$router.push('/feel/lesson/feelCon?selUserId='+item.userId+'&name='+item.name+'&times='+this.value5)
-//				this.$refs.kqCon.show(); //父组件里面通过ref调用子组件方法
+				this.$router.push('/feel/lesson/feelCon?selUserId=' + item.userId + '&name=' + item.name + '&times=' + this.value5)
+				//				this.$refs.kqCon.show(); //父组件里面通过ref调用子组件方法
 			},
-			changeTime:function(value){
-				this.value5=value
+			changeTime: function(value) {
+				this.value5 = value
 			}
 		}
 	}
 </script>
 
 <style scoped="scoped">
-	.mailDiv{
+	.mailDiv {
 		position: fixed;
 		top: 7rem;
 		bottom: 4rem;
 		width: 100%;
+	}
+	.lesson{
+		background: #fff;
 	}
 	.lesson .title {
 		position: fixed;
@@ -209,14 +218,15 @@ import { Toast ,Indicator } from 'mint-ui';
 		z-index: 1000;
 		color: #FFFFFF;
 		margin: 0 3rem;
-	}	
+	}
+	
 	.lesson .title span {
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		font-size: 16px;
 	}
-
+	
 	.lesson .wrap-box {
 		width: 100%;
 		height: 4rem;
@@ -224,7 +234,7 @@ import { Toast ,Indicator } from 'mint-ui';
 		display: flex;
 	}
 	
-	.lesson .wrap a {
+	/*.lesson .wrap a {
 		display: inline-block;
 		color: #FFFFFF;
 		flex: 1;
@@ -238,25 +248,69 @@ import { Toast ,Indicator } from 'mint-ui';
 	.lesson .wrap div {
 		flex: 1;
 	}
+	
 	.lesson .wrap {
 		padding-bottom: 0;
 	}
 	
 	.lesson .weui-cells a div p {
 		color: red;
+	}*/
+	.wrap-box > div{
+		display: inline-block;
+		float: left;
+		width: 60%;
+		margin-top: 0.4rem;
 	}
+	.wrap-box >a{
+		display: inline-block;
+		float: left;
+		width: 16%;
+		margin: 0.8rem 2% 0;
+		height: 2rem;
+		line-height: 2rem;
+		background: #fff;
+		border-radius: 3rem;
+		text-align: center;
+		font-size: 1rem;
+	}
+	
 	.lesson .list {
 		margin: 1rem 1.5rem;
 	}
 	
 	.lesson .kq-list {
 		display: inline-block;
-		margin-right: 1.2rem;
+		margin:0 0.6rem;
 	}
-	
-	.lesson .kq-list:nth-child(4n) {
+	@media only screen and (min-width:320px ) {
+		.lesson .kq-list{
+			margin:0 1rem 0.5rem;
+		}
+	}
+	@media only screen and (min-width:340px ) {
+		.lesson .kq-list{
+			margin:0 0.2rem 0.5rem;
+		}
+	}
+	@media only screen and (min-width:360px ) {
+		.lesson .kq-list{
+			margin:0 0.4rem 0.5rem;
+		}
+	}
+	@media only screen and (min-width:375px ) {
+		.lesson .kq-list{
+			margin:0 0.5rem 0.5rem;
+		}
+	}
+	@media only screen and (min-width:414px ) {
+		.lesson .kq-list{
+			margin:0 0.6rem 0.5rem;
+		}
+	}
+	/*.lesson .kq-list:nth-child(4n) {
 		margin-right: 0;
-	}
+	}*/
 	/*.lesson .kq-list img{
 		width: 6rem;
 		height: 6rem;
@@ -266,7 +320,12 @@ import { Toast ,Indicator } from 'mint-ui';
 	.lesson .iconfont {
 		font-size: 6rem;
 	}
-	
+	.kq-list img{
+		display: inline-block;
+		width: 6rem;
+		height: 6rem;
+		border-radius: 50%;
+	}
 	.lesson .kq-list h2 {
 		text-align: center;
 		color: black;
@@ -331,7 +390,8 @@ import { Toast ,Indicator } from 'mint-ui';
 		border: 1px solid deeppink;
 		border-radius: 1rem 1rem 1rem 1rem;
 	}
-	.mailHeight{
+	
+	.mailHeight {
 		background: #fff;
 	}
 </style>
